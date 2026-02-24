@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PocketLabs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0A0A0A;
+            --surface: #141414;
+            --surface-hover: #1A1A1A;
+            --text: #EAEAEA;
+            --text-dim: #777;
+            --accent: #4F8FFF;
+            --accent-glow: rgba(79, 143, 255, 0.08);
+            --border: #222;
+            --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --serif: 'Instrument Serif', Georgia, serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+
+        /* --- HERO --- */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 140px 24px 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -120px; left: 50%;
+            transform: translateX(-50%);
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .logo-text {
+            font-family: var(--sans);
+            font-size: 2.4em;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+            opacity: 0; animation: fadeUp 0.6s 0.1s forwards;
+        }
+        .logo-text span { color: var(--accent); }
+
+        .hero-tagline {
+            font-size: 1.05em;
+            color: var(--text-dim);
+            line-height: 1.6;
+            max-width: 400px;
+            opacity: 0; animation: fadeUp 0.6s 0.25s forwards;
+        }
+
+        /* --- APPS SECTION --- */
+        .apps-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        .apps-label {
+            text-align: center;
+            font-size: 0.78em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-dim);
+            margin-bottom: 40px;
+            opacity: 0; animation: fadeUp 0.6s 0.4s forwards;
+        }
+
+        .apps-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .app-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px 36px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            transition: background 0.25s, border-color 0.25s;
+            opacity: 0; animation: fadeUp 0.5s 0.5s forwards;
+        }
+        .app-card:nth-child(2) { animation-delay: 0.6s; }
+        .app-card:nth-child(3) { animation-delay: 0.7s; }
+
+        .app-card:hover {
+            background: var(--surface-hover);
+            border-color: #2a2a2a;
+        }
+
+        .app-icon {
+            width: 64px; height: 64px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--accent), #7C5CFC);
+            display: flex;
+            align-items: center; justify-content: center;
+            font-size: 1.6em;
+            flex-shrink: 0;
+            box-shadow: 0 4px 20px rgba(79, 143, 255, 0.15);
+        }
+
+        .app-info { flex: 1; }
+        .app-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 4px;
+            letter-spacing: -0.01em;
+        }
+        .app-desc {
+            font-size: 0.88em;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        .app-badge {
+            font-size: 0.7em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 5px 12px;
+            border-radius: 100px;
+            flex-shrink: 0;
+        }
+        .badge-dev {
+            color: var(--accent);
+            background: var(--accent-glow);
+            border: 1px solid rgba(79, 143, 255, 0.15);
+        }
+        .badge-soon {
+            color: var(--text-dim);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
+            padding: 40px 24px 60px;
+            border-top: 1px solid var(--border);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        footer p {
+            font-size: 0.82em;
+            color: var(--text-dim);
+            line-height: 1.8;
+        }
+        footer a {
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        footer a:hover { color: var(--text); }
+
+        /* --- ANIMATIONS --- */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 600px) {
+            .hero { padding: 120px 20px 60px; }
+            .logo-text { font-size: 2em; }
+            .apps-section { padding: 32px 16px 60px; }
+            .app-card {
+                padding: 24px 20px;
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+            .app-icon { width: 52px; height: 52px; font-size: 1.3em; border-radius: 14px; }
+            .app-badge { margin-top: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HERO -->
+    <section class="hero">
+        <h1 class="logo-text">Pocket<span>Labs</span></h1>
+        <p class="hero-tagline">A studio crafting thoughtful apps<br>for iOS and Android.</p>
+    </section>
+
+    <!-- APPS -->
+    <section class="apps-section">
+        <p class="apps-label">Our Apps</p>
+
+        <div class="apps-grid">
+            <div class="app-card">
+                <div class="app-icon">📚</div>
+                <div class="app-info">
+                    <div class="app-name">PocketLingo</div>
+                    <div class="app-desc">Language learning through interactive conversations and real-world scenarios.</div>
+                </div>
+                <span class="app-badge badge-dev">In Dev</span>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>
+            &copy; 2025 PocketLabs. All rights reserved.<br>
+            <a href="mailto:contact@pocketlabs.kr">contact@pocketlabs.kr</a>
+        </p>
+    </footer>
+
+</body>
+</html>
