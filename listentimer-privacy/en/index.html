@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy — ListenTimer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0A0A0A;
+            --surface: #141414;
+            --text: #EAEAEA;
+            --text-dim: #777;
+            --accent: #4F8FFF;
+            --border: #222;
+            --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 60px 24px 80px;
+        }
+        .back-link {
+            display: inline-block;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.88em;
+            margin-bottom: 32px;
+            transition: opacity 0.2s;
+        }
+        .back-link:hover { opacity: 0.7; }
+        .lang-switch {
+            float: right;
+            color: var(--text-dim);
+            font-size: 0.85em;
+        }
+        .lang-switch a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .lang-switch a:hover { text-decoration: underline; }
+        h1 {
+            font-size: 1.8em;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+        .effective-date {
+            color: var(--text-dim);
+            font-size: 0.88em;
+            margin-bottom: 48px;
+        }
+        h2 {
+            font-size: 1.15em;
+            font-weight: 600;
+            margin-top: 40px;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        p, li {
+            font-size: 0.95em;
+            color: #ccc;
+        }
+        ul {
+            padding-left: 20px;
+            margin-bottom: 12px;
+        }
+        li { margin-bottom: 6px; }
+        a { color: var(--accent); }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 20px;
+            font-size: 0.9em;
+        }
+        th, td {
+            text-align: left;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            color: #ccc;
+        }
+        th {
+            background: var(--surface);
+            color: var(--text);
+            font-weight: 600;
+        }
+        .note {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 0.9em;
+            color: #bbb;
+        }
+        footer {
+            text-align: center;
+            padding: 40px 24px;
+            border-top: 1px solid var(--border);
+            margin-top: 60px;
+        }
+        footer p {
+            font-size: 0.82em;
+            color: var(--text-dim);
+        }
+        @media (max-width: 600px) {
+            .container { padding: 40px 16px 60px; }
+            h1 { font-size: 1.5em; }
+            table { font-size: 0.82em; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <a href="https://pocketlabs.kr" class="back-link">&larr; PocketLabs</a>
+            <span class="lang-switch"><a href="../ko/">한국어</a></span>
+        </div>
+
+        <h1>Privacy Policy</h1>
+        <p class="effective-date">Effective: March 22, 2026 | Last Updated: March 22, 2026</p>
+
+        <p>PocketLabs ("we," "us," or "our") values the privacy of users of <strong>ListenTimer</strong> (the "App"). This Privacy Policy explains what personal information the App collects, how it is used, and how it is protected.</p>
+
+        <h2>1. Information We Collect</h2>
+        <table>
+            <tr>
+                <th>Category</th>
+                <th>Data Collected</th>
+                <th>Storage</th>
+            </tr>
+            <tr>
+                <td>App Settings</td>
+                <td>Timer presets, voice character, voice interval, haptic settings</td>
+                <td>Stored locally on your device (never sent to any server)</td>
+            </tr>
+            <tr>
+                <td>Advertising Data (free users)</td>
+                <td>Advertising identifier (IDFA), device information, app usage data</td>
+                <td>Google LLC servers</td>
+            </tr>
+        </table>
+        <div class="note">
+            This App does not operate its own servers. We do not collect account information, login credentials, or require registration.
+        </div>
+
+        <h2>2. How We Collect Information</h2>
+        <ul>
+            <li><strong>App Settings</strong>: Values you configure within the App are automatically saved on your device.</li>
+            <li><strong>Advertising Data</strong>: Collected automatically by the Google AdMob SDK, based on your App Tracking Transparency (ATT) consent. If you do not allow tracking via ATT, your IDFA is not collected.</li>
+        </ul>
+
+        <h2>3. Purpose of Data Collection</h2>
+        <ul>
+            <li><strong>App Settings</strong>: To provide a personalized timer experience</li>
+            <li><strong>Advertising Data</strong>: To deliver personalized ads and measure advertising performance</li>
+        </ul>
+
+        <h2>4. Data Retention</h2>
+        <table>
+            <tr>
+                <th>Category</th>
+                <th>Retention Period</th>
+            </tr>
+            <tr>
+                <td>App Settings (local)</td>
+                <td>Automatically deleted when you uninstall the App</td>
+            </tr>
+            <tr>
+                <td>Advertising Data</td>
+                <td>Subject to <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a></td>
+            </tr>
+        </table>
+
+        <h2>5. Third-Party Data Sharing</h2>
+        <table>
+            <tr>
+                <th>Recipient</th>
+                <th>Data Shared</th>
+                <th>Purpose</th>
+            </tr>
+            <tr>
+                <td>Google LLC (AdMob)</td>
+                <td>Advertising identifier (IDFA), device information, app usage data</td>
+                <td>Personalized advertising and performance measurement</td>
+            </tr>
+        </table>
+        <p>When you purchase Premium, ads are removed and data sharing with Google ceases.</p>
+
+        <h2>6. International Data Transfer</h2>
+        <p>Advertising data is transferred to Google LLC servers located in the United States and other countries. Google applies appropriate safeguards under the EU-U.S. Data Privacy Framework. For details, see <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.</p>
+
+        <h2>7. Your Rights</h2>
+        <p>You may exercise the following rights at any time:</p>
+        <ul>
+            <li>Withdraw consent for data collection</li>
+            <li>Request access to, correction of, or deletion of your personal information</li>
+            <li>Request suspension of data processing</li>
+        </ul>
+        <p>To exercise these rights, please contact us at <a href="mailto:contact@pocketlabs.kr">contact@pocketlabs.kr</a>. We will respond without delay.</p>
+
+        <h2>8. Data Deletion</h2>
+        <ul>
+            <li><strong>App Settings (local data)</strong>: All settings stored on your device are automatically deleted when you uninstall the App.</li>
+            <li><strong>Advertising Data</strong>: Handled according to Google's data retention policies. You can stop future data collection by changing your ATT settings.</li>
+        </ul>
+
+        <h2>9. Data Protection Officer</h2>
+        <table>
+            <tr>
+                <th>Item</th>
+                <th>Details</th>
+            </tr>
+            <tr>
+                <td>Responsible party</td>
+                <td>PocketLabs Representative</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td><a href="mailto:contact@pocketlabs.kr">contact@pocketlabs.kr</a></td>
+            </tr>
+        </table>
+
+        <h2>10. Security Measures</h2>
+        <p>We take the following measures to ensure the security of your personal information:</p>
+        <ul>
+            <li>We do not operate our own servers, eliminating risks of server breaches or data leaks.</li>
+            <li>All app settings are stored locally on your device only.</li>
+            <li>Communication with ad networks is encrypted via HTTPS.</li>
+        </ul>
+
+        <h2>11. Children's Privacy</h2>
+        <p>This App does not knowingly collect personal information from children under the age of 14 (or the applicable age of consent in your jurisdiction). If we become aware that personal information from a child has been collected, we will delete it promptly.</p>
+
+        <h2>12. Changes with Premium Purchase</h2>
+        <p>When you purchase Premium, in-app ads are removed. As a result, advertising data collection through the AdMob SDK (IDFA, device information, app usage data) ceases.</p>
+
+        <h2>13. GDPR Rights (European Economic Area Residents)</h2>
+        <p>If you reside in the European Economic Area (EEA), you have the following additional rights under the General Data Protection Regulation (GDPR):</p>
+        <ul>
+            <li><strong>Right to Erasure</strong>: You may request the deletion of your personal data.</li>
+            <li><strong>Right to Object</strong>: You may object to the processing of your personal data.</li>
+            <li><strong>Right to Data Portability</strong>: You may request to receive your personal data in a structured format or have it transferred to another service.</li>
+            <li><strong>Right to Restriction</strong>: You may request restriction of processing under certain conditions.</li>
+        </ul>
+        <p>To exercise these rights, please contact us at <a href="mailto:contact@pocketlabs.kr">contact@pocketlabs.kr</a>.</p>
+
+        <h2>14. Withdrawing Consent</h2>
+        <p>You can withdraw your consent for ad tracking at any time through the following steps:</p>
+        <div class="note">
+            <strong>iOS</strong>: Settings &gt; Privacy &amp; Security &gt; Tracking &gt; Toggle off ListenTimer
+        </div>
+        <p>Disabling tracking will stop IDFA-based personalized advertising data collection.</p>
+
+        <h2>15. Changes to This Policy</h2>
+        <p>If this Privacy Policy is updated, we will post the changes on this page and update the effective date. For significant changes, we may provide notice within the App.</p>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 PocketLabs. All rights reserved.<br>
+        <a href="mailto:contact@pocketlabs.kr" style="color: #777; text-decoration: none;">contact@pocketlabs.kr</a></p>
+    </footer>
+</body>
+</html>
