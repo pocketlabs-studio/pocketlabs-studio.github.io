@@ -130,7 +130,7 @@
         </div>
 
         <h1>Privacy Policy</h1>
-        <p class="effective-date">Effective: March 22, 2026 | Last Updated: March 22, 2026</p>
+        <p class="effective-date">Effective: March 22, 2026 | Last Updated: April 23, 2026</p>
 
         <p>PocketLabs ("we," "us," or "our") values the privacy of users of <strong>ListenTimer</strong> (the "App"). This Privacy Policy explains what personal information the App collects, how it is used, and how it is protected.</p>
 
@@ -151,21 +151,35 @@
                 <td>Advertising identifier (IDFA), device information, app usage data</td>
                 <td>Google LLC servers</td>
             </tr>
+            <tr>
+                <td>App Usage Analytics (Firebase Analytics)</td>
+                <td>App Instance ID (pseudonymous identifier), device information (model, OS version, language/region), automatically collected events (first open, session start/end, app updates, app removals, in-app purchases, etc.), approximate IP-based location (country/region level)</td>
+                <td>Google LLC (Firebase) servers</td>
+            </tr>
+            <tr>
+                <td>Crash Reports (Firebase Crashlytics)</td>
+                <td>Crash stack traces, device state (model, OS version, memory/disk usage, battery state, etc.), Crashlytics installation UUID (pseudonymous identifier), crash timestamps, app run time, non-fatal error logs</td>
+                <td>Google LLC (Firebase) servers</td>
+            </tr>
         </table>
         <div class="note">
-            This App does not operate its own servers. We do not collect account information, login credentials, or require registration.
+            This App does not operate its own servers. We do not collect account information, login credentials, or require registration. The identifiers used by Firebase Analytics and Crashlytics (App Instance ID, Crashlytics installation UUID) are pseudonymous and are not linked to directly identifying information such as your name, email, or phone number.
         </div>
 
         <h2>2. How We Collect Information</h2>
         <ul>
             <li><strong>App Settings</strong>: Values you configure within the App are automatically saved on your device.</li>
             <li><strong>Advertising Data</strong>: Collected automatically by the Google AdMob SDK, based on your App Tracking Transparency (ATT) consent. If you do not allow tracking via ATT, your IDFA is not collected.</li>
+            <li><strong>App Usage Analytics (Firebase Analytics)</strong>: Collected automatically by the Firebase Analytics SDK during app launch and use. It does not use IDFA; it relies on a pseudonymous identifier (App Instance ID) issued by Firebase.</li>
+            <li><strong>Crash Reports (Firebase Crashlytics)</strong>: When the App terminates abnormally (crashes) or encounters non-fatal errors, the Firebase Crashlytics SDK automatically uploads a report on the next app launch.</li>
         </ul>
 
         <h2>3. Purpose of Data Collection</h2>
         <ul>
             <li><strong>App Settings</strong>: To provide a personalized timer experience</li>
             <li><strong>Advertising Data</strong>: To deliver personalized ads and measure advertising performance</li>
+            <li><strong>App Usage Analytics (Firebase Analytics)</strong>: To analyze usage patterns for feature improvements, performance optimization, and user experience enhancements</li>
+            <li><strong>Crash Reports (Firebase Crashlytics)</strong>: To diagnose app stability issues, fix bugs, and improve quality</li>
         </ul>
 
         <h2>4. Data Retention</h2>
@@ -182,6 +196,14 @@
                 <td>Advertising Data</td>
                 <td>Subject to <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a></td>
             </tr>
+            <tr>
+                <td>Firebase Analytics Data</td>
+                <td>Default Google Analytics for Firebase retention (up to 14 months). See <a href="https://support.google.com/firebase/answer/7667196" target="_blank" rel="noopener">Firebase data retention policy</a> for details.</td>
+            </tr>
+            <tr>
+                <td>Firebase Crashlytics Data</td>
+                <td>Retained for up to 90 days from the crash event, then automatically deleted (Firebase default policy)</td>
+            </tr>
         </table>
 
         <h2>5. Third-Party Data Sharing</h2>
@@ -196,11 +218,21 @@
                 <td>Advertising identifier (IDFA), device information, app usage data</td>
                 <td>Personalized advertising and performance measurement</td>
             </tr>
+            <tr>
+                <td>Google LLC (Firebase Analytics)</td>
+                <td>App Instance ID, device information, automatically collected events, approximate IP-based location</td>
+                <td>App usage analysis and feature improvement</td>
+            </tr>
+            <tr>
+                <td>Google LLC (Firebase Crashlytics)</td>
+                <td>Crash stack traces, device state, Crashlytics installation UUID</td>
+                <td>Crash diagnostics and app stability improvement</td>
+            </tr>
         </table>
-        <p>When you purchase Premium, ads are removed and data sharing with Google ceases.</p>
+        <p>When you purchase Premium, ads are removed and data sharing with AdMob ceases. However, Firebase Analytics and Crashlytics continue to operate identically for Premium users for the purpose of app quality improvement.</p>
 
         <h2>6. International Data Transfer</h2>
-        <p>Advertising data is transferred to Google LLC servers located in the United States and other countries. Google applies appropriate safeguards under the EU-U.S. Data Privacy Framework. For details, see <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.</p>
+        <p>Advertising data, Firebase Analytics data, and Firebase Crashlytics data are transferred to Google LLC servers located in the United States and other countries. For details, see <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a> and <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener">Firebase Privacy and Security</a>.</p>
 
         <h2>7. Your Rights</h2>
         <p>You may exercise the following rights at any time:</p>
@@ -215,6 +247,8 @@
         <ul>
             <li><strong>App Settings (local data)</strong>: All settings stored on your device are automatically deleted when you uninstall the App.</li>
             <li><strong>Advertising Data</strong>: Handled according to Google's data retention policies. You can stop future data collection by changing your ATT settings.</li>
+            <li><strong>Firebase Analytics Data</strong>: Automatically deleted after the Firebase default retention period (up to 14 months). Uninstalling the App stops future data collection. To request immediate deletion of previously collected data, contact us at the email below.</li>
+            <li><strong>Firebase Crashlytics Data</strong>: Automatically deleted 90 days after the crash event. Immediate deletion can be requested via the contact email below.</li>
         </ul>
 
         <h2>9. Data Protection Officer</h2>
@@ -238,14 +272,16 @@
         <ul>
             <li>We do not operate our own servers, eliminating risks of server breaches or data leaks.</li>
             <li>All app settings are stored locally on your device only.</li>
-            <li>Communication with ad networks is encrypted via HTTPS.</li>
+            <li>Communication with ad networks and Firebase is encrypted via HTTPS.</li>
+            <li>Firebase Analytics and Crashlytics use only pseudonymous identifiers and do not collect directly identifying information such as your name, email, or phone number.</li>
         </ul>
 
         <h2>11. Children's Privacy</h2>
-        <p>This App does not knowingly collect personal information from children under the age of 14 (or the applicable age of consent in your jurisdiction). If we become aware that personal information from a child has been collected, we will delete it promptly.</p>
+        <p>This App does not knowingly collect personal information from children under the age of 14. If we become aware that personal information from a child has been collected, we will delete it promptly.</p>
 
         <h2>12. Changes with Premium Purchase</h2>
         <p>When you purchase Premium, in-app ads are removed. As a result, advertising data collection through the AdMob SDK (IDFA, device information, app usage data) ceases.</p>
+        <p>However, Firebase Analytics (app usage analytics) and Firebase Crashlytics (crash reports) continue to operate identically for Premium users for the purpose of app stability and quality improvement.</p>
 
         <h2>13. Withdrawing Consent</h2>
         <p>You can withdraw your consent for ad tracking at any time through the following steps:</p>
@@ -253,6 +289,7 @@
             <strong>iOS</strong>: Settings &gt; Privacy &amp; Security &gt; Tracking &gt; Toggle off ListenTimer
         </div>
         <p>Disabling tracking will stop IDFA-based personalized advertising data collection.</p>
+        <p>Firebase Analytics and Crashlytics data collection operates independently of the ATT setting, and an in-app opt-out toggle is not currently provided. To stop data collection entirely, you may uninstall the App. To request immediate deletion of previously collected data, please contact us using the email listed in <strong>Section 9 (Data Protection Officer)</strong>.</p>
 
         <h2>14. Changes to This Policy</h2>
         <p>If this Privacy Policy is updated, we will post the changes on this page and update the effective date. For significant changes, we may provide notice within the App.</p>
