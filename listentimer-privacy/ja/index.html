@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プライバシーポリシー — ListenTimer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0A0A0A;
+            --surface: #141414;
+            --text: #EAEAEA;
+            --text-dim: #777;
+            --accent: #4F8FFF;
+            --border: #222;
+            --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 60px 24px 80px;
+        }
+        .back-link {
+            display: inline-block;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.88em;
+            margin-bottom: 32px;
+            transition: opacity 0.2s;
+        }
+        .back-link:hover { opacity: 0.7; }
+        .lang-switch {
+            float: right;
+            color: var(--text-dim);
+            font-size: 0.85em;
+        }
+        .lang-switch a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .lang-switch a:hover { text-decoration: underline; }
+        h1 {
+            font-size: 1.8em;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+        .effective-date {
+            color: var(--text-dim);
+            font-size: 0.88em;
+            margin-bottom: 48px;
+        }
+        h2 {
+            font-size: 1.15em;
+            font-weight: 600;
+            margin-top: 40px;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        p, li {
+            font-size: 0.95em;
+            color: #ccc;
+        }
+        ul {
+            padding-left: 20px;
+            margin-bottom: 12px;
+        }
+        li { margin-bottom: 6px; }
+        a { color: var(--accent); }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 20px;
+            font-size: 0.9em;
+        }
+        th, td {
+            text-align: left;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            color: #ccc;
+        }
+        th {
+            background: var(--surface);
+            color: var(--text);
+            font-weight: 600;
+        }
+        .note {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 0.9em;
+            color: #bbb;
+        }
+        footer {
+            text-align: center;
+            padding: 40px 24px;
+            border-top: 1px solid var(--border);
+            margin-top: 60px;
+        }
+        footer p {
+            font-size: 0.82em;
+            color: var(--text-dim);
+        }
+        @media (max-width: 600px) {
+            .container { padding: 40px 16px 60px; }
+            h1 { font-size: 1.5em; }
+            table { font-size: 0.82em; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <span class="lang-switch"><a href="../ko/" hreflang="ko" lang="ko">한국어</a> · <a href="../en/" hreflang="en" lang="en">English</a> · <span lang="ja" aria-current="page">日本語</span></span>
+        </div>
+
+        <h1>プライバシーポリシー</h1>
+        <p class="effective-date">施行日: 2026年3月22日 | 最終更新日: 2026年4月23日</p>
+
+        <p>PocketLabs(以下「当社」)は、<strong>ListenTimer</strong>(以下「本アプリ」)をご利用いただくユーザーのプライバシーを尊重し、関連法令を遵守します。本プライバシーポリシーでは、本アプリが収集する個人情報の項目、利用目的、保有期間、第三者提供などについてご説明します。</p>
+
+        <h2>1. 収集する個人情報の項目</h2>
+        <table>
+            <tr>
+                <th>区分</th>
+                <th>収集項目</th>
+                <th>保存場所</th>
+            </tr>
+            <tr>
+                <td>アプリ設定</td>
+                <td>タイマープリセット、音声キャラクター、音声間隔、触覚フィードバック設定</td>
+                <td>端末内ローカル保存(サーバーへの送信なし)</td>
+            </tr>
+            <tr>
+                <td>広告データ(無料ユーザー)</td>
+                <td>広告識別子(IDFA)、デバイス情報、アプリ利用データ</td>
+                <td>Google LLCサーバー</td>
+            </tr>
+            <tr>
+                <td>アプリ利用統計(Firebase Analytics)</td>
+                <td>アプリインスタンスID(仮名識別子)、デバイス情報(機種、OSバージョン、言語/地域)、自動収集イベント(初回起動、セッション開始・終了、アプリアップデート、アプリ削除、アプリ内課金など)、IPベースの大まかな位置情報(国/地域レベル)</td>
+                <td>Google LLC(Firebase)サーバー</td>
+            </tr>
+            <tr>
+                <td>クラッシュレポート(Firebase Crashlytics)</td>
+                <td>クラッシュのスタックトレース、デバイス状態(機種、OSバージョン、メモリ・ディスク使用量、バッテリー状態など)、Crashlyticsインストール用UUID(仮名識別子)、クラッシュ発生時刻、アプリ実行時間、非致命的エラーログ</td>
+                <td>Google LLC(Firebase)サーバー</td>
+            </tr>
+        </table>
+        <div class="note">
+            本アプリは独自のサーバーを運営しておらず、会員登録、ログイン、アカウント情報の収集を行いません。Firebase AnalyticsおよびCrashlyticsで使用される識別子(アプリインスタンスID、Crashlyticsインストール用UUID)は仮名識別子であり、ユーザーの氏名・メールアドレス・電話番号など個人を直接特定できる情報とは紐付けられません。
+        </div>
+
+        <h2>2. 個人情報の収集方法</h2>
+        <ul>
+            <li><strong>アプリ設定</strong>: ユーザーが本アプリ内で設定した値が端末に自動保存されます。</li>
+            <li><strong>広告データ</strong>: Google AdMob SDKが自動的に収集し、iOSのAppのトラッキングの透明性(ATT)同意に基づきます。ATTでトラッキングを許可しない場合、IDFAは収集されません。</li>
+            <li><strong>アプリ利用統計(Firebase Analytics)</strong>: Firebase Analytics SDKがアプリの起動・利用過程で自動的に収集します。IDFAは使用せず、Firebaseが独自に発行する仮名識別子(アプリインスタンスID)に基づきます。</li>
+            <li><strong>クラッシュレポート(Firebase Crashlytics)</strong>: 本アプリが異常終了(クラッシュ)した場合、または非致命的エラーが発生した場合、Firebase Crashlytics SDKが次回アプリ起動時に自動的にレポートをアップロードします。</li>
+        </ul>
+
+        <h2>3. 個人情報の収集および利用目的</h2>
+        <ul>
+            <li><strong>アプリ設定</strong>: ユーザーに合わせたタイマー環境の提供</li>
+            <li><strong>広告データ</strong>: パーソナライズ広告の配信および広告効果の測定</li>
+            <li><strong>アプリ利用統計(Firebase Analytics)</strong>: 利用パターンの分析による機能改善、パフォーマンス最適化、ユーザー体験の向上</li>
+            <li><strong>クラッシュレポート(Firebase Crashlytics)</strong>: アプリの安定性診断、バグ修正、品質改善</li>
+        </ul>
+
+        <h2>4. 個人情報の保有および利用期間</h2>
+        <table>
+            <tr>
+                <th>区分</th>
+                <th>保有期間</th>
+            </tr>
+            <tr>
+                <td>アプリ設定(ローカル)</td>
+                <td>アプリ削除時に自動削除</td>
+            </tr>
+            <tr>
+                <td>広告データ</td>
+                <td><a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Googleプライバシーポリシー</a>に準拠</td>
+            </tr>
+            <tr>
+                <td>Firebase Analyticsデータ</td>
+                <td>Google Analytics for Firebaseの既定保存期間(最大14ヶ月)を適用。詳細は<a href="https://support.google.com/firebase/answer/7667196" target="_blank" rel="noopener noreferrer">Firebaseデータ保存ポリシー</a>をご参照ください。</td>
+            </tr>
+            <tr>
+                <td>Firebase Crashlyticsデータ</td>
+                <td>クラッシュ発生日から最大90日間保存後、自動削除(Firebaseの既定ポリシー)</td>
+            </tr>
+        </table>
+
+        <h2>5. 個人情報の第三者提供</h2>
+        <table>
+            <tr>
+                <th>提供先</th>
+                <th>提供項目</th>
+                <th>提供目的</th>
+            </tr>
+            <tr>
+                <td>Google LLC(AdMob)</td>
+                <td>広告識別子(IDFA)、デバイス情報、アプリ利用データ</td>
+                <td>パーソナライズ広告の配信および広告効果の測定</td>
+            </tr>
+            <tr>
+                <td>Google LLC(Firebase Analytics)</td>
+                <td>アプリインスタンスID、デバイス情報、自動収集イベント、IPベースの大まかな位置情報</td>
+                <td>アプリ利用統計の分析および機能改善</td>
+            </tr>
+            <tr>
+                <td>Google LLC(Firebase Crashlytics)</td>
+                <td>クラッシュのスタックトレース、デバイス状態、Crashlyticsインストール用UUID</td>
+                <td>クラッシュ診断およびアプリ安定性の改善</td>
+            </tr>
+        </table>
+        <p>プレミアムを購入された場合、広告が削除されるためAdMobへのデータ提供は停止します。ただし、Firebase AnalyticsおよびCrashlyticsはアプリの品質改善を目的として、プレミアムユーザーに対しても同様に動作します。</p>
+
+        <h2>6. 個人情報の国外移転</h2>
+        <p>広告データ、Firebase Analyticsデータ、Firebase CrashlyticsデータはGoogle LLCのサーバー(米国など)へ送信されます。詳細は<a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Googleプライバシーポリシー</a>および<a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener noreferrer">Firebaseのプライバシーとセキュリティ</a>をご参照ください。</p>
+
+        <h2>7. ユーザーの権利</h2>
+        <p>ユーザーはいつでも以下の権利を行使できます。</p>
+        <ul>
+            <li>個人情報の収集・利用に関する同意の撤回</li>
+            <li>個人情報の閲覧、訂正、削除のリクエスト</li>
+            <li>個人情報処理の停止リクエスト</li>
+        </ul>
+        <p>権利の行使は下記のメールアドレスからご請求いただけます。当社は遅滞なく対応いたします。</p>
+        <p><strong>お問い合わせ</strong>: <a href="mailto:contact@pocketlabs.kr">contact@pocketlabs.kr</a></p>
+
+        <h2>8. 個人情報の破棄手続きおよび方法</h2>
+        <ul>
+            <li><strong>アプリ設定(ローカルデータ)</strong>: アプリを削除すると、端末に保存されたすべての設定データが自動的に削除されます。</li>
+            <li><strong>広告データ</strong>: Googleのデータ保有ポリシーに従って処理されます。ユーザーはATT設定を変更することで、今後のデータ収集を停止できます。</li>
+            <li><strong>Firebase Analyticsデータ</strong>: Firebaseの既定保存期間(最大14ヶ月)経過後に自動削除されます。アプリを削除すると今後のデータ収集は停止しますが、既に収集されたデータの即時削除は下記お問い合わせメールよりリクエストいただけます。</li>
+            <li><strong>Firebase Crashlyticsデータ</strong>: クラッシュ発生日から90日経過後に自動削除されます。即時削除のリクエストは下記お問い合わせメールよりお寄せください。</li>
+        </ul>
+
+        <h2>9. 個人情報保護責任者</h2>
+        <table>
+            <tr>
+                <th>項目</th>
+                <th>内容</th>
+            </tr>
+            <tr>
+                <td>担当</td>
+                <td>個人情報保護担当</td>
+            </tr>
+            <tr>
+                <td>メール</td>
+                <td><a href="mailto:contact@pocketlabs.kr">contact@pocketlabs.kr</a></td>
+            </tr>
+        </table>
+
+        <h2>10. 安全性確保のための措置</h2>
+        <p>当社は個人情報の安全性を確保するため、以下の措置を講じています。</p>
+        <ul>
+            <li>独自のサーバーを運営していないため、サーバーへのハッキング・情報漏洩のリスクがありません。</li>
+            <li>すべてのアプリ設定は端末内のローカルにのみ保存されます。</li>
+            <li>広告ネットワークおよびFirebaseとの通信はHTTPS暗号化を介して行われます。</li>
+            <li>Firebase AnalyticsおよびCrashlyticsは仮名識別子のみを使用し、氏名・メールアドレス・電話番号など直接識別できる情報は収集しません。</li>
+        </ul>
+
+        <h2>11. 14歳未満の児童の個人情報</h2>
+        <p>本アプリは、14歳未満の児童の個人情報を意図的に収集することはありません。万一、14歳未満の児童の個人情報が収集されたことが判明した場合は、遅滞なく当該情報を削除します。</p>
+
+        <h2>12. プレミアム購入時の変更点</h2>
+        <p>プレミアムを購入されるとアプリ内の広告が削除されます。これに伴い、AdMob SDKによる広告データの収集(IDFA、デバイス情報、アプリ利用データ)は停止します。</p>
+        <p>ただし、Firebase Analytics(アプリ利用統計)およびFirebase Crashlytics(クラッシュレポート)は、アプリの安定性および品質改善を目的として、プレミアムユーザーに対しても同様に動作します。</p>
+
+        <h2>13. 同意の撤回方法</h2>
+        <p>広告トラッキングへの同意は、以下の手順でいつでも変更できます。</p>
+        <div class="note">
+            <strong>iOS</strong>: 設定 &gt; プライバシーとセキュリティ &gt; トラッキング &gt; ListenTimerのトグルをオフ
+        </div>
+        <p>トラッキングを無効化すると、IDFAに基づくパーソナライズ広告データの収集が停止します。</p>
+        <p>Firebase AnalyticsおよびCrashlyticsのデータ収集はATT設定とは独立して動作し、現在のところアプリ内に個別の無効化オプションは提供されておりません。データ収集を完全に停止したい場合はアプリを削除いただけます。既に収集されたデータの即時削除は、下記<strong>9. 個人情報保護責任者</strong>欄のメールアドレスよりリクエストいただけます。</p>
+
+        <h2>14. プライバシーポリシーの変更</h2>
+        <p>本プライバシーポリシーが変更された場合、変更内容を本ページに掲載し、施行日を更新します。重要な変更がある場合は、アプリ内のお知らせを通じてご案内することがあります。</p>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 PocketLabs. All rights reserved.<br>
+        <a href="mailto:contact@pocketlabs.kr" style="color: #777; text-decoration: none;">contact@pocketlabs.kr</a></p>
+    </footer>
+</body>
+</html>
