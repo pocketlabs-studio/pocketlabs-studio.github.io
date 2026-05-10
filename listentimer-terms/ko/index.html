@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이용약관 — ListenTimer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0A0A0A;
+            --surface: #141414;
+            --text: #EAEAEA;
+            --text-dim: #777;
+            --accent: #4F8FFF;
+            --border: #222;
+            --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 60px 24px 80px;
+        }
+        .back-link {
+            display: inline-block;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.88em;
+            margin-bottom: 32px;
+            transition: opacity 0.2s;
+        }
+        .back-link:hover { opacity: 0.7; }
+        .lang-switch {
+            float: right;
+            color: var(--text-dim);
+            font-size: 0.85em;
+        }
+        .lang-switch a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .lang-switch a:hover { text-decoration: underline; }
+        h1 {
+            font-size: 1.8em;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+        .effective-date {
+            color: var(--text-dim);
+            font-size: 0.88em;
+            margin-bottom: 48px;
+        }
+        h2 {
+            font-size: 1.15em;
+            font-weight: 600;
+            margin-top: 40px;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        p, li {
+            font-size: 0.95em;
+            color: #ccc;
+        }
+        ol, ul {
+            padding-left: 20px;
+            margin-bottom: 12px;
+        }
+        li { margin-bottom: 6px; }
+        a { color: var(--accent); }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 20px;
+            font-size: 0.9em;
+        }
+        th, td {
+            text-align: left;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            color: #ccc;
+        }
+        th {
+            background: var(--surface);
+            color: var(--text);
+            font-weight: 600;
+        }
+        .note {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 0.9em;
+            color: #bbb;
+        }
+        footer {
+            text-align: center;
+            padding: 40px 24px;
+            border-top: 1px solid var(--border);
+            margin-top: 60px;
+        }
+        footer p {
+            font-size: 0.82em;
+            color: var(--text-dim);
+        }
+        @media (max-width: 600px) {
+            .container { padding: 40px 16px 60px; }
+            h1 { font-size: 1.5em; }
+            table { font-size: 0.82em; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <span class="lang-switch"><span lang="ko" aria-current="page">한국어</span> · <a href="../en/" hreflang="en" lang="en">English</a> · <a href="../ja/" hreflang="ja" lang="ja">日本語</a></span>
+        </div>
+
+        <h1>듣는타이머(ListenTimer) 이용약관</h1>
+        <p class="effective-date">시행일: 2026년 5월 10일</p>
+
+        <p>본 약관은 포켓랩스(Pocket Labs, 이하 "회사")가 제공하는 모바일 애플리케이션 "듣는타이머(ListenTimer)"(이하 "서비스")의 이용에 관한 조건, 회사와 이용자의 권리·의무 및 책임 사항을 규정함을 목적으로 합니다.</p>
+
+        <h2>제1조 (목적)</h2>
+        <p>본 약관은 회사가 제공하는 서비스를 이용함에 있어 회사와 이용자(이하 "이용자")간의 권리, 의무 및 책임 사항, 서비스 이용 조건 및 절차, 기타 필요한 사항을 규정함을 목적으로 합니다.</p>
+
+        <h2>제2조 (용어의 정의)</h2>
+        <p>본 약관에서 사용하는 용어의 정의는 다음과 같습니다.</p>
+        <ol>
+            <li>"서비스"란 회사가 모바일 애플리케이션 형태로 제공하는 청각 기반 카운트다운 타이머 및 이에 부수하는 일체의 기능을 말합니다.</li>
+            <li>"이용자"란 본 약관에 따라 서비스를 이용하는 모든 사람을 말합니다.</li>
+            <li>"유료 서비스"란 이용자가 회사에 대가를 지급하여 이용할 수 있는 서비스를 말하며, 본 서비스에서는 "프리미엄 인앱결제"가 이에 해당합니다.</li>
+            <li>"인앱결제(IAP)"란 Apple App Store 또는 Google Play의 결제 시스템을 통하여 이루어지는 디지털 콘텐츠 결제를 말합니다.</li>
+            <li>"프리미엄 콘텐츠"란 인앱결제를 통해 해금되는 프리미엄 캐릭터 음성, Apple Watch / Wear OS 연동, 광고 제거 등의 기능을 통칭합니다.</li>
+        </ol>
+
+        <h2>제3조 (약관의 효력 및 변경)</h2>
+        <ol>
+            <li>본 약관은 서비스 화면에 게시하거나 회사가 운영하는 웹사이트에 공지함으로써 효력을 발생합니다.</li>
+            <li>회사는 「약관의 규제에 관한 법률」, 「정보통신망 이용촉진 및 정보보호 등에 관한 법률」 등 관련 법령을 위반하지 않는 범위에서 본 약관을 개정할 수 있습니다.</li>
+            <li>회사가 약관을 개정할 경우, 적용일자 및 개정 사유를 명시하여 적용일자 7일 전부터 서비스 내 또는 회사 웹사이트에 공지합니다. 단, 이용자에게 불리하게 약관 내용을 변경하는 경우에는 적용일자 30일 전부터 공지합니다.</li>
+            <li>이용자는 변경된 약관에 동의하지 않을 경우 서비스 이용을 중단하고 앱을 삭제함으로써 이용계약을 해지할 수 있습니다. 변경된 약관 적용일 이후에도 서비스를 계속 이용하는 경우 변경된 약관에 동의한 것으로 봅니다.</li>
+        </ol>
+
+        <h2>제4조 (서비스의 제공 및 변경)</h2>
+        <ol>
+            <li>회사는 다음과 같은 서비스를 제공합니다.
+                <ul>
+                    <li>카운트다운 타이머 기능 (프리셋, 음성 가이드, 추임새 포함)</li>
+                    <li>음성 캐릭터 선택 기능 (기본 캐릭터 무료 제공)</li>
+                    <li>햅틱 피드백</li>
+                    <li>프리미엄 캐릭터 음성, Apple Watch / Wear OS 연동, 광고 제거 (유료)</li>
+                    <li>기타 회사가 추가 개발하거나 제휴를 통해 제공하는 일체의 서비스</li>
+                </ul>
+            </li>
+            <li>회사는 서비스의 품질 향상, 운영상 또는 기술상의 필요에 따라 제공 중인 서비스의 전부 또는 일부를 변경할 수 있습니다. 이 경우 변경 내용 및 적용일자를 사전에 공지합니다.</li>
+            <li>회사는 다음 각 호의 사유가 발생한 경우 서비스의 제공을 일시 중단할 수 있습니다.
+                <ul>
+                    <li>서비스용 설비의 보수 등 공사로 인한 부득이한 경우</li>
+                    <li>이용자가 회사의 영업 활동을 방해하는 경우</li>
+                    <li>정전, 제반 설비의 장애 또는 이용량의 폭주 등으로 정상적인 서비스 이용에 지장이 있는 경우</li>
+                    <li>천재지변, 국가비상사태 등 불가항력적 사유가 있는 경우</li>
+                </ul>
+            </li>
+        </ol>
+
+        <h2>제5조 (서비스 이용계약)</h2>
+        <ol>
+            <li>서비스 이용계약은 이용자가 앱을 설치하고 본 약관 및 개인정보처리방침에 동의함으로써 성립합니다.</li>
+            <li>본 서비스는 별도의 회원가입 없이 이용 가능하며, 인앱결제 시에도 회사는 별도의 계정 정보를 보관하지 않습니다.</li>
+        </ol>
+
+        <h2>제6조 (이용자의 의무)</h2>
+        <p>이용자는 다음 각 호의 행위를 하여서는 안 됩니다.</p>
+        <ol>
+            <li>서비스의 운영을 고의로 방해하는 행위</li>
+            <li>회사의 동의 없이 서비스 또는 그 구성요소(음성 파일, 이미지, 코드 등)를 복제, 배포, 양도, 재가공, 리버스 엔지니어링하는 행위</li>
+            <li>회사가 제공하는 서비스를 이용해 얻은 정보를 회사의 사전 승낙 없이 복제, 출판, 방송 등에 사용하거나 제3자에게 제공하는 행위</li>
+            <li>회사 및 제3자의 저작권 등 지적재산권을 침해하는 행위</li>
+            <li>부정한 결제 수단을 이용하여 서비스를 결제하는 행위</li>
+            <li>기타 관련 법령에 위반되는 행위</li>
+        </ol>
+
+        <h2>제7조 (유료 서비스 — 인앱결제)</h2>
+        <ol>
+            <li>회사는 서비스 내에서 프리미엄 콘텐츠를 인앱결제 형태로 제공합니다.</li>
+            <li>모든 결제는 Apple App Store 또는 Google Play의 결제 시스템을 통해 이루어지며, 결제 처리·영수증 발행·환불은 각 플랫폼의 정책에 따릅니다.</li>
+            <li>인앱결제 가격, 결제 통화, 자동갱신 여부 등 거래 조건은 결제 화면에서 별도로 고지되며, 이용자는 해당 내용을 확인한 후 결제를 진행합니다.</li>
+            <li>본 서비스의 프리미엄 인앱결제는 <strong>1회성 결제</strong> 방식이며, 자동 구독 갱신은 적용되지 않습니다.</li>
+            <li>결제 완료 후 영수증 검증은 각 플랫폼 사업자가 수행하며, 검증 완료 시점에 프리미엄 콘텐츠가 해금됩니다.</li>
+        </ol>
+
+        <h2>제8조 (청약철회 및 환불)</h2>
+        <ol>
+            <li>「전자상거래 등에서의 소비자보호에 관한 법률」 제17조에 따라, 이용자는 결제일로부터 7일 이내에 청약철회를 요청할 수 있습니다.</li>
+            <li>다만, 같은 법 제17조 제2항 제5호 및 동법 시행령에 따라 다음의 경우에는 청약철회가 제한될 수 있습니다.
+                <ul>
+                    <li>디지털 콘텐츠를 다운로드하여 사용하기 시작한 경우</li>
+                    <li>프리미엄 콘텐츠의 효용 가치가 즉시 발생하여 회복할 수 없는 경우</li>
+                </ul>
+            </li>
+            <li>청약철회가 가능한 경우, 이용자는 다음 경로 중 하나로 환불을 요청할 수 있습니다.
+                <ul>
+                    <li><strong>iOS</strong>: Apple의 <a href="https://reportaproblem.apple.com" target="_blank" rel="noopener noreferrer">환불 요청 페이지(reportaproblem.apple.com)</a>에서 직접 신청</li>
+                    <li><strong>Android</strong>: Google Play의 환불 요청 절차에 따라 신청</li>
+                    <li>또는 회사의 고객 지원 이메일(<a href="mailto:contact@pocketlabs.kr">contact@pocketlabs.kr</a>)로 결제 내역(영수증·주문번호)을 첨부하여 요청</li>
+                </ul>
+            </li>
+            <li>환불 처리는 각 플랫폼 사업자의 환불 절차에 따라 진행되며, 회사는 환불 가능 여부 확인 및 플랫폼 사업자와의 협의에 협조합니다.</li>
+            <li>결제 후 회사의 귀책사유(서비스 결함, 약관 위반 등)로 콘텐츠를 정상적으로 이용할 수 없는 경우, 이용자는 결제일로부터 합리적인 기간 내에 환불을 요청할 수 있으며 회사는 이를 처리합니다.</li>
+        </ol>
+
+        <h2>제9조 (서비스 이용제한 및 해지)</h2>
+        <ol>
+            <li>회사는 이용자가 본 약관 제6조의 의무를 위반하거나 다음 각 호에 해당하는 경우, 사전 통지 없이 서비스 이용을 제한 또는 해지할 수 있습니다.
+                <ul>
+                    <li>부정 결제, 환불 악용 등 거래 질서를 해치는 행위</li>
+                    <li>서비스의 안정적 운영을 방해하는 행위</li>
+                    <li>관련 법령 위반 행위</li>
+                </ul>
+            </li>
+            <li>이용자는 언제든지 앱을 삭제함으로써 서비스 이용계약을 해지할 수 있습니다. 단, 이미 결제된 인앱결제는 본 약관 제8조에 따라 처리됩니다.</li>
+        </ol>
+
+        <h2>제10조 (지적재산권)</h2>
+        <ol>
+            <li>서비스 및 서비스 내 모든 콘텐츠(음성 파일, 캐릭터, 이미지, 디자인, 코드 등)에 대한 저작권 및 기타 지적재산권은 회사 또는 정당한 권리자에게 있습니다.</li>
+            <li>이용자는 서비스를 이용함으로써 얻은 정보 중 회사 또는 정당한 권리자에게 지적재산권이 귀속된 정보를 회사의 사전 승낙 없이 복제·송신·출판·배포·방송 기타 방법에 의하여 영리적 목적으로 이용하거나 제3자에게 이용하게 하여서는 안 됩니다.</li>
+        </ol>
+
+        <h2>제11조 (개인정보 보호)</h2>
+        <ol>
+            <li>회사는 이용자의 개인정보를 보호하기 위하여 「개인정보 보호법」, 「정보통신망 이용촉진 및 정보보호 등에 관한 법률」 등 관련 법령을 준수합니다.</li>
+            <li>개인정보의 수집·이용·제공 및 보호에 관한 사항은 별도의 <a href="https://pocketlabs.kr/listentimer-privacy/ko">개인정보처리방침</a>에서 정합니다.</li>
+        </ol>
+
+        <h2>제12조 (광고)</h2>
+        <ol>
+            <li>회사는 서비스 운영을 위하여 서비스 내 광고를 게재할 수 있습니다. 본 서비스는 Google AdMob을 광고 네트워크로 사용합니다.</li>
+            <li>광고 식별자(IDFA, AAID) 사용 동의는 운영체제(iOS/Android)의 추적 권한 다이얼로그를 통해 이용자가 직접 결정합니다.</li>
+            <li>이용자가 프리미엄 인앱결제를 통해 광고 제거 기능을 이용하는 경우, 광고가 표시되지 않습니다.</li>
+        </ol>
+
+        <h2>제13조 (Apple Watch / Wear OS 연동)</h2>
+        <ol>
+            <li>프리미엄 콘텐츠 중 하나인 Apple Watch / Wear OS 연동 기능은 페어링된 스마트워치를 보조 컨트롤러로 사용할 수 있게 합니다.</li>
+            <li>본 기능은 iPhone / Android 폰의 타이머 엔진과 오디오 시스템에 의존하며, 워치 단독 음성 재생은 지원하지 않습니다.</li>
+            <li>페어링 상태, OS 버전, 통신 환경에 따라 연결이 일시적으로 제한될 수 있으며 이는 회사의 귀책 사유에 해당하지 않습니다.</li>
+        </ol>
+
+        <h2>제14조 (면책 조항)</h2>
+        <ol>
+            <li>회사는 천재지변, 정전, 제반 설비의 장애, 이용량 폭주 등 불가항력적 사유로 서비스를 제공할 수 없는 경우 책임을 지지 않습니다.</li>
+            <li>회사는 이용자의 귀책 사유로 인한 서비스 이용 장애에 대하여 책임을 지지 않습니다.</li>
+            <li>회사는 이용자가 서비스를 통해 얻은 정보로 인해 발생한 손해에 대하여 책임을 지지 않습니다.</li>
+            <li>회사는 이용자 간 또는 이용자와 제3자 간 발생한 분쟁에 개입할 의무가 없으며, 이로 인한 손해를 배상할 책임이 없습니다.</li>
+            <li>회사가 제공하는 서비스는 의료·운동·재활 등 전문 영역의 결과를 보장하지 않으며, 이용자가 자신의 상태에 맞게 사용해야 합니다.</li>
+        </ol>
+
+        <h2>제15조 (분쟁 해결 및 준거법)</h2>
+        <ol>
+            <li>본 약관과 관련된 분쟁에 대해서는 대한민국 법령을 준거법으로 합니다.</li>
+            <li>회사와 이용자 간 발생한 분쟁의 해결을 위해 회사는 성실히 협의에 임합니다.</li>
+            <li>협의를 통해 해결되지 않는 경우, 「민사소송법」상의 관할 법원을 제1심 관할 법원으로 합니다.</li>
+            <li>「전자상거래 등에서의 소비자보호에 관한 법률」 제33조에 따른 소비자분쟁조정위원회의 조정을 신청할 수 있습니다.</li>
+        </ol>
+
+        <h2>사업자 정보</h2>
+        <table>
+            <tr>
+                <th>항목</th>
+                <th>내용</th>
+            </tr>
+            <tr>
+                <td>상호</td>
+                <td>포켓랩스 (PocketLabs)</td>
+            </tr>
+            <tr>
+                <td>대표자</td>
+                <td>배준범</td>
+            </tr>
+            <tr>
+                <td>사업자등록번호</td>
+                <td>236-23-02232</td>
+            </tr>
+            <tr>
+                <td>통신판매업 신고번호</td>
+                <td>제 2026-용인수지-1452 호</td>
+            </tr>
+            <tr>
+                <td>사업장 주소</td>
+                <td>경기도 용인시 수지구 용구대로2790번길 7, 302-S31호 (죽전동, 코워크시티 용인수지점)</td>
+            </tr>
+            <tr>
+                <td>고객 지원 이메일</td>
+                <td><a href="mailto:contact@pocketlabs.kr">contact@pocketlabs.kr</a></td>
+            </tr>
+            <tr>
+                <td>개인정보 보호책임자</td>
+                <td>개인정보보호 담당 (<a href="mailto:contact@pocketlabs.kr">contact@pocketlabs.kr</a>)</td>
+            </tr>
+        </table>
+
+        <h2>부칙</h2>
+        <p>본 약관은 2026년 5월 10일부터 시행됩니다.</p>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 PocketLabs. All rights reserved.<br>
+        <a href="mailto:contact@pocketlabs.kr" style="color: #777; text-decoration: none;">contact@pocketlabs.kr</a></p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>利用規約 — ListenTimer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0A0A0A;
+            --surface: #141414;
+            --text: #EAEAEA;
+            --text-dim: #777;
+            --accent: #4F8FFF;
+            --border: #222;
+            --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 60px 24px 80px;
+        }
+        .back-link {
+            display: inline-block;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.88em;
+            margin-bottom: 32px;
+            transition: opacity 0.2s;
+        }
+        .back-link:hover { opacity: 0.7; }
+        .lang-switch {
+            float: right;
+            color: var(--text-dim);
+            font-size: 0.85em;
+        }
+        .lang-switch a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .lang-switch a:hover { text-decoration: underline; }
+        h1 {
+            font-size: 1.8em;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+        .effective-date {
+            color: var(--text-dim);
+            font-size: 0.88em;
+            margin-bottom: 48px;
+        }
+        h2 {
+            font-size: 1.15em;
+            font-weight: 600;
+            margin-top: 40px;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        p, li {
+            font-size: 0.95em;
+            color: #ccc;
+        }
+        ol, ul {
+            padding-left: 20px;
+            margin-bottom: 12px;
+        }
+        li { margin-bottom: 6px; }
+        a { color: var(--accent); }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 20px;
+            font-size: 0.9em;
+        }
+        th, td {
+            text-align: left;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            color: #ccc;
+        }
+        th {
+            background: var(--surface);
+            color: var(--text);
+            font-weight: 600;
+        }
+        .note {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 0.9em;
+            color: #bbb;
+        }
+        footer {
+            text-align: center;
+            padding: 40px 24px;
+            border-top: 1px solid var(--border);
+            margin-top: 60px;
+        }
+        footer p {
+            font-size: 0.82em;
+            color: var(--text-dim);
+        }
+        @media (max-width: 600px) {
+            .container { padding: 40px 16px 60px; }
+            h1 { font-size: 1.5em; }
+            table { font-size: 0.82em; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <span class="lang-switch"><a href="../ko/" hreflang="ko" lang="ko">한국어</a> · <a href="../en/" hreflang="en" lang="en">English</a> · <span lang="ja" aria-current="page">日本語</span></span>
+        </div>
+
+        <h1>聴くタイマー(ListenTimer) 利用規約</h1>
+        <p class="effective-date">施行日: 2026年5月10日</p>
+
+        <p>本規約は、ポケットラボ(Pocket Labs、以下「当社」)が提供するモバイルアプリケーション「聴くタイマー(ListenTimer)」(以下「本サービス」)の利用条件、当社と利用者の権利・義務および責任事項を定めることを目的とします。</p>
+
+        <h2>第1条 (目的)</h2>
+        <p>本規約は、当社が提供する本サービスを利用するにあたり、当社と利用者(以下「利用者」)の権利・義務・責任事項、サービス利用条件および手続、その他必要な事項を定めることを目的とします。</p>
+
+        <h2>第2条 (用語の定義)</h2>
+        <p>本規約で使用する用語の定義は次のとおりです。</p>
+        <ol>
+            <li>「本サービス」とは、当社がモバイルアプリケーションの形態で提供する聴覚ベースのカウントダウンタイマーおよびこれに付随する一切の機能をいいます。</li>
+            <li>「利用者」とは、本規約に従って本サービスを利用するすべての人をいいます。</li>
+            <li>「有料サービス」とは、当社に対価を支払うことによって利用できるサービスをいい、本サービスにおける「プレミアムアプリ内課金」がこれに該当します。</li>
+            <li>「アプリ内課金(IAP)」とは、Apple App Store または Google Play の決済システムを通じて行われるデジタルコンテンツの決済をいいます。</li>
+            <li>「プレミアムコンテンツ」とは、アプリ内課金により解放されるプレミアムキャラクター音声、Apple Watch / Wear OS 連携、広告除去などの機能を総称します。</li>
+        </ol>
+
+        <h2>第3条 (規約の効力および変更)</h2>
+        <ol>
+            <li>本規約は、本サービス画面に掲示するか、当社が運営するウェブサイトに公示することにより効力を生じます。</li>
+            <li>当社は、「約款の規制に関する法律」、「情報通信網利用促進および情報保護等に関する法律」その他関連法令に違反しない範囲で本規約を改定することができます。</li>
+            <li>当社が規約を改定する場合、適用日および改定理由を明示し、適用日の7日前から本サービス内または当社ウェブサイトに公示します。ただし、利用者に不利な内容に変更する場合は、適用日の30日前から公示します。</li>
+            <li>利用者は、変更後の規約に同意しない場合、本サービスの利用を中止しアプリを削除することにより、利用契約を解除することができます。変更後の規約適用日以降も本サービスを継続して利用する場合は、変更後の規約に同意したものとみなします。</li>
+        </ol>
+
+        <h2>第4条 (サービスの提供および変更)</h2>
+        <ol>
+            <li>当社は、次の各号のサービスを提供します。
+                <ul>
+                    <li>カウントダウンタイマー機能(プリセット、音声ガイド、合いの手を含む)</li>
+                    <li>音声キャラクター選択機能(基本キャラクター無料提供)</li>
+                    <li>触覚フィードバック</li>
+                    <li>プレミアムキャラクター音声、Apple Watch / Wear OS 連携、広告除去(有料)</li>
+                    <li>その他、当社が追加開発または提携を通じて提供する一切のサービス</li>
+                </ul>
+            </li>
+            <li>当社は、サービスの品質向上、運営上または技術上の必要性に応じて、提供中のサービスの全部または一部を変更することができます。この場合、変更内容および適用日を事前に告知します。</li>
+            <li>当社は、次の各号の事由が生じた場合、サービスの提供を一時的に中断することができます。
+                <ul>
+                    <li>サービス用設備の保守等の工事による不可抗力の場合</li>
+                    <li>利用者が当社の営業活動を妨害する場合</li>
+                    <li>停電、設備の障害または利用量の急増などにより、正常なサービスの利用に支障がある場合</li>
+                    <li>天災地変、国家非常事態などの不可抗力的な事由がある場合</li>
+                </ul>
+            </li>
+        </ol>
+
+        <h2>第5条 (サービス利用契約)</h2>
+        <ol>
+            <li>本サービスの利用契約は、利用者がアプリをインストールし、本規約およびプライバシーポリシーに同意することにより成立します。</li>
+            <li>本サービスは別途の会員登録なしで利用可能であり、アプリ内課金時にも当社は別途のアカウント情報を保管しません。</li>
+        </ol>
+
+        <h2>第6条 (利用者の義務)</h2>
+        <p>利用者は、次の各号の行為を行ってはなりません。</p>
+        <ol>
+            <li>本サービスの運営を故意に妨害する行為</li>
+            <li>当社の同意なく本サービスまたはその構成要素(音声ファイル、画像、コード等)を複製、配布、譲渡、再加工、リバースエンジニアリングする行為</li>
+            <li>当社が提供する本サービスを利用して得た情報を当社の事前承諾なく複製、出版、放送等に使用したり、第三者に提供する行為</li>
+            <li>当社および第三者の著作権等の知的財産権を侵害する行為</li>
+            <li>不正な決済手段を利用してサービスを決済する行為</li>
+            <li>その他関連法令に違反する行為</li>
+        </ol>
+
+        <h2>第7条 (有料サービス — アプリ内課金)</h2>
+        <ol>
+            <li>当社は、本サービス内でプレミアムコンテンツをアプリ内課金の形態で提供します。</li>
+            <li>すべての決済は Apple App Store または Google Play の決済システムを通じて行われ、決済処理・領収書発行・払い戻しは各プラットフォームのポリシーに従います。</li>
+            <li>アプリ内課金の価格、決済通貨、自動更新の有無等の取引条件は決済画面で別途告知され、利用者は当該内容を確認したうえで決済を進めます。</li>
+            <li>本サービスのプレミアムアプリ内課金は <strong>1回限りの決済</strong> 方式であり、サブスクリプションの自動更新は適用されません。</li>
+            <li>決済完了後の領収書検証は各プラットフォーム事業者が実施し、検証完了時点でプレミアムコンテンツが解放されます。</li>
+        </ol>
+
+        <h2>第8条 (申込みの撤回および払い戻し)</h2>
+        <ol>
+            <li>大韓民国「電子商取引等における消費者保護に関する法律」第17条に基づき、利用者は決済日から7日以内に申込みの撤回を要求することができます。</li>
+            <li>ただし、同法第17条第2項第5号および同法施行令に基づき、次の場合には申込み撤回が制限されることがあります。
+                <ul>
+                    <li>デジタルコンテンツをダウンロードして使用を開始した場合</li>
+                    <li>プレミアムコンテンツの効用価値が直ちに発生し、回復不能となった場合</li>
+                </ul>
+            </li>
+            <li>申込み撤回が可能な場合、利用者は次のいずれかの経路を通じて払い戻しを要求することができます。
+                <ul>
+                    <li><strong>iOS</strong>: Apple の<a href="https://reportaproblem.apple.com" target="_blank" rel="noopener noreferrer">払い戻しリクエストページ(reportaproblem.apple.com)</a>から直接申請</li>
+                    <li><strong>Android</strong>: Google Play の払い戻しリクエスト手続きに従って申請</li>
+                    <li>または、当社のカスタマーサポートメール(<a href="mailto:contact@pocketlabs.kr">contact@pocketlabs.kr</a>)に決済明細(領収書・注文番号)を添付してリクエスト</li>
+                </ul>
+            </li>
+            <li>払い戻し処理は各プラットフォーム事業者の払い戻し手続きに従って進行され、当社は払い戻し可否確認およびプラットフォーム事業者との協議に協力します。</li>
+            <li>決済後、当社の帰責事由(サービス瑕疵、規約違反など)によりコンテンツを正常に利用できない場合、利用者は決済日から合理的な期間内に払い戻しを要求でき、当社はこれに対応します。</li>
+        </ol>
+
+        <h2>第9条 (サービス利用制限および解約)</h2>
+        <ol>
+            <li>当社は、利用者が本規約第6条の義務に違反するか、次の各号に該当する場合、事前通知なくサービスの利用を制限または解約することができます。
+                <ul>
+                    <li>不正決済、払い戻しの濫用など取引秩序を害する行為</li>
+                    <li>本サービスの安定的運営を妨害する行為</li>
+                    <li>関連法令の違反行為</li>
+                </ul>
+            </li>
+            <li>利用者は、いつでもアプリを削除することによりサービス利用契約を解約することができます。ただし、既に決済されたアプリ内課金については本規約第8条に従って処理されます。</li>
+        </ol>
+
+        <h2>第10条 (知的財産権)</h2>
+        <ol>
+            <li>本サービスおよびサービス内のすべてのコンテンツ(音声ファイル、キャラクター、画像、デザイン、コードなど)に関する著作権およびその他の知的財産権は、当社または正当な権利者に帰属します。</li>
+            <li>利用者は、本サービスを利用することにより得た情報のうち、当社または正当な権利者に知的財産権が帰属する情報を、当社の事前承諾なく複製、送信、出版、配布、放送その他の方法によって営利目的で利用したり、第三者に利用させてはなりません。</li>
+        </ol>
+
+        <h2>第11条 (個人情報の保護)</h2>
+        <ol>
+            <li>当社は、利用者の個人情報を保護するため、「個人情報保護法」、「情報通信網利用促進および情報保護等に関する法律」その他関連法令を遵守します。</li>
+            <li>個人情報の収集・利用・提供および保護に関する事項は、別途<a href="https://pocketlabs.kr/listentimer-privacy/ja">プライバシーポリシー</a>で定めます。</li>
+        </ol>
+
+        <h2>第12条 (広告)</h2>
+        <ol>
+            <li>当社は、サービス運営のためサービス内に広告を掲載することがあります。本サービスは Google AdMob を広告ネットワークとして使用します。</li>
+            <li>広告識別子(IDFA、AAID)の使用同意は、オペレーティングシステム(iOS/Android)の追跡権限ダイアログを通じて利用者が直接決定します。</li>
+            <li>利用者がプレミアムアプリ内課金により広告除去機能を利用する場合、広告は表示されません。</li>
+        </ol>
+
+        <h2>第13条 (Apple Watch / Wear OS 連携)</h2>
+        <ol>
+            <li>プレミアムコンテンツの一つである Apple Watch / Wear OS 連携機能は、ペアリングされたスマートウォッチを補助コントローラーとして使用できるようにするものです。</li>
+            <li>本機能は iPhone / Android スマートフォンのタイマーエンジンおよびオーディオシステムに依存し、ウォッチ単独での音声再生はサポートしません。</li>
+            <li>ペアリング状態、OS バージョン、通信環境により接続が一時的に制限されることがありますが、これは当社の帰責事由には該当しません。</li>
+        </ol>
+
+        <h2>第14条 (免責条項)</h2>
+        <ol>
+            <li>当社は、天災地変、停電、設備の障害、利用量の急増等の不可抗力的事由によりサービスを提供できない場合、責任を負いません。</li>
+            <li>当社は、利用者の帰責事由によるサービス利用障害について責任を負いません。</li>
+            <li>当社は、利用者がサービスを通じて得た情報により発生した損害について責任を負いません。</li>
+            <li>当社は、利用者間または利用者と第三者間で発生した紛争に介入する義務はなく、これによる損害を賠償する責任もありません。</li>
+            <li>当社が提供する本サービスは、医療・運動・リハビリ等の専門領域の結果を保証するものではなく、利用者は自身の状態に応じて使用する必要があります。</li>
+        </ol>
+
+        <h2>第15条 (紛争解決および準拠法)</h2>
+        <ol>
+            <li>本規約に関連する紛争については、大韓民国の法令を準拠法とします。</li>
+            <li>当社と利用者間で発生した紛争の解決のため、当社は誠実に協議に応じます。</li>
+            <li>協議により解決されない場合は、「民事訴訟法」上の管轄裁判所を第一審の管轄裁判所とします。</li>
+            <li>「電子商取引等における消費者保護に関する法律」第33条に基づく消費者紛争調停委員会の調停を申請することができます。</li>
+        </ol>
+
+        <h2>事業者情報</h2>
+        <table>
+            <tr>
+                <th>項目</th>
+                <th>内容</th>
+            </tr>
+            <tr>
+                <td>商号</td>
+                <td>ポケットラボ (PocketLabs / 포켓랩스)</td>
+            </tr>
+            <tr>
+                <td>代表者</td>
+                <td>ベ・ジュンボム (Bae Jun Beom)</td>
+            </tr>
+            <tr>
+                <td>事業者登録番号</td>
+                <td>236-23-02232</td>
+            </tr>
+            <tr>
+                <td>通信販売業申告番号</td>
+                <td>第2026-龍仁水枝-1452号</td>
+            </tr>
+            <tr>
+                <td>事業所住所</td>
+                <td>大韓民国 京畿道 龍仁市 水枝区 龍駒大路2790番ギル 7, 302-S31号 (竹田洞、コワークシティ龍仁水枝店)</td>
+            </tr>
+            <tr>
+                <td>カスタマーサポートメール</td>
+                <td><a href="mailto:contact@pocketlabs.kr">contact@pocketlabs.kr</a></td>
+            </tr>
+            <tr>
+                <td>個人情報保護責任者</td>
+                <td>個人情報保護担当 (<a href="mailto:contact@pocketlabs.kr">contact@pocketlabs.kr</a>)</td>
+            </tr>
+        </table>
+
+        <h2>附則</h2>
+        <p>本規約は2026年5月10日から施行されます。</p>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 PocketLabs. All rights reserved.<br>
+        <a href="mailto:contact@pocketlabs.kr" style="color: #777; text-decoration: none;">contact@pocketlabs.kr</a></p>
+    </footer>
+</body>
+</html>
