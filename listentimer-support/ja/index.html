@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>サポート — ListenTimer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0A0A0A;
+            --surface: #141414;
+            --text: #EAEAEA;
+            --text-dim: #777;
+            --accent: #4F8FFF;
+            --border: #222;
+            --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 60px 24px 80px;
+        }
+        .lang-switch {
+            float: right;
+            color: var(--text-dim);
+            font-size: 0.85em;
+        }
+        .lang-switch a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .lang-switch a:hover { text-decoration: underline; }
+        h1 {
+            font-size: 1.8em;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+        .lead {
+            color: #ccc;
+            font-size: 0.95em;
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+        h2 {
+            font-size: 1.15em;
+            font-weight: 600;
+            margin-top: 40px;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        h3 {
+            font-size: 1em;
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 4px;
+            color: var(--text);
+        }
+        p, li {
+            font-size: 0.95em;
+            color: #ccc;
+        }
+        ol, ul {
+            padding-left: 20px;
+            margin-bottom: 12px;
+        }
+        li { margin-bottom: 6px; }
+        a { color: var(--accent); }
+        .note {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 0.9em;
+            color: #bbb;
+        }
+        footer {
+            text-align: center;
+            padding: 40px 24px;
+            border-top: 1px solid var(--border);
+            margin-top: 60px;
+        }
+        footer p {
+            font-size: 0.82em;
+            color: var(--text-dim);
+        }
+        @media (max-width: 600px) {
+            .container { padding: 40px 16px 60px; }
+            h1 { font-size: 1.5em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <span class="lang-switch"><a href="../ko/" hreflang="ko" lang="ko">한국어</a> · <a href="../en/" hreflang="en" lang="en">English</a> · <span lang="ja" aria-current="page">日本語</span></span>
+        </div>
+
+        <h1>リッスンタイマー(ListenTimer) サポート</h1>
+        <p class="lead">トレーニング中に画面を見られない時、AI音声が毎秒の数字を読み上げるタイマーアプリ <strong>リッスンタイマー</strong> をご利用いただきありがとうございます。</p>
+
+        <h2>お問い合わせ</h2>
+        <p>サポートが必要な場合やご意見は、下記までご連絡ください。</p>
+        <ul>
+            <li>メール: <a href="mailto:contact@pocketlabs.kr">contact@pocketlabs.kr</a></li>
+            <li>アプリ内: 設定(⚙️) → アプリ情報 → お問い合わせ</li>
+        </ul>
+        <p>できる限り早く（営業日ベースで2〜3日以内）ご返信いたします。</p>
+
+        <h2>よくある質問</h2>
+
+        <h3>Q. 音声が聞こえません。</h3>
+        <p>端末側面の消音（着信/サイレント）スイッチがオフになっているか、メディア音量が十分かをご確認ください。AirPodsなどのBluetoothイヤホンをお使いの場合は、出力がその機器に接続されているかもご確認ください。</p>
+
+        <h3>Q. 音楽を聴きながら使うと音楽は止まりますか？</h3>
+        <p>止まりません。数字の音声が流れる瞬間だけ音楽が少し小さくなり（自動ダッキング）、その後元の音量に戻ります。</p>
+
+        <h3>Q. 画面を消すとタイマーが止まります。</h3>
+        <p>リッスンタイマーは画面をロックしてもバックグラウンドで動作し続けます。低電力モードや端末のバックグラウンド制限設定が有効だと影響することがありますので、ご確認ください。</p>
+
+        <h3>Q. Apple Watchから開始できません。</h3>
+        <p>Apple Watch連携はプレミアム機能です。プレミアムをご購入済みか、iPhoneとWatchが正しくペアリングされているかをご確認ください。</p>
+
+        <h3>Q. 端末を変えました。プレミアムを買い直す必要がありますか？</h3>
+        <p>いいえ。プレミアムは買い切りで、同じAppleアカウントで復元できます。プレミアム案内画面の <strong>購入を復元</strong> をタップしてください。</p>
+
+        <h3>Q. 返金はどうすればよいですか？</h3>
+        <p>App Storeの返金はAppleが処理します。<a href="https://reportaproblem.apple.com" target="_blank" rel="noopener noreferrer">reportaproblem.apple.com</a> から申請いただけます。</p>
+
+        <h2>関連リンク</h2>
+        <ul>
+            <li><a href="https://pocketlabs.kr/listentimer-privacy/ja">プライバシーポリシー</a></li>
+            <li><a href="https://pocketlabs.kr/listentimer-terms/ja">利用規約</a></li>
+        </ul>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 PocketLabs. All rights reserved.<br>
+        <a href="mailto:contact@pocketlabs.kr" style="color: #777; text-decoration: none;">contact@pocketlabs.kr</a></p>
+    </footer>
+</body>
+</html>
