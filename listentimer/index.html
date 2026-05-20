@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ListenTimer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0A0A0A">
+    <!-- 다국어 분기 페이지 — 검색엔진은 각 언어 페이지를 직접 인덱싱하도록 hreflang 명시 -->
+    <link rel="alternate" hreflang="ko" href="https://pocketlabs.kr/listentimer/ko/">
+    <link rel="alternate" hreflang="en" href="https://pocketlabs.kr/listentimer/en/">
+    <link rel="alternate" hreflang="ja" href="https://pocketlabs.kr/listentimer/ja/">
+    <link rel="alternate" hreflang="x-default" href="https://pocketlabs.kr/listentimer/en/">
+    <script>
+        // 브라우저 언어 기반 자동 분기. 매칭 없으면 en으로 fallback (글로벌 디폴트).
+        (function() {
+            var lang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+            var target = './en/';
+            if (lang.indexOf('ko') === 0) target = './ko/';
+            else if (lang.indexOf('ja') === 0) target = './ja/';
+            location.replace(target);
+        })();
+    </script>
+    <noscript>
+        <meta http-equiv="refresh" content="0; url=./en/">
+    </noscript>
+    <style>
+        body {
+            background: #0A0A0A;
+            color: #888;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-size: 0.9em;
+        }
+        a { color: #4F8FFF; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <!-- JS 비활성 환경 fallback — 사용자가 직접 언어 선택 가능 -->
+    <p>
+        ListenTimer ·
+        <a href="./ko/" hreflang="ko">한국어</a> ·
+        <a href="./en/" hreflang="en">English</a> ·
+        <a href="./ja/" hreflang="ja">日本語</a>
+    </p>
+</body>
+</html>
