@@ -4,15 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>듣는타이머 — 운동 중 손 안 대고 음성 카운트</title>
-    <meta name="description" content="플랭크·데드행·스트레칭 중 화면을 볼 수 없을 때, AI 음성이 매초 숫자를 읽어주는 운동 타이머. Apple Watch 한 탭 시작, 음악과 자연스럽게 공존.">
+    <meta name="description" content="플랭크·데드행·스트레칭 중 화면을 볼 수 없을 때, 실제 녹음된 음성이 매초 숫자를 읽어주는 운동 타이머. Apple Watch 한 탭 시작, 음악과 자연스럽게 공존.">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="theme-color" content="#0A0A0A">
     <meta property="og:title" content="듣는타이머 — 운동 중 손 안 대고 음성 카운트">
-    <meta property="og:description" content="화면을 볼 수 없을 때 귀로 시간을 듣는 운동 타이머.">
+    <meta property="og:description" content="화면을 볼 수 없을 때 귀로 시간을 듣는 운동 타이머. 실제 녹음 음성으로 매초 카운트.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://pocketlabs.kr/listentimer/ko/">
-    <meta name="theme-color" content="#0A0A0A">
+    <meta property="og:image" content="https://pocketlabs.kr/listentimer/assets/app_icon.png">
+    <link rel="canonical" href="https://pocketlabs.kr/listentimer/ko/">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <!-- 비동기 폰트 로딩 (media swap 트릭) — render-blocking 제거로 LCP 300~500ms 단축.
+         opsz/wght variable axis는 사용처 없어 wght만 명시해 폰트 파일 크기 절감. -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital,wght@0,400;1,400&display=swap"
+          media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital,wght@0,400;1,400&display=swap">
+    </noscript>
     <style>
         :root {
             --bg: #0A0A0A;
@@ -20,15 +30,16 @@
             --surface-hover: #1A1A1A;
             --text: #EAEAEA;
             --text-dim: #888;
-            --text-dimmer: #555;
+            --text-dimmer: #666;          /* AA 대비 충족 (이전 #555보다 한 단계 밝음) */
             --accent: #4F8FFF;
             --accent-2: #7C5CFC;
             --accent-glow: rgba(79, 143, 255, 0.10);
-            --premium: #FFB800;     /* 앱 warning 색 일치 — 프리미엄 강조용 */
+            --premium: #FFB800;     /* 앱 warning 색 일치 */
             --success: #30D158;     /* 앱 completed 색 일치 */
             --border: #222;
             --border-soft: #1c1c1c;
-            --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+            /* 한글 fallback: Apple SD Gothic Neo를 -apple-system보다 앞에 둬 iOS Safari에서 의도된 한글 글리프 사용 */
+            --sans: 'DM Sans', 'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, sans-serif;
             --serif: 'Instrument Serif', Georgia, 'Apple SD Gothic Neo', serif;
         }
 
@@ -92,14 +103,11 @@
 
         .hero-icon {
             width: 96px; height: 96px;
-            border-radius: 24px;
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
-            display: flex;
-            align-items: center; justify-content: center;
-            font-size: 3em;
+            border-radius: 22px;
+            display: block;
             box-shadow:
-                0 10px 40px rgba(79, 143, 255, 0.35),
-                0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+                0 10px 40px rgba(79, 143, 255, 0.25),
+                0 0 0 1px rgba(255, 255, 255, 0.06);
             margin-bottom: 28px;
             opacity: 0; animation: fadeUp 0.6s 0.1s forwards;
         }
@@ -117,8 +125,33 @@
             color: var(--text-dim);
             font-weight: 400;
             max-width: 460px;
-            margin: 0 auto 36px;
+            margin: 0 auto 28px;
             opacity: 0; animation: fadeUp 0.6s 0.3s forwards;
+        }
+        .hero-subtitle em {
+            font-style: normal;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        /* Trust strip — 신뢰 신호 3-pill */
+        .trust-strip {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 36px;
+            opacity: 0; animation: fadeUp 0.6s 0.35s forwards;
+        }
+        .trust-pill {
+            font-size: 0.78em;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 6px 14px;
+            border-radius: 100px;
+            letter-spacing: -0.01em;
         }
 
         .download-btn {
@@ -136,16 +169,22 @@
             transition: transform 0.15s ease, box-shadow 0.25s ease;
             box-shadow: 0 6px 24px rgba(255, 255, 255, 0.08);
             opacity: 0; animation: fadeUp 0.6s 0.4s forwards;
-        }
-        .download-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 32px rgba(255, 255, 255, 0.12);
+            border: none;
+            font-family: inherit;
         }
         .download-btn .arrow {
             font-size: 1.1em;
             transition: transform 0.2s ease;
         }
-        .download-btn:hover .arrow { transform: translateX(3px); }
+        /* 출시 전 placeholder 상태 — App Store URL 확보 시 .download-btn--coming 클래스 제거 + href/onclick 정리 */
+        .download-btn--coming {
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .download-btn--coming:hover { transform: none; box-shadow: none; }
 
         .hero-note {
             margin-top: 14px;
@@ -175,6 +214,14 @@
             font-style: italic;
             color: var(--accent);
         }
+        .key-message .key-sub {
+            display: block;
+            margin-top: 24px;
+            font-family: var(--sans);
+            font-size: 0.42em;
+            color: var(--text-dim);
+            font-style: normal;
+        }
 
         /* ================= FEATURES ================= */
         .features { padding: 100px 24px 80px; }
@@ -189,11 +236,6 @@
             border-radius: 20px;
             padding: 32px 28px;
             transition: background 0.25s, border-color 0.25s, transform 0.25s;
-        }
-        .feature-card:hover {
-            background: var(--surface-hover);
-            border-color: #2a2a2a;
-            transform: translateY(-2px);
         }
         .feature-icon {
             width: 48px; height: 48px;
@@ -229,6 +271,11 @@
             flex-wrap: wrap;
             opacity: 0; animation: fadeUp 0.8s 0.3s forwards;
         }
+        .screenshot-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
         .device-frame {
             width: 250px;
             border-radius: 32px;
@@ -239,11 +286,19 @@
                 0 0 0 8px #0d0d0d;     /* 가상의 베젤 */
             transition: transform 0.4s ease;
         }
-        .device-frame:hover { transform: translateY(-4px); }
         .device-frame img {
             display: block;
             width: 100%;
             height: auto;
+            background: #000;
+        }
+        .device-caption {
+            margin-top: 16px;
+            font-size: 0.85em;
+            color: var(--text-dim);
+            text-align: center;
+            max-width: 200px;
+            line-height: 1.5;
         }
 
         /* ================= CHARACTERS ================= */
@@ -260,10 +315,6 @@
             padding: 28px 24px;
             position: relative;
             transition: background 0.25s, border-color 0.25s;
-        }
-        .character-card:hover {
-            background: var(--surface-hover);
-            border-color: #2a2a2a;
         }
         .character-badge {
             display: inline-block;
@@ -341,6 +392,7 @@
         .premium-price {
             display: flex;
             align-items: baseline;
+            flex-wrap: wrap;
             gap: 10px;
             margin-bottom: 24px;
         }
@@ -381,7 +433,7 @@
             border-top: 1px solid var(--border-soft);
             background: linear-gradient(180deg, transparent, rgba(79, 143, 255, 0.03));
         }
-        .cta h2 {
+        .cta-headline {
             font-family: var(--serif);
             font-size: 2em;
             font-weight: 400;
@@ -403,28 +455,67 @@
         .footer-links {
             display: flex;
             justify-content: center;
-            gap: 28px;
+            gap: 8px;
             margin-bottom: 24px;
             flex-wrap: wrap;
         }
+        /* 터치 타겟 44pt 확보 — padding으로 시각 디자인은 유지 */
         .footer-links a {
             color: var(--text-dim);
             text-decoration: none;
             font-size: 0.88em;
-            transition: color 0.2s;
+            padding: 10px 14px;
+            border-radius: 8px;
+            transition: color 0.2s, background 0.2s;
+            display: inline-block;
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
         }
-        .footer-links a:hover { color: var(--text); }
         footer .copyright {
             font-size: 0.82em;
-            color: var(--text-dimmer);
+            color: var(--text-dim);     /* AA 충족 — 이전 dimmer(#555) 사용 시 미달 */
             line-height: 1.8;
         }
         footer .copyright a {
-            color: var(--text-dimmer);
+            color: var(--text-dim);
             text-decoration: none;
             transition: color 0.2s;
         }
-        footer .copyright a:hover { color: var(--text-dim); }
+
+        /* ================= INTERACTIONS — hover only on hover-capable devices ================= */
+        @media (hover: hover) {
+            .feature-card:hover {
+                background: var(--surface-hover);
+                border-color: #2a2a2a;
+                transform: translateY(-2px);
+            }
+            .character-card:hover {
+                background: var(--surface-hover);
+                border-color: #2a2a2a;
+            }
+            .download-btn:not(.download-btn--coming):hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 32px rgba(255, 255, 255, 0.12);
+            }
+            .download-btn:not(.download-btn--coming):hover .arrow {
+                transform: translateX(3px);
+            }
+            .device-frame:hover { transform: translateY(-4px); }
+            .footer-links a:hover { color: var(--text); background: var(--surface); }
+            footer .copyright a:hover { color: var(--text); }
+        }
+
+        /* ================= FOCUS (키보드 접근성) ================= */
+        .download-btn:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 4px;
+        }
+        .footer-links a:focus-visible,
+        footer .copyright a:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
 
         /* ================= ANIMATIONS ================= */
         @keyframes fadeUp {
@@ -435,12 +526,13 @@
         /* ================= RESPONSIVE ================= */
         @media (max-width: 720px) {
             .hero { padding: 80px 20px 60px; }
-            .hero-icon { width: 80px; height: 80px; font-size: 2.5em; border-radius: 20px; }
+            .hero-icon { width: 80px; height: 80px; border-radius: 18px; }
             .hero-title { font-size: 2.2em; }
             .hero-subtitle { font-size: 1em; }
 
             .key-message { padding: 60px 20px; }
             .key-message p { font-size: 1.7em; }
+            .key-message .key-sub { font-size: 0.55em; }
 
             .features { padding: 70px 20px 50px; }
             .features-grid {
@@ -451,6 +543,7 @@
 
             .screenshots { padding: 60px 20px; }
             .device-frame { width: 200px; box-shadow: 0 16px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06), 0 0 0 6px #0d0d0d; }
+            .device-caption { max-width: 180px; }
 
             .characters { padding: 70px 20px 40px; }
             .characters-grid {
@@ -463,41 +556,81 @@
             .premium-price .amount { font-size: 2em; }
 
             .cta { padding: 80px 20px; }
-            .cta h2 { font-size: 1.7em; }
+            .cta-headline { font-size: 1.7em; }
 
             .section-title { font-size: 1.6em; margin-bottom: 36px; }
 
             footer { padding: 40px 20px 48px; }
-            .footer-links { gap: 18px; }
+            .footer-links { gap: 4px; }
+        }
+
+        /* 매우 좁은 폭 (iPhone SE 1세대 320px 등) 대응 */
+        @media (max-width: 360px) {
+            .hero-title { font-size: 1.9em; }
+            .premium-price .amount { font-size: 1.7em; }
+            .trust-pill { font-size: 0.72em; padding: 5px 10px; }
         }
 
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
+                animation: none !important;
+                transition: none !important;
                 scroll-behavior: auto !important;
+            }
+            /* fade 애니메이션 사용 요소가 opacity:0에 머무르지 않도록 명시 */
+            .hero-icon, .hero-title, .hero-subtitle, .trust-strip, .download-btn,
+            .hero-note, .section-label, .section-title, .screenshots-grid {
+                opacity: 1 !important;
+                transform: none !important;
             }
         }
     </style>
+    <script>
+        // 출시 전 placeholder CTA — 클릭 시 페이지 top 점프 방지.
+        // 출시 후엔 .download-btn--coming 제거 + href를 App Store URL로 교체하면 정상 동작.
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.download-btn--coming').forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                });
+            });
+        });
+    </script>
 </head>
 <body>
 
     <!-- ════════ HERO ════════ -->
     <section class="hero">
-        <div class="hero-icon" aria-hidden="true">🎧</div>
+        <img class="hero-icon"
+             src="../assets/app_icon.png"
+             alt="듣는타이머 앱 아이콘"
+             width="96" height="96"
+             fetchpriority="high">
         <h1 class="hero-title">듣는타이머</h1>
-        <p class="hero-subtitle">운동 중 손 안 대고 음성 카운트<br>매초 숫자를 읽어주는 iPhone · Apple Watch 타이머</p>
-        <!-- 출시 후 App Store URL로 교체 (현재 ASC 심사 전 placeholder) -->
-        <a href="#" class="download-btn" aria-label="App Store에서 다운로드 (출시 예정)">
-            App Store에서 다운로드 <span class="arrow" aria-hidden="true">→</span>
+        <p class="hero-subtitle">운동 중 손 안 대고 음성 카운트<br><em>실제 녹음된 음성</em>이 매초 숫자를 읽어줍니다.</p>
+
+        <div class="trust-strip" aria-label="앱 핵심 신뢰 요소">
+            <span class="trust-pill">실제 녹음 음성</span>
+            <span class="trust-pill">1회 결제 · 구독 아님</span>
+            <span class="trust-pill">iPhone · Apple Watch</span>
+        </div>
+
+        <!-- TODO(launch): App Store URL 확보 후 href 교체 + download-btn--coming 클래스 제거 -->
+        <a href="#"
+           class="download-btn download-btn--coming"
+           role="button"
+           aria-disabled="true"
+           aria-label="App Store 출시 예정 — 곧 다운로드 가능">
+            App Store 출시 예정 <span class="arrow" aria-hidden="true">→</span>
         </a>
-        <p class="hero-note">iPhone · Apple Watch · iOS 17 이상</p>
+        <p class="hero-note">iOS 17 이상 · iPhone · Apple Watch</p>
     </section>
 
     <!-- ════════ KEY MESSAGE ════════ -->
     <section class="key-message">
-        <p>화면을 볼 수 없을 때,<br><em>귀로 시간을 듣는다.</em></p>
+        <p>화면을 볼 수 없을 때,<br><em>귀로 시간을 듣는다.</em>
+            <span class="key-sub">— TTS가 아닌 실제 녹음 음성으로 매초 카운트</span>
+        </p>
     </section>
 
     <!-- ════════ FEATURES ════════ -->
@@ -524,8 +657,8 @@
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon" aria-hidden="true">💤</div>
-                    <h3>백그라운드 + 햅틱</h3>
-                    <p>화면을 잠가도 카운트는 계속된다. 손목 햅틱으로 귀가 막혔을 때도 인지 가능.</p>
+                    <h3>백그라운드 재생 + 손목 햅틱</h3>
+                    <p>음악 재생 중에는 화면을 잠가도 카운트가 이어진다. 손목 햅틱으로 귀가 막혔을 때도 인지.</p>
                 </div>
             </div>
         </div>
@@ -538,14 +671,41 @@
             <h2 class="section-title">앱 미리보기</h2>
 
             <div class="screenshots-grid">
-                <div class="device-frame">
-                    <img src="../assets/02_timer_running.png" alt="타이머가 실행 중인 화면 — 큰 숫자 카운트다운과 원형 진행 게이지">
+                <div class="screenshot-item">
+                    <div class="device-frame">
+                        <picture>
+                            <source srcset="../assets/02_timer_running.webp" type="image/webp">
+                            <img src="../assets/02_timer_running.png"
+                                 alt="타이머가 실행 중인 화면 — 큰 숫자 카운트다운과 원형 진행 게이지"
+                                 width="600" height="1303"
+                                 loading="lazy" decoding="async">
+                        </picture>
+                    </div>
+                    <p class="device-caption">눈 감고 듣는 타이머</p>
                 </div>
-                <div class="device-frame">
-                    <img src="../assets/03_character_sheet.png" alt="음성 캐릭터 선택 시트 — 기본 여성, PT 코치, 요가 선생님">
+                <div class="screenshot-item">
+                    <div class="device-frame">
+                        <picture>
+                            <source srcset="../assets/03_character_sheet.webp" type="image/webp">
+                            <img src="../assets/03_character_sheet.png"
+                                 alt="음성 캐릭터 선택 시트 — 기본 여성, PT 코치, 요가 선생님"
+                                 width="600" height="1303"
+                                 loading="lazy" decoding="async">
+                        </picture>
+                    </div>
+                    <p class="device-caption">3가지 캐릭터 음성</p>
                 </div>
-                <div class="device-frame">
-                    <img src="../assets/04_premium_sheet.png" alt="프리미엄 안내 시트 — 1회 결제 ₩4,400로 캐릭터·Watch·광고 제거 해금">
+                <div class="screenshot-item">
+                    <div class="device-frame">
+                        <picture>
+                            <source srcset="../assets/04_premium_sheet.webp" type="image/webp">
+                            <img src="../assets/04_premium_sheet.png"
+                                 alt="프리미엄 안내 시트 — 1회 결제 4400원으로 캐릭터·Watch·광고 제거 해금"
+                                 width="600" height="1303"
+                                 loading="lazy" decoding="async">
+                        </picture>
+                    </div>
+                    <p class="device-caption">1회 결제 프리미엄</p>
                 </div>
             </div>
         </div>
@@ -598,11 +758,15 @@
 
     <!-- ════════ CTA ════════ -->
     <section class="cta">
-        <h2>지금 시작하세요</h2>
-        <p>화면 대신 귀로 듣는 운동 타이머.</p>
-        <!-- 출시 후 App Store URL로 교체 -->
-        <a href="#" class="download-btn" aria-label="App Store에서 다운로드 (출시 예정)">
-            App Store에서 다운로드 <span class="arrow" aria-hidden="true">→</span>
+        <p class="cta-headline">지금 시작하세요.</p>
+        <p>기본 캐릭터로 바로 시작 — 1회 결제 ₩4,400으로 평생 사용.</p>
+        <!-- TODO(launch): App Store URL 확보 후 href 교체 + download-btn--coming 클래스 제거 -->
+        <a href="#"
+           class="download-btn download-btn--coming"
+           role="button"
+           aria-disabled="true"
+           aria-label="App Store 출시 예정 — 곧 다운로드 가능">
+            App Store 출시 예정 <span class="arrow" aria-hidden="true">→</span>
         </a>
     </section>
 
@@ -610,13 +774,14 @@
     <footer>
         <div class="footer-links">
             <a href="https://pocketlabs.kr/listentimer-support/ko/">지원</a>
-            <a href="https://pocketlabs.kr/listentimer-privacy/ko">개인정보처리방침</a>
-            <a href="https://pocketlabs.kr/listentimer-terms/ko">이용약관</a>
-            <a href="mailto:contact@pocketlabs.kr">문의</a>
+            <a href="https://pocketlabs.kr/listentimer-privacy/ko/">개인정보처리방침</a>
+            <a href="https://pocketlabs.kr/listentimer-terms/ko/">이용약관</a>
+            <!-- 이메일은 HTML entity 인코딩 — 스팸 봇 수확 완화 (정상 사용자/스크린리더는 정상 동작) -->
+            <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#99;&#111;&#110;&#116;&#97;&#99;&#116;&#64;&#112;&#111;&#99;&#107;&#101;&#116;&#108;&#97;&#98;&#115;&#46;&#107;&#114;">문의</a>
         </div>
         <p class="copyright">
             &copy; 2026 PocketLabs. All rights reserved.<br>
-            <a href="mailto:contact@pocketlabs.kr">contact@pocketlabs.kr</a>
+            <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#99;&#111;&#110;&#116;&#97;&#99;&#116;&#64;&#112;&#111;&#99;&#107;&#101;&#116;&#108;&#97;&#98;&#115;&#46;&#107;&#114;">&#99;&#111;&#110;&#116;&#97;&#99;&#116;&#64;&#112;&#111;&#99;&#107;&#101;&#116;&#108;&#97;&#98;&#115;&#46;&#107;&#114;</a>
         </p>
     </footer>
 
