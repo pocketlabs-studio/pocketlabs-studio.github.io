@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>リッスンタイマー — 画面を見ない、音声カウントダウン</title>
+    <meta name="description" content="プランク・デッドハング・ストレッチ中、画面を見られない時に音声が毎秒数字を読み上げます。Apple Watchのコンプリケーションからワンタップで起動。音楽を流したまま自然に共存。">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="theme-color" content="#0A0A0A">
+    <meta property="og:title" content="リッスンタイマー — 画面を見ない、音声カウントダウン">
+    <meta property="og:description" content="動きに集中。カウントダウンは耳で。耐える一秒一秒を声でカウントするタイマー。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pocketlabs.kr/listentimer/ja/">
+    <meta property="og:image" content="https://pocketlabs.kr/listentimer/assets/app_icon.png">
+    <link rel="canonical" href="https://pocketlabs.kr/listentimer/ja/">
+    <link rel="alternate" hreflang="ko" href="https://pocketlabs.kr/listentimer/ko/">
+    <link rel="alternate" hreflang="en" href="https://pocketlabs.kr/listentimer/en/">
+    <link rel="alternate" hreflang="ja" href="https://pocketlabs.kr/listentimer/ja/">
+    <link rel="alternate" hreflang="x-default" href="https://pocketlabs.kr/listentimer/en/">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Noto Sans JP는 weight 400/700만 — 500은 본문 비중이 낮고 글리프 페이로드(~70KB) 절감 우선 -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital,wght@0,400;1,400&family=Noto+Sans+JP:wght@400;700&display=swap"
+          media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital,wght@0,400;1,400&family=Noto+Sans+JP:wght@400;700&display=swap">
+    </noscript>
+    <style>
+        :root {
+            --bg: #0A0A0A;
+            --surface: #141414;
+            --surface-hover: #1A1A1A;
+            --text: #EAEAEA;
+            --text-dim: #888;
+            --text-dimmer: #666;
+            --accent: #4F8FFF;
+            --accent-2: #7C5CFC;
+            --accent-glow: rgba(79, 143, 255, 0.10);
+            --premium: #FFB800;
+            --success: #30D158;
+            --border: #222;
+            --border-soft: #1c1c1c;
+            /* 일본어: Noto Sans JP를 명시적으로 우선해 가나·한자 가독성 확보 */
+            --sans: 'DM Sans', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            --serif: 'Instrument Serif', Georgia, 'Hiragino Mincho ProN', serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--sans);
+            background: var(--bg); color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh; line-height: 1.6;
+            overflow-x: hidden;
+        }
+        section { padding: 0 24px; }
+        .container { max-width: 980px; margin: 0 auto; }
+        .section-label {
+            text-align: center;
+            font-size: 0.78em; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.16em;
+            color: var(--accent); margin-bottom: 16px;
+            opacity: 0; animation: fadeUp 0.6s 0.1s forwards;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 2em; font-weight: 600;
+            letter-spacing: -0.02em; margin-bottom: 48px;
+            opacity: 0; animation: fadeUp 0.6s 0.2s forwards;
+        }
+
+        .hero {
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            text-align: center;
+            padding: 100px 24px 80px;
+            position: relative; overflow: hidden;
+        }
+        .hero::before {
+            content: ''; position: absolute;
+            top: -150px; left: 50%;
+            transform: translateX(-50%);
+            width: 800px; height: 800px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 65%);
+            pointer-events: none; z-index: 0;
+        }
+        .hero > * { position: relative; z-index: 1; }
+        .hero-icon {
+            width: 96px; height: 96px;
+            border-radius: 22px; display: block;
+            box-shadow: 0 10px 40px rgba(79, 143, 255, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.06);
+            margin-bottom: 28px;
+            opacity: 0; animation: fadeUp 0.6s 0.1s forwards;
+        }
+        .hero-title {
+            font-size: 2.7em; font-weight: 700;
+            letter-spacing: -0.02em; line-height: 1.1;
+            margin-bottom: 14px;
+            opacity: 0; animation: fadeUp 0.6s 0.2s forwards;
+        }
+        .hero-subtitle {
+            font-size: 1.1em; color: var(--text-dim);
+            font-weight: 400; max-width: 480px;
+            margin: 0 auto 28px;
+            opacity: 0; animation: fadeUp 0.6s 0.3s forwards;
+        }
+        .hero-subtitle em {
+            font-style: normal; color: var(--text); font-weight: 500;
+        }
+        .trust-strip {
+            display: flex; gap: 8px;
+            justify-content: center; flex-wrap: wrap;
+            margin-bottom: 36px;
+            opacity: 0; animation: fadeUp 0.6s 0.35s forwards;
+        }
+        .trust-pill {
+            font-size: 0.78em; font-weight: 500;
+            color: var(--text-dim);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 6px 14px; border-radius: 100px;
+            letter-spacing: -0.01em;
+        }
+        .download-btn {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: var(--text); color: var(--bg);
+            padding: 14px 28px; border-radius: 100px;
+            font-size: 0.95em; font-weight: 600;
+            text-decoration: none; letter-spacing: -0.01em;
+            transition: transform 0.15s ease, box-shadow 0.25s ease;
+            box-shadow: 0 6px 24px rgba(255, 255, 255, 0.08);
+            opacity: 0; animation: fadeUp 0.6s 0.4s forwards;
+            border: none; font-family: inherit;
+        }
+        .download-btn .arrow {
+            font-size: 1.1em; transition: transform 0.2s ease;
+        }
+        .download-btn--coming {
+            background: var(--surface); color: var(--text);
+            border: 1px solid var(--border); cursor: not-allowed;
+            box-shadow: none;
+        }
+        .download-btn--coming:hover { transform: none; box-shadow: none; }
+        .hero-note {
+            margin-top: 14px;
+            font-size: 0.82em;
+            color: var(--text-dimmer);
+            opacity: 0; animation: fadeUp 0.6s 0.5s forwards;
+        }
+
+        .lifestyle {
+            padding: 60px 24px 80px;
+            border-top: 1px solid var(--border-soft);
+            border-bottom: 1px solid var(--border-soft);
+        }
+        .lifestyle-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            gap: 20px; max-width: 900px; margin: 0 auto;
+        }
+        .lifestyle-card {
+            border-radius: 24px; overflow: hidden;
+            background: #000;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.04);
+            transition: transform 0.4s ease;
+            opacity: 0; animation: fadeUp 0.7s 0.15s forwards;
+        }
+        .lifestyle-card:nth-child(2) { animation-delay: 0.25s; }
+        .lifestyle-card img { display: block; width: 100%; height: auto; }
+
+        .lang-switch {
+            display: flex; justify-content: center;
+            gap: 4px; margin-bottom: 28px; flex-wrap: wrap;
+        }
+        .lang-switch a, .lang-switch .current {
+            font-size: 0.85em; color: var(--text-dim);
+            text-decoration: none; padding: 8px 14px;
+            border-radius: 100px; border: 1px solid transparent;
+            transition: color 0.2s, background 0.2s, border-color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            min-height: 44px;
+        }
+        .lang-switch .current {
+            color: var(--text); border-color: var(--border);
+            background: var(--surface); font-weight: 500;
+        }
+
+        .features { padding: 100px 24px 80px; }
+        .features-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+        }
+        .feature-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 20px; padding: 32px 28px;
+            transition: background 0.25s, border-color 0.25s, transform 0.25s;
+        }
+        .feature-icon {
+            width: 48px; height: 48px; border-radius: 12px;
+            background: var(--accent-glow);
+            border: 1px solid rgba(79, 143, 255, 0.18);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4em; margin-bottom: 20px;
+        }
+        .feature-card h3 {
+            font-size: 1.1em; font-weight: 600;
+            letter-spacing: -0.01em; margin-bottom: 8px;
+        }
+        .feature-card p { font-size: 0.92em; color: var(--text-dim); line-height: 1.6; }
+
+        .screenshots {
+            padding: 80px 24px;
+            background: radial-gradient(ellipse at center, rgba(79, 143, 255, 0.04), transparent 70%);
+        }
+        .screenshots-grid {
+            display: flex; justify-content: center; gap: 24px;
+            flex-wrap: wrap;
+            opacity: 0; animation: fadeUp 0.8s 0.3s forwards;
+        }
+        .screenshot-item { display: flex; flex-direction: column; align-items: center; }
+        .device-frame {
+            width: 250px; border-radius: 32px; overflow: hidden;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.06), 0 0 0 8px #0d0d0d;
+            transition: transform 0.4s ease;
+        }
+        .device-frame img { display: block; width: 100%; height: auto; background: #000; }
+        .device-caption {
+            margin-top: 16px; font-size: 0.85em;
+            color: var(--text-dim); text-align: center;
+            max-width: 200px; line-height: 1.5;
+        }
+
+        .characters { padding: 100px 24px 60px; }
+        .characters-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+        }
+        .character-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 20px; padding: 28px 24px; position: relative;
+            transition: background 0.25s, border-color 0.25s;
+        }
+        .character-badge {
+            display: inline-block;
+            font-size: 0.68em; font-weight: 700;
+            letter-spacing: 0.1em;
+            padding: 4px 10px; border-radius: 100px;
+            margin-bottom: 16px;
+        }
+        .character-badge.free {
+            color: var(--success);
+            background: rgba(48, 209, 88, 0.10);
+            border: 1px solid rgba(48, 209, 88, 0.25);
+        }
+        .character-badge.premium {
+            color: var(--premium);
+            background: rgba(255, 184, 0, 0.10);
+            border: 1px solid rgba(255, 184, 0, 0.25);
+        }
+        .character-card h3 { font-size: 1.05em; font-weight: 600; margin-bottom: 8px; }
+        .character-card p { font-size: 0.88em; color: var(--text-dim); line-height: 1.55; }
+        .characters-note {
+            text-align: center; margin-top: 32px;
+            font-size: 0.88em; color: var(--text-dim);
+        }
+        .characters-note strong { color: var(--text); font-weight: 600; }
+
+        .premium { padding: 60px 24px 100px; }
+        .premium-card {
+            max-width: 480px; margin: 0 auto;
+            background: linear-gradient(180deg, var(--surface), #0f0f0f);
+            border: 1px solid rgba(255, 184, 0, 0.22);
+            border-radius: 24px; padding: 40px 36px;
+            position: relative; overflow: hidden;
+        }
+        .premium-card::before {
+            content: ''; position: absolute;
+            top: -50%; right: -30%;
+            width: 280px; height: 280px;
+            background: radial-gradient(circle, rgba(255, 184, 0, 0.08) 0%, transparent 65%);
+            pointer-events: none;
+        }
+        .premium-card > * { position: relative; }
+        .premium-badge {
+            display: inline-block;
+            font-size: 0.7em; font-weight: 700;
+            letter-spacing: 0.14em; color: var(--premium);
+            background: rgba(255, 184, 0, 0.10);
+            border: 1px solid rgba(255, 184, 0, 0.25);
+            padding: 5px 12px; border-radius: 100px;
+            margin-bottom: 20px;
+        }
+        .premium-price {
+            display: flex; align-items: baseline;
+            flex-wrap: wrap; gap: 10px; margin-bottom: 24px;
+        }
+        .premium-price .amount {
+            font-size: 2.4em; font-weight: 700; letter-spacing: -0.03em;
+        }
+        .premium-price .period { font-size: 0.92em; color: var(--text-dim); }
+        .premium-list { list-style: none; padding: 0; }
+        .premium-list li {
+            padding: 10px 0; font-size: 0.95em; color: var(--text);
+            display: flex; align-items: center; gap: 12px;
+            border-bottom: 1px solid var(--border-soft);
+        }
+        .premium-list li:last-child { border-bottom: none; }
+        .premium-list li::before {
+            content: '✓'; color: var(--premium);
+            font-weight: 700; font-size: 1em;
+        }
+
+        .cta {
+            padding: 100px 24px; text-align: center;
+            border-top: 1px solid var(--border-soft);
+            background: linear-gradient(180deg, transparent, rgba(79, 143, 255, 0.03));
+        }
+        .cta-headline {
+            font-family: var(--serif);
+            font-size: 1.9em; font-weight: 400;
+            margin-bottom: 14px; letter-spacing: -0.01em;
+        }
+        .cta p { font-size: 1.02em; color: var(--text-dim); margin-bottom: 32px; }
+
+        footer {
+            border-top: 1px solid var(--border-soft);
+            padding: 48px 24px 56px;
+            text-align: center;
+        }
+        .footer-links {
+            display: flex; justify-content: center;
+            gap: 8px; margin-bottom: 24px; flex-wrap: wrap;
+        }
+        .footer-links a {
+            color: var(--text-dim); text-decoration: none;
+            font-size: 0.88em;
+            padding: 10px 14px; border-radius: 8px;
+            transition: color 0.2s, background 0.2s;
+            display: inline-flex; align-items: center;
+            min-height: 44px;
+        }
+        footer .copyright {
+            font-size: 0.82em; color: var(--text-dim); line-height: 1.8;
+        }
+        footer .copyright a {
+            color: var(--text-dim); text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        @media (hover: hover) {
+            .feature-card:hover { background: var(--surface-hover); border-color: #2a2a2a; transform: translateY(-2px); }
+            .character-card:hover { background: var(--surface-hover); border-color: #2a2a2a; }
+            .download-btn:not(.download-btn--coming):hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(255, 255, 255, 0.12); }
+            .download-btn:not(.download-btn--coming):hover .arrow { transform: translateX(3px); }
+            .device-frame:hover { transform: translateY(-4px); }
+            .lifestyle-card:hover { transform: translateY(-4px); }
+            .footer-links a:hover { color: var(--text); background: var(--surface); }
+            .lang-switch a:hover { color: var(--text); background: var(--surface); }
+            footer .copyright a:hover { color: var(--text); }
+        }
+        .download-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+        .footer-links a:focus-visible,
+        .lang-switch a:focus-visible,
+        footer .copyright a:focus-visible {
+            outline: 2px solid var(--accent); outline-offset: 2px;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 720px) {
+            .hero { padding: 80px 20px 60px; }
+            .hero-icon { width: 80px; height: 80px; border-radius: 18px; }
+            .hero-title { font-size: 2em; }
+            .hero-subtitle { font-size: 0.95em; }
+            .lifestyle { padding: 40px 16px 60px; }
+            .lifestyle-grid { grid-template-columns: 1fr; gap: 14px; max-width: 360px; }
+            .lifestyle-card { border-radius: 20px; }
+            .features { padding: 70px 20px 50px; }
+            .features-grid { grid-template-columns: 1fr; gap: 12px; }
+            .feature-card { padding: 26px 24px; }
+            .screenshots { padding: 60px 20px; }
+            .device-frame { width: 200px; box-shadow: 0 16px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06), 0 0 0 6px #0d0d0d; }
+            .device-caption { max-width: 180px; }
+            .characters { padding: 70px 20px 40px; }
+            .characters-grid { grid-template-columns: 1fr; gap: 12px; }
+            .premium { padding: 40px 20px 80px; }
+            .premium-card { padding: 32px 28px; }
+            .premium-price .amount { font-size: 2em; }
+            .cta { padding: 80px 20px; }
+            .cta-headline { font-size: 1.6em; }
+            .section-title { font-size: 1.6em; margin-bottom: 36px; }
+            footer { padding: 40px 20px 48px; }
+            .footer-links { gap: 4px; }
+        }
+        @media (max-width: 360px) {
+            .hero-title { font-size: 1.7em; }
+            .premium-price .amount { font-size: 1.7em; }
+            .trust-pill { font-size: 0.72em; padding: 5px 10px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation: none !important;
+                transition: none !important;
+                scroll-behavior: auto !important;
+            }
+            .hero-icon, .hero-title, .hero-subtitle, .trust-strip, .download-btn,
+            .hero-note, .section-label, .section-title, .screenshots-grid,
+            .lifestyle-card {
+                opacity: 1 !important;
+                transform: none !important;
+            }
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.download-btn--coming').forEach(function(btn) {
+                btn.addEventListener('click', function(e) { e.preventDefault(); });
+            });
+        });
+    </script>
+</head>
+<body>
+
+    <section class="hero">
+        <img class="hero-icon"
+             src="../assets/app_icon.png"
+             alt="リッスンタイマー アプリアイコン"
+             width="96" height="96"
+             fetchpriority="high">
+        <h1 class="hero-title">リッスンタイマー</h1>
+        <p class="hero-subtitle">目を閉じても続く、音声カウント<br><em>本物の声</em>が毎秒の数字を読み上げます。</p>
+
+        <div class="trust-strip" aria-label="アプリの主な特徴">
+            <span class="trust-pill">肉声録音</span>
+            <span class="trust-pill">買い切り · サブスクなし</span>
+            <span class="trust-pill">プランク · デッドハング · ヨガ</span>
+        </div>
+
+        <!-- TODO(launch): App Store URL確保後にhref置換 + .download-btn--coming除去 -->
+        <a href="#"
+           class="download-btn download-btn--coming"
+           role="button"
+           aria-disabled="true"
+           tabindex="-1"
+           aria-label="App Store 配信予定">
+            App Store 配信予定 <span class="arrow" aria-hidden="true">→</span>
+        </a>
+        <p class="hero-note">iOS 17以上 · iPhone · Apple Watch</p>
+    </section>
+
+    <section class="lifestyle" aria-label="ライフスタイルプレビュー">
+        <div class="lifestyle-grid">
+            <div class="lifestyle-card">
+                <picture>
+                    <source srcset="../assets/lifestyle/ja/yoga.webp" type="image/webp">
+                    <img src="../assets/lifestyle/ja/yoga.png"
+                         alt="ヨガポーズを維持する女性とリッスンタイマーが60秒のカウントダウンを表示中の画面"
+                         width="800" height="1734"
+                         loading="lazy" decoding="async">
+                </picture>
+            </div>
+            <div class="lifestyle-card">
+                <picture>
+                    <source srcset="../assets/lifestyle/ja/pullup.webp" type="image/webp">
+                    <img src="../assets/lifestyle/ja/pullup.png"
+                         alt="懸垂の姿勢を維持する男性とリッスンタイマーが60秒のカウントダウンを表示中の画面"
+                         width="800" height="1734"
+                         loading="lazy" decoding="async">
+                </picture>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <p class="section-label">Features</p>
+            <h2 class="section-title">目を閉じても、時間は流れる</h2>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon" aria-hidden="true">🔢</div>
+                    <h3>毎秒の音声カウントダウン</h3>
+                    <p>1秒ごと、または10秒ごと+最後の10秒は1秒ごと。姿勢に集中している間、時間だけが耳から流れていきます。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" aria-hidden="true">⌚</div>
+                    <h3>Apple Watch ワンタップで開始</h3>
+                    <p>コンプリケーションから即座にスタート。iPhoneを取り出したり画面をつけたりする必要はありません。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" aria-hidden="true">🎵</div>
+                    <h3>音楽との自然な共存</h3>
+                    <p>自動ダッキング。音声が流れる瞬間だけ音楽が少し小さくなり、すぐに元の音量に戻ります。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" aria-hidden="true">💤</div>
+                    <h3>バックグラウンド再生 + 手首のハプティクス</h3>
+                    <p>音楽再生中なら画面をロックしてもカウントが続きます。手首のハプティクスで、イヤホンを外していても気づけます。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="screenshots">
+        <div class="container">
+            <p class="section-label">Inside</p>
+            <h2 class="section-title">アプリの中身</h2>
+
+            <div class="screenshots-grid">
+                <div class="screenshot-item">
+                    <div class="device-frame">
+                        <picture>
+                            <source srcset="../assets/ja/02_timer_running.webp" type="image/webp">
+                            <img src="../assets/ja/02_timer_running.png"
+                                 alt="タイマー実行中の画面 — 大きなカウントダウン数字と円形プログレス"
+                                 width="600" height="1303"
+                                 loading="lazy" decoding="async">
+                        </picture>
+                    </div>
+                    <p class="device-caption">目を閉じて、耳で時間を聴く</p>
+                </div>
+                <div class="screenshot-item">
+                    <div class="device-frame">
+                        <picture>
+                            <source srcset="../assets/ja/03_character_sheet.webp" type="image/webp">
+                            <img src="../assets/ja/03_character_sheet.png"
+                                 alt="音声キャラクター選択 — スタンダード、PTコーチ、ヨガインストラクター"
+                                 width="600" height="1303"
+                                 loading="lazy" decoding="async">
+                        </picture>
+                    </div>
+                    <p class="device-caption">3種類のキャラクター音声</p>
+                </div>
+                <div class="screenshot-item">
+                    <div class="device-frame">
+                        <picture>
+                            <source srcset="../assets/ja/04_premium_sheet.webp" type="image/webp">
+                            <img src="../assets/ja/04_premium_sheet.png"
+                                 alt="プレミアム案内 — 買い切りでキャラクター・Apple Watch連携・広告削除を解除"
+                                 width="600" height="1303"
+                                 loading="lazy" decoding="async">
+                        </picture>
+                    </div>
+                    <p class="device-caption">買い切りプレミアム</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="characters">
+        <div class="container">
+            <p class="section-label">Voices</p>
+            <h2 class="section-title">3種類のキャラクター音声</h2>
+
+            <div class="characters-grid">
+                <div class="character-card">
+                    <span class="character-badge free">FREE</span>
+                    <h3>スタンダード</h3>
+                    <p>落ち着いた、はっきりした声。どんなトレーニングにも自然に馴染みます。</p>
+                </div>
+                <div class="character-card">
+                    <span class="character-badge premium">PREMIUM</span>
+                    <h3>PTコーチ</h3>
+                    <p>エネルギッシュなPTコーチの声。高強度の姿勢キープ・インターバルに最適。</p>
+                </div>
+                <div class="character-card">
+                    <span class="character-badge premium">PREMIUM</span>
+                    <h3>ヨガインストラクター</h3>
+                    <p>穏やかで落ち着いた呼吸トーン。ヨガ・瞑想・ストレッチに最適。</p>
+                </div>
+            </div>
+            <p class="characters-note">すべてのキャラクターは<strong>実録音の音声</strong>です — TTSではなく、セットを重ねてもリズム・抑揚が変わりません。</p>
+        </div>
+    </section>
+
+    <section class="premium">
+        <div class="container">
+            <div class="premium-card">
+                <span class="premium-badge">PREMIUM</span>
+                <div class="premium-price">
+                    <span class="amount">¥500</span>
+                    <span class="period">税込 · 買い切り · サブスクではありません</span>
+                </div>
+                <ul class="premium-list">
+                    <li>PTコーチ + ヨガインストラクターを解除</li>
+                    <li>Apple Watch連携 (コンプリケーション · 単独実行)</li>
+                    <li>アプリ内広告を削除</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <p class="cta-headline">今すぐ、画面を見ないトレーニングへ。</p>
+        <p>スタンダード音声で無料スタート。買い切り ¥500 で、すべて永続解除。</p>
+        <!-- TODO(launch): App Store URL確保後にhref置換 -->
+        <a href="#"
+           class="download-btn download-btn--coming"
+           role="button"
+           aria-disabled="true"
+           tabindex="-1"
+           aria-label="App Store 配信予定">
+            App Store 配信予定 <span class="arrow" aria-hidden="true">→</span>
+        </a>
+    </section>
+
+    <footer>
+        <nav class="lang-switch" aria-label="言語選択">
+            <a href="../ko/" hreflang="ko" lang="ko">한국어</a>
+            <a href="../en/" hreflang="en" lang="en">English</a>
+            <span class="current" aria-current="page">日本語</span>
+        </nav>
+        <div class="footer-links">
+            <a href="https://pocketlabs.kr/listentimer-support/ja/">サポート</a>
+            <a href="https://pocketlabs.kr/listentimer-privacy/ja/">プライバシー</a>
+            <a href="https://pocketlabs.kr/listentimer-terms/ja/">利用規約</a>
+            <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#99;&#111;&#110;&#116;&#97;&#99;&#116;&#64;&#112;&#111;&#99;&#107;&#101;&#116;&#108;&#97;&#98;&#115;&#46;&#107;&#114;">お問い合わせ</a>
+        </div>
+        <p class="copyright">
+            &copy; 2026 PocketLabs. All rights reserved.<br>
+            <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#99;&#111;&#110;&#116;&#97;&#99;&#116;&#64;&#112;&#111;&#99;&#107;&#101;&#116;&#108;&#97;&#98;&#115;&#46;&#107;&#114;">&#99;&#111;&#110;&#116;&#97;&#99;&#116;&#64;&#112;&#111;&#99;&#107;&#101;&#116;&#108;&#97;&#98;&#115;&#46;&#107;&#114;</a>
+        </p>
+    </footer>
+
+</body>
+</html>

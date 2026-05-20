@@ -13,6 +13,11 @@
     <meta property="og:url" content="https://pocketlabs.kr/listentimer/ko/">
     <meta property="og:image" content="https://pocketlabs.kr/listentimer/assets/app_icon.png">
     <link rel="canonical" href="https://pocketlabs.kr/listentimer/ko/">
+    <!-- hreflang: 다국어 페이지 간 SEO 연결 — 검색엔진이 사용자 언어에 맞는 페이지를 안내 -->
+    <link rel="alternate" hreflang="ko" href="https://pocketlabs.kr/listentimer/ko/">
+    <link rel="alternate" hreflang="en" href="https://pocketlabs.kr/listentimer/en/">
+    <link rel="alternate" hreflang="ja" href="https://pocketlabs.kr/listentimer/ja/">
+    <link rel="alternate" hreflang="x-default" href="https://pocketlabs.kr/listentimer/en/">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- 비동기 폰트 로딩 (media swap 트릭) — render-blocking 제거로 LCP 300~500ms 단축.
@@ -193,34 +198,61 @@
             opacity: 0; animation: fadeUp 0.6s 0.5s forwards;
         }
 
-        /* ================= KEY MESSAGE ================= */
-        .key-message {
-            padding: 80px 24px;
-            text-align: center;
+        /* ================= LIFESTYLE ================= */
+        .lifestyle {
+            padding: 60px 24px 80px;
             border-top: 1px solid var(--border-soft);
             border-bottom: 1px solid var(--border-soft);
-            background: linear-gradient(180deg, transparent, rgba(79, 143, 255, 0.025), transparent);
         }
-        .key-message p {
-            font-family: var(--serif);
-            font-size: 2.4em;
-            line-height: 1.25;
-            color: var(--text);
-            max-width: 720px;
+        .lifestyle-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 900px;
             margin: 0 auto;
-            letter-spacing: -0.01em;
         }
-        .key-message em {
-            font-style: italic;
-            color: var(--accent);
+        .lifestyle-card {
+            border-radius: 24px;
+            overflow: hidden;
+            background: #000;
+            box-shadow:
+                0 16px 48px rgba(0, 0, 0, 0.55),
+                0 0 0 1px rgba(255, 255, 255, 0.04);
+            transition: transform 0.4s ease;
+            opacity: 0; animation: fadeUp 0.7s 0.15s forwards;
         }
-        .key-message .key-sub {
+        .lifestyle-card:nth-child(2) { animation-delay: 0.25s; }
+        .lifestyle-card img {
             display: block;
-            margin-top: 24px;
-            font-family: var(--sans);
-            font-size: 0.42em;
+            width: 100%;
+            height: auto;
+        }
+
+        /* ================= LANG SWITCH ================= */
+        .lang-switch {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+        .lang-switch a, .lang-switch .current {
+            font-size: 0.85em;
             color: var(--text-dim);
-            font-style: normal;
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 100px;
+            border: 1px solid transparent;
+            transition: color 0.2s, background 0.2s, border-color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            min-height: 44px;
+        }
+        .lang-switch .current {
+            color: var(--text);
+            border-color: var(--border);
+            background: var(--surface);
+            font-weight: 500;
         }
 
         /* ================= FEATURES ================= */
@@ -467,10 +499,9 @@
             padding: 10px 14px;
             border-radius: 8px;
             transition: color 0.2s, background 0.2s;
-            display: inline-block;
-            min-height: 44px;
             display: inline-flex;
             align-items: center;
+            min-height: 44px;
         }
         footer .copyright {
             font-size: 0.82em;
@@ -502,7 +533,12 @@
                 transform: translateX(3px);
             }
             .device-frame:hover { transform: translateY(-4px); }
+            .lifestyle-card:hover { transform: translateY(-4px); }
             .footer-links a:hover { color: var(--text); background: var(--surface); }
+            .lang-switch a:hover {
+                color: var(--text);
+                background: var(--surface);
+            }
             footer .copyright a:hover { color: var(--text); }
         }
 
@@ -512,6 +548,7 @@
             outline-offset: 4px;
         }
         .footer-links a:focus-visible,
+        .lang-switch a:focus-visible,
         footer .copyright a:focus-visible {
             outline: 2px solid var(--accent);
             outline-offset: 2px;
@@ -530,9 +567,13 @@
             .hero-title { font-size: 2.2em; }
             .hero-subtitle { font-size: 1em; }
 
-            .key-message { padding: 60px 20px; }
-            .key-message p { font-size: 1.7em; }
-            .key-message .key-sub { font-size: 0.55em; }
+            .lifestyle { padding: 40px 16px 60px; }
+            .lifestyle-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+                max-width: 360px;
+            }
+            .lifestyle-card { border-radius: 20px; }
 
             .features { padding: 70px 20px 50px; }
             .features-grid {
@@ -579,7 +620,8 @@
             }
             /* fade 애니메이션 사용 요소가 opacity:0에 머무르지 않도록 명시 */
             .hero-icon, .hero-title, .hero-subtitle, .trust-strip, .download-btn,
-            .hero-note, .section-label, .section-title, .screenshots-grid {
+            .hero-note, .section-label, .section-title, .screenshots-grid,
+            .lifestyle-card {
                 opacity: 1 !important;
                 transform: none !important;
             }
@@ -612,7 +654,7 @@
         <div class="trust-strip" aria-label="앱 핵심 신뢰 요소">
             <span class="trust-pill">실제 녹음 음성</span>
             <span class="trust-pill">1회 결제 · 구독 아님</span>
-            <span class="trust-pill">iPhone · Apple Watch</span>
+            <span class="trust-pill">플랭크 · 데드행 · 요가</span>
         </div>
 
         <!-- TODO(launch): App Store URL 확보 후 href 교체 + download-btn--coming 클래스 제거 -->
@@ -620,17 +662,35 @@
            class="download-btn download-btn--coming"
            role="button"
            aria-disabled="true"
+           tabindex="-1"
            aria-label="App Store 출시 예정 — 곧 다운로드 가능">
             App Store 출시 예정 <span class="arrow" aria-hidden="true">→</span>
         </a>
         <p class="hero-note">iOS 17 이상 · iPhone · Apple Watch</p>
     </section>
 
-    <!-- ════════ KEY MESSAGE ════════ -->
-    <section class="key-message">
-        <p>화면을 볼 수 없을 때,<br><em>귀로 시간을 듣는다.</em>
-            <span class="key-sub">— TTS가 아닌 실제 녹음 음성으로 매초 카운트</span>
-        </p>
+    <!-- ════════ LIFESTYLE ════════ -->
+    <section class="lifestyle" aria-label="라이프스타일 미리보기">
+        <div class="lifestyle-grid">
+            <div class="lifestyle-card">
+                <picture>
+                    <source srcset="../assets/lifestyle/ko/yoga.webp" type="image/webp">
+                    <img src="../assets/lifestyle/ko/yoga.png"
+                         alt="요가 자세를 유지하는 여성과 60초 카운트다운을 표시 중인 듣는타이머 화면"
+                         width="800" height="1734"
+                         loading="lazy" decoding="async">
+                </picture>
+            </div>
+            <div class="lifestyle-card">
+                <picture>
+                    <source srcset="../assets/lifestyle/ko/pullup.webp" type="image/webp">
+                    <img src="../assets/lifestyle/ko/pullup.png"
+                         alt="턱걸이 자세를 유지하는 남성과 60초 카운트다운을 표시 중인 듣는타이머 화면"
+                         width="800" height="1734"
+                         loading="lazy" decoding="async">
+                </picture>
+            </div>
+        </div>
     </section>
 
     <!-- ════════ FEATURES ════════ -->
@@ -765,6 +825,7 @@
            class="download-btn download-btn--coming"
            role="button"
            aria-disabled="true"
+           tabindex="-1"
            aria-label="App Store 출시 예정 — 곧 다운로드 가능">
             App Store 출시 예정 <span class="arrow" aria-hidden="true">→</span>
         </a>
@@ -772,6 +833,11 @@
 
     <!-- ════════ FOOTER ════════ -->
     <footer>
+        <nav class="lang-switch" aria-label="언어 선택">
+            <span class="current" aria-current="page">한국어</span>
+            <a href="../en/" hreflang="en" lang="en">English</a>
+            <a href="../ja/" hreflang="ja" lang="ja">日本語</a>
+        </nav>
         <div class="footer-links">
             <a href="https://pocketlabs.kr/listentimer-support/ko/">지원</a>
             <a href="https://pocketlabs.kr/listentimer-privacy/ko/">개인정보처리방침</a>
