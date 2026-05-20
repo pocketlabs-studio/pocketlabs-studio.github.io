@@ -187,7 +187,9 @@
             text-decoration: none; padding: 8px 14px;
             border-radius: 100px; border: 1px solid transparent;
             transition: color 0.2s, background 0.2s, border-color 0.2s;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            min-height: 44px;
         }
         .lang-switch .current {
             color: var(--text); border-color: var(--border);
@@ -438,12 +440,12 @@
              width="96" height="96"
              fetchpriority="high">
         <h1 class="hero-title">ListenTimer</h1>
-        <p class="hero-subtitle">Hands-free voice workout timer.<br><em>Real recorded voice</em> reads every second out loud.</p>
+        <p class="hero-subtitle">Hands-free voice workout timer.<br><em>A real recorded voice</em> reads every second.</p>
 
         <div class="trust-strip" aria-label="Key app values">
             <span class="trust-pill">Real recorded voice</span>
             <span class="trust-pill">One-time · No subscription</span>
-            <span class="trust-pill">iPhone · Apple Watch</span>
+            <span class="trust-pill">Planks · Dead hangs · Yoga</span>
         </div>
 
         <!-- TODO(launch): replace href with App Store URL + remove .download-btn--coming -->
@@ -451,6 +453,7 @@
            class="download-btn download-btn--coming"
            role="button"
            aria-disabled="true"
+           tabindex="-1"
            aria-label="Coming soon to App Store">
             Coming soon to App Store <span class="arrow" aria-hidden="true">→</span>
         </a>
@@ -463,7 +466,7 @@
                 <picture>
                     <source srcset="../assets/lifestyle/en/yoga.webp" type="image/webp">
                     <img src="../assets/lifestyle/en/yoga.png"
-                         alt="A woman holding a yoga pose with ListenTimer counting down 60 seconds — eyes on your form, not on your screen"
+                         alt="A woman holding a yoga pose with ListenTimer displaying a 60-second countdown"
                          width="800" height="1734"
                          loading="lazy" decoding="async">
                 </picture>
@@ -472,7 +475,7 @@
                 <picture>
                     <source srcset="../assets/lifestyle/en/pullup.webp" type="image/webp">
                     <img src="../assets/lifestyle/en/pullup.png"
-                         alt="A man holding a pull-up with ListenTimer counting down 60 seconds — every second of the hold, spoken out loud"
+                         alt="A man holding a pull-up with ListenTimer displaying a 60-second countdown"
                          width="800" height="1734"
                          loading="lazy" decoding="async">
                 </picture>
@@ -588,7 +591,7 @@
                 <span class="premium-badge">PREMIUM</span>
                 <div class="premium-price">
                     <span class="amount">$3.99</span>
-                    <span class="period">One-time purchase · Not a subscription</span>
+                    <span class="period">USD · One-time purchase · Not a subscription</span>
                 </div>
                 <ul class="premium-list">
                     <li>Unlocks PT Coach and Yoga Instructor voices</li>
@@ -600,13 +603,14 @@
     </section>
 
     <section class="cta">
-        <p class="cta-headline">Ready to train without watching.</p>
+        <p class="cta-headline">Train without watching the clock.</p>
         <p>Start free with the Default voice — one-time $3.99 unlocks everything for life.</p>
         <!-- TODO(launch): replace href with App Store URL + remove .download-btn--coming -->
         <a href="#"
            class="download-btn download-btn--coming"
            role="button"
            aria-disabled="true"
+           tabindex="-1"
            aria-label="Coming soon to App Store">
             Coming soon to App Store <span class="arrow" aria-hidden="true">→</span>
         </a>

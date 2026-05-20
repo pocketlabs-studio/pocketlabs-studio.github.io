@@ -10,41 +10,78 @@
     <link rel="alternate" hreflang="en" href="https://pocketlabs.kr/listentimer/en/">
     <link rel="alternate" hreflang="ja" href="https://pocketlabs.kr/listentimer/ja/">
     <link rel="alternate" hreflang="x-default" href="https://pocketlabs.kr/listentimer/en/">
+    <!-- Next-page 폰트 핸드셰이크 cold connect 비용 절감 — redirect 후 곧바로 폰트 로드 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <script>
-        // 브라우저 언어 기반 자동 분기. 매칭 없으면 en으로 fallback (글로벌 디폴트).
+        // 브라우저 언어 우선순위 배열 전체를 훑어 첫 매칭 언어로 분기.
+        // navigator.languages = 사용자가 시스템에 등록한 모든 우선순위 언어 (예: ['ko', 'en-US']).
+        // 단일 navigator.language만 보면 영문 OS + 한글 보조 사용자가 영문 페이지로 잘못 떨어진다.
         (function() {
-            var lang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+            var langs = (navigator.languages && navigator.languages.length)
+                ? navigator.languages
+                : [navigator.language || navigator.userLanguage || 'en'];
             var target = './en/';
-            if (lang.indexOf('ko') === 0) target = './ko/';
-            else if (lang.indexOf('ja') === 0) target = './ja/';
+            for (var i = 0; i < langs.length; i++) {
+                var l = (langs[i] || '').toLowerCase();
+                if (l.indexOf('ko') === 0) { target = './ko/'; break; }
+                if (l.indexOf('ja') === 0) { target = './ja/'; break; }
+                if (l.indexOf('en') === 0) { break; }   // 명시적 en 발견 시 즉시 종료(빠른 분기)
+            }
             location.replace(target);
         })();
     </script>
-    <noscript>
-        <meta http-equiv="refresh" content="0; url=./en/">
-    </noscript>
     <style>
         body {
             background: #0A0A0A;
             color: #888;
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans JP', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            font-size: 0.9em;
+            font-size: 0.95em;
+            padding: 24px;
         }
-        a { color: #4F8FFF; text-decoration: none; }
+        .picker {
+            text-align: center;
+            max-width: 320px;
+        }
+        .picker h1 {
+            color: #EAEAEA;
+            font-size: 1.4em;
+            font-weight: 600;
+            margin: 0 0 16px;
+            letter-spacing: -0.01em;
+        }
+        .picker p {
+            margin: 0 0 24px;
+            line-height: 1.5;
+        }
+        .picker a {
+            display: inline-block;
+            color: #4F8FFF;
+            text-decoration: none;
+            padding: 10px 16px;
+            margin: 4px;
+            border-radius: 100px;
+            border: 1px solid #222;
+            min-height: 44px;
+            line-height: 24px;
+        }
+        .picker a:hover { background: #141414; }
     </style>
 </head>
 <body>
-    <!-- JS 비활성 환경 fallback — 사용자가 직접 언어 선택 가능 -->
-    <p>
-        ListenTimer ·
-        <a href="./ko/" hreflang="ko">한국어</a> ·
-        <a href="./en/" hreflang="en">English</a> ·
-        <a href="./ja/" hreflang="ja">日本語</a>
-    </p>
+    <!-- JS 비활성 환경 fallback — 사용자가 직접 언어를 선택할 수 있도록 명시적 picker 표시.
+         JS 환경에서는 위 스크립트가 즉시 location.replace로 분기하므로 이 화면은 표시되지 않는다. -->
+    <div class="picker">
+        <h1>ListenTimer</h1>
+        <p>Select a language to continue:</p>
+        <a href="./ko/" hreflang="ko" lang="ko">한국어</a>
+        <a href="./en/" hreflang="en" lang="en">English</a>
+        <a href="./ja/" hreflang="ja" lang="ja">日本語</a>
+    </div>
 </body>
 </html>

@@ -19,11 +19,12 @@
     <link rel="alternate" hreflang="x-default" href="https://pocketlabs.kr/listentimer/en/">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Noto Sans JP는 weight 400/700만 — 500은 본문 비중이 낮고 글리프 페이로드(~70KB) 절감 우선 -->
     <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital,wght@0,400;1,400&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital,wght@0,400;1,400&family=Noto+Sans+JP:wght@400;700&display=swap"
           media="print" onload="this.media='all'">
     <noscript>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital,wght@0,400;1,400&family=Noto+Sans+JP:wght@400;500;700&display=swap">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital,wght@0,400;1,400&family=Noto+Sans+JP:wght@400;700&display=swap">
     </noscript>
     <style>
         :root {
@@ -177,7 +178,9 @@
             text-decoration: none; padding: 8px 14px;
             border-radius: 100px; border: 1px solid transparent;
             transition: color 0.2s, background 0.2s, border-color 0.2s;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            min-height: 44px;
         }
         .lang-switch .current {
             color: var(--text); border-color: var(--border);
@@ -428,12 +431,12 @@
              width="96" height="96"
              fetchpriority="high">
         <h1 class="hero-title">リッスンタイマー</h1>
-        <p class="hero-subtitle">目を閉じても続く音声カウント。<br><em>実録音の音声</em>が毎秒の数字を読み上げます。</p>
+        <p class="hero-subtitle">目を閉じても続く、音声カウント<br><em>本物の声</em>が毎秒の数字を読み上げます。</p>
 
         <div class="trust-strip" aria-label="アプリの主な特徴">
-            <span class="trust-pill">実録音音声</span>
+            <span class="trust-pill">肉声録音</span>
             <span class="trust-pill">買い切り · サブスクなし</span>
-            <span class="trust-pill">iPhone · Apple Watch</span>
+            <span class="trust-pill">プランク · デッドハング · ヨガ</span>
         </div>
 
         <!-- TODO(launch): App Store URL確保後にhref置換 + .download-btn--coming除去 -->
@@ -441,6 +444,7 @@
            class="download-btn download-btn--coming"
            role="button"
            aria-disabled="true"
+           tabindex="-1"
            aria-label="App Store 配信予定">
             App Store 配信予定 <span class="arrow" aria-hidden="true">→</span>
         </a>
@@ -453,7 +457,7 @@
                 <picture>
                     <source srcset="../assets/lifestyle/ja/yoga.webp" type="image/webp">
                     <img src="../assets/lifestyle/ja/yoga.png"
-                         alt="ヨガポーズを維持する女性とリッスンタイマーが60秒をカウントダウン中の画面 — 動きに集中、カウントダウンは耳で"
+                         alt="ヨガポーズを維持する女性とリッスンタイマーが60秒のカウントダウンを表示中の画面"
                          width="800" height="1734"
                          loading="lazy" decoding="async">
                 </picture>
@@ -462,7 +466,7 @@
                 <picture>
                     <source srcset="../assets/lifestyle/ja/pullup.webp" type="image/webp">
                     <img src="../assets/lifestyle/ja/pullup.png"
-                         alt="懸垂の姿勢を維持する男性とリッスンタイマーが60秒をカウントダウン中の画面 — 耐える一秒一秒を声でカウント"
+                         alt="懸垂の姿勢を維持する男性とリッスンタイマーが60秒のカウントダウンを表示中の画面"
                          width="800" height="1734"
                          loading="lazy" decoding="async">
                 </picture>
@@ -493,8 +497,8 @@
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon" aria-hidden="true">💤</div>
-                    <h3>バックグラウンド + 触覚</h3>
-                    <p>音楽再生中なら画面をロックしてもカウントが続きます。手首のハプティクスで、イヤホンを外していても気づける。</p>
+                    <h3>バックグラウンド再生 + 手首のハプティクス</h3>
+                    <p>音楽再生中なら画面をロックしてもカウントが続きます。手首のハプティクスで、イヤホンを外していても気づけます。</p>
                 </div>
             </div>
         </div>
@@ -578,7 +582,7 @@
                 <span class="premium-badge">PREMIUM</span>
                 <div class="premium-price">
                     <span class="amount">¥500</span>
-                    <span class="period">買い切り · サブスクではありません</span>
+                    <span class="period">税込 · 買い切り · サブスクではありません</span>
                 </div>
                 <ul class="premium-list">
                     <li>PTコーチ + ヨガインストラクターを解除</li>
@@ -597,6 +601,7 @@
            class="download-btn download-btn--coming"
            role="button"
            aria-disabled="true"
+           tabindex="-1"
            aria-label="App Store 配信予定">
             App Store 配信予定 <span class="arrow" aria-hidden="true">→</span>
         </a>

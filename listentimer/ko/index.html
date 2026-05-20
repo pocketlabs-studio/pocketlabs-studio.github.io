@@ -244,7 +244,9 @@
             border-radius: 100px;
             border: 1px solid transparent;
             transition: color 0.2s, background 0.2s, border-color 0.2s;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            min-height: 44px;
         }
         .lang-switch .current {
             color: var(--text);
@@ -497,10 +499,9 @@
             padding: 10px 14px;
             border-radius: 8px;
             transition: color 0.2s, background 0.2s;
-            display: inline-block;
-            min-height: 44px;
             display: inline-flex;
             align-items: center;
+            min-height: 44px;
         }
         footer .copyright {
             font-size: 0.82em;
@@ -547,6 +548,7 @@
             outline-offset: 4px;
         }
         .footer-links a:focus-visible,
+        .lang-switch a:focus-visible,
         footer .copyright a:focus-visible {
             outline: 2px solid var(--accent);
             outline-offset: 2px;
@@ -652,7 +654,7 @@
         <div class="trust-strip" aria-label="앱 핵심 신뢰 요소">
             <span class="trust-pill">실제 녹음 음성</span>
             <span class="trust-pill">1회 결제 · 구독 아님</span>
-            <span class="trust-pill">iPhone · Apple Watch</span>
+            <span class="trust-pill">플랭크 · 데드행 · 요가</span>
         </div>
 
         <!-- TODO(launch): App Store URL 확보 후 href 교체 + download-btn--coming 클래스 제거 -->
@@ -660,6 +662,7 @@
            class="download-btn download-btn--coming"
            role="button"
            aria-disabled="true"
+           tabindex="-1"
            aria-label="App Store 출시 예정 — 곧 다운로드 가능">
             App Store 출시 예정 <span class="arrow" aria-hidden="true">→</span>
         </a>
@@ -673,7 +676,7 @@
                 <picture>
                     <source srcset="../assets/lifestyle/ko/yoga.webp" type="image/webp">
                     <img src="../assets/lifestyle/ko/yoga.png"
-                         alt="요가 자세를 유지하는 여성과 60초 카운트다운 중인 듣는타이머 화면 — 화면을 안 봐도 시간을 알려주는 타이머"
+                         alt="요가 자세를 유지하는 여성과 60초 카운트다운을 표시 중인 듣는타이머 화면"
                          width="800" height="1734"
                          loading="lazy" decoding="async">
                 </picture>
@@ -682,7 +685,7 @@
                 <picture>
                     <source srcset="../assets/lifestyle/ko/pullup.webp" type="image/webp">
                     <img src="../assets/lifestyle/ko/pullup.png"
-                         alt="턱걸이 자세를 유지하는 남성과 60초 카운트다운 중인 듣는타이머 화면 — 버티는 매 순간을 귀로 듣는 카운트다운"
+                         alt="턱걸이 자세를 유지하는 남성과 60초 카운트다운을 표시 중인 듣는타이머 화면"
                          width="800" height="1734"
                          loading="lazy" decoding="async">
                 </picture>
@@ -822,6 +825,7 @@
            class="download-btn download-btn--coming"
            role="button"
            aria-disabled="true"
+           tabindex="-1"
            aria-label="App Store 출시 예정 — 곧 다운로드 가능">
             App Store 출시 예정 <span class="arrow" aria-hidden="true">→</span>
         </a>
