@@ -157,6 +157,13 @@
             background: rgba(255,255,255,0.04);
             border: 1px solid var(--border);
         }
+        .badge-live {
+            color: #30D158;
+            background: rgba(48, 209, 88, 0.08);
+            border: 1px solid rgba(48, 209, 88, 0.18);
+        }
+        /* 카드가 링크일 때 링크 기본 스타일 무효화 */
+        a.app-card { color: inherit; text-decoration: none; }
 
         /* --- FOOTER --- */
         footer {
@@ -221,14 +228,14 @@
                 <span class="app-badge badge-dev">In Dev</span>
             </div>
 
-            <div class="app-card">
+            <a class="app-card" href="/listentimer/">
                 <div class="app-icon">⏱️</div>
                 <div class="app-info">
                     <div class="app-name">ListenTimer</div>
                     <div class="app-desc">Voice-driven workout timer that calls out each second — train without watching the screen.</div>
                 </div>
-                <span class="app-badge badge-dev">In Dev</span>
-            </div>
+                <span class="app-badge badge-live">Released</span>
+            </a>
 
         </div>
     </section>

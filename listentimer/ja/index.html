@@ -19,6 +19,7 @@
     <link rel="alternate" hreflang="x-default" href="https://pocketlabs.kr/listentimer/en/">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://apps.apple.com">
     <!-- Noto Sans JP는 weight 400/700만 — 500은 본문 비중이 낮고 글리프 페이로드(~70KB) 절감 우선 -->
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital,wght@0,400;1,400&family=Noto+Sans+JP:wght@400;700&display=swap"
@@ -137,12 +138,6 @@
         .download-btn .arrow {
             font-size: 1.1em; transition: transform 0.2s ease;
         }
-        .download-btn--coming {
-            background: var(--surface); color: var(--text);
-            border: 1px solid var(--border); cursor: not-allowed;
-            box-shadow: none;
-        }
-        .download-btn--coming:hover { transform: none; box-shadow: none; }
         .hero-note {
             margin-top: 14px;
             font-size: 0.82em;
@@ -350,8 +345,8 @@
         @media (hover: hover) {
             .feature-card:hover { background: var(--surface-hover); border-color: #2a2a2a; transform: translateY(-2px); }
             .character-card:hover { background: var(--surface-hover); border-color: #2a2a2a; }
-            .download-btn:not(.download-btn--coming):hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(255, 255, 255, 0.12); }
-            .download-btn:not(.download-btn--coming):hover .arrow { transform: translateX(3px); }
+            .download-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(255, 255, 255, 0.12); }
+            .download-btn:hover .arrow { transform: translateX(3px); }
             .device-frame:hover { transform: translateY(-4px); }
             .lifestyle-card:hover { transform: translateY(-4px); }
             .footer-links a:hover { color: var(--text); background: var(--surface); }
@@ -414,13 +409,6 @@
             }
         }
     </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.download-btn--coming').forEach(function(btn) {
-                btn.addEventListener('click', function(e) { e.preventDefault(); });
-            });
-        });
-    </script>
 </head>
 <body>
 
@@ -439,16 +427,11 @@
             <span class="trust-pill">プランク · デッドハング · ヨガ</span>
         </div>
 
-        <!-- TODO(launch): App Store URL確保後にhref置換 + .download-btn--coming除去 -->
-        <a href="#"
-           class="download-btn download-btn--coming"
-           role="button"
-           aria-disabled="true"
-           tabindex="-1"
-           aria-label="App Store 配信予定">
-            App Store 配信予定 <span class="arrow" aria-hidden="true">→</span>
+        <a href="https://apps.apple.com/kr/app/id6769309369"
+           class="download-btn">
+            App Storeでダウンロード <span class="arrow" aria-hidden="true">→</span>
         </a>
-        <p class="hero-note">iOS 17以上 · iPhone · Apple Watch</p>
+        <p class="hero-note">iOS 17以上 · iPhone · Apple Watch<br>現在は韓国のApp Storeでのみ配信中</p>
     </section>
 
     <section class="lifestyle" aria-label="ライフスタイルプレビュー">
@@ -596,14 +579,9 @@
     <section class="cta">
         <p class="cta-headline">今すぐ、画面を見ないトレーニングへ。</p>
         <p>スタンダード音声で無料スタート。買い切り ¥500 で、すべて永続解除。</p>
-        <!-- TODO(launch): App Store URL確保後にhref置換 -->
-        <a href="#"
-           class="download-btn download-btn--coming"
-           role="button"
-           aria-disabled="true"
-           tabindex="-1"
-           aria-label="App Store 配信予定">
-            App Store 配信予定 <span class="arrow" aria-hidden="true">→</span>
+        <a href="https://apps.apple.com/kr/app/id6769309369"
+           class="download-btn">
+            App Storeでダウンロード <span class="arrow" aria-hidden="true">→</span>
         </a>
     </section>
 

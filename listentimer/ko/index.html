@@ -20,6 +20,7 @@
     <link rel="alternate" hreflang="x-default" href="https://pocketlabs.kr/listentimer/en/">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://apps.apple.com">
     <!-- 비동기 폰트 로딩 (media swap 트릭) — render-blocking 제거로 LCP 300~500ms 단축.
          opsz/wght variable axis는 사용처 없어 wght만 명시해 폰트 파일 크기 절감. -->
     <link rel="stylesheet"
@@ -181,16 +182,6 @@
             font-size: 1.1em;
             transition: transform 0.2s ease;
         }
-        /* 출시 전 placeholder 상태 — App Store URL 확보 시 .download-btn--coming 클래스 제거 + href/onclick 정리 */
-        .download-btn--coming {
-            background: var(--surface);
-            color: var(--text);
-            border: 1px solid var(--border);
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-        .download-btn--coming:hover { transform: none; box-shadow: none; }
-
         .hero-note {
             margin-top: 14px;
             font-size: 0.82em;
@@ -525,11 +516,11 @@
                 background: var(--surface-hover);
                 border-color: #2a2a2a;
             }
-            .download-btn:not(.download-btn--coming):hover {
+            .download-btn:hover {
                 transform: translateY(-2px);
                 box-shadow: 0 10px 32px rgba(255, 255, 255, 0.12);
             }
-            .download-btn:not(.download-btn--coming):hover .arrow {
+            .download-btn:hover .arrow {
                 transform: translateX(3px);
             }
             .device-frame:hover { transform: translateY(-4px); }
@@ -627,17 +618,6 @@
             }
         }
     </style>
-    <script>
-        // 출시 전 placeholder CTA — 클릭 시 페이지 top 점프 방지.
-        // 출시 후엔 .download-btn--coming 제거 + href를 App Store URL로 교체하면 정상 동작.
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.download-btn--coming').forEach(function(btn) {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                });
-            });
-        });
-    </script>
 </head>
 <body>
 
@@ -657,14 +637,9 @@
             <span class="trust-pill">플랭크 · 데드행 · 요가</span>
         </div>
 
-        <!-- TODO(launch): App Store URL 확보 후 href 교체 + download-btn--coming 클래스 제거 -->
-        <a href="#"
-           class="download-btn download-btn--coming"
-           role="button"
-           aria-disabled="true"
-           tabindex="-1"
-           aria-label="App Store 출시 예정 — 곧 다운로드 가능">
-            App Store 출시 예정 <span class="arrow" aria-hidden="true">→</span>
+        <a href="https://apps.apple.com/kr/app/id6769309369"
+           class="download-btn">
+            App Store에서 다운로드 <span class="arrow" aria-hidden="true">→</span>
         </a>
         <p class="hero-note">iOS 17 이상 · iPhone · Apple Watch</p>
     </section>
@@ -820,14 +795,9 @@
     <section class="cta">
         <p class="cta-headline">지금 시작하세요.</p>
         <p>기본 캐릭터로 바로 시작 — 1회 결제 ₩4,400으로 평생 사용.</p>
-        <!-- TODO(launch): App Store URL 확보 후 href 교체 + download-btn--coming 클래스 제거 -->
-        <a href="#"
-           class="download-btn download-btn--coming"
-           role="button"
-           aria-disabled="true"
-           tabindex="-1"
-           aria-label="App Store 출시 예정 — 곧 다운로드 가능">
-            App Store 출시 예정 <span class="arrow" aria-hidden="true">→</span>
+        <a href="https://apps.apple.com/kr/app/id6769309369"
+           class="download-btn">
+            App Store에서 다운로드 <span class="arrow" aria-hidden="true">→</span>
         </a>
     </section>
 
