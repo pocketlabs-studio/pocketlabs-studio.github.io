@@ -6,16 +6,24 @@
     <title>개인정보처리방침 — PocketLingo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0A0A0A;
-            --surface: #141414;
-            --text: #EAEAEA;
-            --text-dim: #777;
-            --accent: #4F8FFF;
-            --border: #222;
-            --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+            /* PocketLingo "Pocket Paper" — 웜 아이보리 + 손바느질 스티치 + 틸/버터 */
+            --bg: #ECE1C9;            /* Warm Ivory (앱 콘텐츠 배경) */
+            --surface: #FFFFFF;        /* 흰 카드 */
+            --text: #3A3D34;           /* Ink */
+            --text-dim: #6E7263;       /* Ink Soft */
+            --faint: #9A958B;
+            --accent: #3F7E78;         /* Teal Deep — 링크/액센트 */
+            --accent-ink: #2F5E59;     /* 진한 틸 — h1 */
+            --border: #E5D7B4;         /* 웜 헤어라인 */
+            --stitch: rgba(63,126,120,.38); /* 손바느질 스티치(틸) */
+            --th-bg: #F6F0E2;          /* 표 헤더 웜 틴트 */
+            --note-bg: #FBF4E2;        /* 콜아웃 웜 틴트 */
+            --sans: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+            --serif: 'Gowun Batang', 'Apple SD Gothic Neo', serif;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
@@ -29,8 +37,21 @@
         }
         .container {
             max-width: 720px;
-            margin: 0 auto;
-            padding: 60px 24px 80px;
+            margin: 40px auto;
+            padding: 48px 40px 56px;
+            background: var(--surface);
+            border-radius: 18px;
+            box-shadow: 0 1px 2px rgba(58,61,52,.05), 0 20px 50px rgba(58,61,52,.10);
+            position: relative;
+        }
+        /* 손바느질 스티치 점선 — Pocket Paper 시그니처(앱 카드 테두리) */
+        .container::before {
+            content: "";
+            position: absolute;
+            inset: 9px;
+            border: 1.5px dashed var(--stitch);
+            border-radius: 12px;
+            pointer-events: none;
         }
         .lang-switch {
             float: right;
@@ -38,9 +59,11 @@
             font-size: 0.85em;
         }
         h1 {
-            font-size: 1.8em;
+            font-family: var(--serif);
+            font-size: 1.85em;
             font-weight: 700;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.01em;
+            color: var(--accent-ink);
             margin-bottom: 8px;
         }
         .effective-date {
@@ -49,22 +72,23 @@
             margin-bottom: 48px;
         }
         h2 {
-            font-size: 1.15em;
-            font-weight: 600;
+            font-family: var(--serif);
+            font-size: 1.22em;
+            font-weight: 700;
             margin-top: 40px;
             margin-bottom: 12px;
-            color: var(--text);
+            color: var(--accent);
         }
         h3 {
             font-size: 1.0em;
-            font-weight: 600;
+            font-weight: 700;
             margin-top: 20px;
             margin-bottom: 8px;
             color: var(--text);
         }
         p, li {
             font-size: 0.95em;
-            color: #ccc;
+            color: var(--text);
         }
         p { margin-bottom: 12px; }
         ul, ol {
@@ -83,35 +107,35 @@
             text-align: left;
             padding: 10px 12px;
             border: 1px solid var(--border);
-            color: #ccc;
+            color: var(--text);
             vertical-align: top;
         }
         th {
-            background: var(--surface);
+            background: var(--th-bg);
             color: var(--text);
-            font-weight: 600;
+            font-weight: 700;
         }
         .note {
-            background: var(--surface);
+            background: var(--note-bg);
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 16px 20px;
             margin: 16px 0;
             font-size: 0.9em;
-            color: #bbb;
+            color: var(--text-dim);
         }
         footer {
             text-align: center;
-            padding: 40px 24px;
-            border-top: 1px solid var(--border);
-            margin-top: 60px;
+            padding: 36px 24px 8px;
+            margin-top: 28px;
         }
         footer p {
             font-size: 0.82em;
             color: var(--text-dim);
         }
         @media (max-width: 600px) {
-            .container { padding: 40px 16px 60px; }
+            .container { margin: 16px auto; padding: 32px 22px 44px; }
+            .container::before { inset: 6px; }
             h1 { font-size: 1.5em; }
             table { font-size: 0.82em; }
             th, td { padding: 8px; }
