@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>지원 — 내년 집값</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0A0A0A;
+            --surface: #141414;
+            --text: #EAEAEA;
+            --text-dim: #777;
+            --accent: #4F8FFF;
+            --border: #222;
+            --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 60px 24px 80px;
+        }
+        .lang-switch {
+            float: right;
+            color: var(--text-dim);
+            font-size: 0.85em;
+        }
+        .lang-switch a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .lang-switch a:hover { text-decoration: underline; }
+        h1 {
+            font-size: 1.8em;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+        .lead {
+            color: #ccc;
+            font-size: 0.95em;
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+        h2 {
+            font-size: 1.15em;
+            font-weight: 600;
+            margin-top: 40px;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        h3 {
+            font-size: 1em;
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 4px;
+            color: var(--text);
+        }
+        p, li {
+            font-size: 0.95em;
+            color: #ccc;
+        }
+        ol, ul {
+            padding-left: 20px;
+            margin-bottom: 12px;
+        }
+        li { margin-bottom: 6px; }
+        a { color: var(--accent); }
+        .note {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 0.9em;
+            color: #bbb;
+        }
+        footer {
+            text-align: center;
+            padding: 40px 24px;
+            border-top: 1px solid var(--border);
+            margin-top: 60px;
+        }
+        footer p {
+            font-size: 0.82em;
+            color: var(--text-dim);
+        }
+        @media (max-width: 600px) {
+            .container { padding: 40px 16px 60px; }
+            h1 { font-size: 1.5em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <span class="lang-switch"><span lang="ko" aria-current="page">한국어</span></span>
+        </div>
+
+        <h1>내년 집값(HouseCast) 지원</h1>
+        <p class="lead">금리·통화량·가계부채·주택 공급·거래량 같은 거시경제 지표와 확정된 정책, 인구 데이터를 근거로 아파트 매매가격지수의 향후 12개월 방향과 범위를 AI로 전망하는 앱, <strong>내년 집값</strong>을 이용해 주셔서 감사합니다. 로그인이나 계정 없이 쓸 수 있습니다.</p>
+
+        <h2>문의하기</h2>
+        <ul>
+            <li>이메일: <a href="mailto:contact@pocketlabs.kr">contact@pocketlabs.kr</a></li>
+            <li>앱 내 문의: 설정 → 문의 이메일</li>
+        </ul>
+        <p>문의하실 때 사용 중인 기기 종류와 앱 버전, 문제가 생긴 화면을 함께 적어 주시면 더 빠르게 도와드릴 수 있습니다.</p>
+
+        <h2>자주 묻는 질문</h2>
+
+        <h3>Q. 전망은 어떻게 볼 수 있나요?</h3>
+        <p>지역을 고른 뒤 <strong>「내년 집값 보기」</strong>를 누르면 리워드 광고 안내가 나옵니다. 광고를 한 번 끝까지 보면 해당 지역의 12개월 전망이 열립니다. 광고 시청은 선택 사항이며 「나중에」를 눌러 언제든 거절할 수 있습니다. 광고 없이 보려면 <strong>영구 광고 제거</strong>(1회 결제)를 이용해 주세요. 한 번 연 전망은 일정 시간 동안 광고 없이 다시 볼 수 있으며, 남은 시간은 화면에 표시됩니다.</p>
+
+        <h3>Q. 광고가 뜨지 않거나 불러오지 못해요.</h3>
+        <p>네트워크 연결을 확인한 뒤 안내 시트를 닫고 다시 시도해 주세요. 시간대나 지역에 따라 게재할 광고가 잠시 없을 수도 있습니다. 같은 문제가 반복되면 위 이메일로 알려 주세요.</p>
+
+        <h3>Q. 근거 카드가 잠겨 있어요.</h3>
+        <p>전망의 근거 카드는 리워드 광고를 보고 열거나, 영구 광고 제거를 구매하면 광고 없이 모두 볼 수 있습니다.</p>
+
+        <h3>Q. 기기를 바꿨거나 앱을 다시 설치했는데 광고 제거가 풀렸어요.</h3>
+        <p>영구 광고 제거는 1회 결제이며 같은 Google 계정(Android) 또는 Apple 계정(iOS)에서 복원할 수 있습니다. 앱 설정의 <strong>구매 복원</strong>을 눌러 주세요.</p>
+
+        <h3>Q. 환불은 어떻게 하나요?</h3>
+        <p>결제 환불은 각 스토어가 처리합니다. Google Play는 <a href="https://support.google.com/googleplay/answer/2479637" target="_blank" rel="noopener noreferrer">Google Play 환불 안내</a>를, App Store는 <a href="https://reportaproblem.apple.com" target="_blank" rel="noopener noreferrer">reportaproblem.apple.com</a>을 이용해 주세요.</p>
+
+        <h3>Q. 알림을 끄고 싶어요.</h3>
+        <p>월간 전망 갱신 알림과 주간 지표 갱신 알림은 원하실 때만 켜는 옵트인 방식입니다. 앱 설정에서 두 알림을 각각 끌 수 있습니다.</p>
+
+        <h3>Q. 내 데이터를 삭제하고 싶어요.</h3>
+        <p>내년 집값은 계정을 만들지 않으며, 관심 지역과 설정은 기기 안에만 저장됩니다. 앱을 삭제하면 이 데이터도 함께 지워집니다. 광고·분석 데이터의 처리와 삭제 요청 절차는 <a href="https://pocketlabs.kr/housecast-privacy/ko/#data-deletion">개인정보처리방침의 데이터 삭제 요청</a> 항목을 참고해 주세요.</p>
+
+        <h3>Q. 전망은 얼마나 정확한가요? 투자 판단에 써도 되나요?</h3>
+        <p>전망은 공개 데이터와 모델을 근거로 한 참고용 추정치입니다. 실제 시장은 예상과 다르게 움직일 수 있으며, 본 정보는 투자 권유가 아닙니다. 중요한 결정은 여러 정보를 함께 살펴보고 내려 주세요.</p>
+
+        <div class="note">본 정보는 참고용 추정치이며 투자 권유가 아닙니다.</div>
+
+        <h2>관련 링크</h2>
+        <ul>
+            <li><a href="https://pocketlabs.kr/housecast-privacy/ko">개인정보처리방침</a></li>
+        </ul>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 PocketLabs. All rights reserved.<br>
+        <a href="mailto:contact@pocketlabs.kr" style="color: #777; text-decoration: none;">contact@pocketlabs.kr</a></p>
+    </footer>
+</body>
+</html>
