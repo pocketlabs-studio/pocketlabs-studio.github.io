@@ -61,7 +61,7 @@
         </div>
 
         <h1>개인정보처리방침</h1>
-        <p class="effective-date">시행일: 2026년 8월 20일</p>
+        <p class="effective-date">시행일: 2026년 8월 29일 (iOS 항목 추가 · 최초 시행 2026년 8월 20일)</p>
 
         <p>PocketLabs(이하 "회사")는 <strong>내년 집값</strong>(HouseCast, 이하 "앱") 이용자의 개인정보를 중요시하며, 「개인정보 보호법」 및 관련 법령을 준수합니다. 본 개인정보처리방침은 앱이 수집하는 개인정보의 항목, 수집 목적, 보유 기간, 제3자 제공·국외 이전 등을 안내합니다.</p>
 
@@ -83,12 +83,12 @@
             </tr>
             <tr>
                 <td>광고 데이터 (Google AdMob — 광고 제거 미구매 시)</td>
-                <td>Android 광고 ID, 앱 세트 ID, IP 주소(대략적 위치 추정에 사용), 광고 상호작용(노출·클릭·보상형 광고 시청 완료), 앱·SDK 진단 정보</td>
+                <td>Android: 광고 ID, 앱 세트 ID · iOS: 공급업체 식별자(IDFV) — 광고 식별자(IDFA)는 수집하지 않습니다(앱 추적 투명성(ATT) 권한을 요청하지 않으며 비개인화 광고만 표시) · 공통: IP 주소(대략적 위치 추정에 사용), 광고 상호작용(노출·클릭·보상형 광고 시청 완료), 앱·SDK 진단 정보</td>
                 <td>Google LLC 서버</td>
             </tr>
             <tr>
                 <td>앱 사용 통계 (Firebase Analytics)</td>
-                <td>앱 인스턴스 ID(가명 식별자), 광고 ID, 기기 정보(기기 모델, OS 버전, 언어/지역), 자동 수집 이벤트(첫 실행, 세션, 앱 업데이트, 인앱 결제 상품·가격 등), 앱 이용 이벤트(전망 열람, 광고 게이트 진행, 근거 해금, 지역 비교 등 화면 사용 기록 — 조회한 지역 코드 포함), 마스킹된 IP 기반 대략적 위치(국가/지역 수준)</td>
+                <td>앱 인스턴스 ID(가명 식별자), 광고 ID(Android — iOS에서는 IDFA를 수집하지 않습니다), 기기 정보(기기 모델, OS 버전, 언어/지역), 자동 수집 이벤트(첫 실행, 세션, 앱 업데이트, 인앱 결제 상품·가격 등), 앱 이용 이벤트(전망 열람, 광고 게이트 진행, 근거 해금, 지역 비교 등 화면 사용 기록 — 조회한 지역 코드 포함), 마스킹된 IP 기반 대략적 위치(국가/지역 수준)</td>
                 <td>Google LLC (Firebase) 서버</td>
             </tr>
             <tr>
@@ -107,9 +107,9 @@
                 <td>Google LLC (Firebase) 서버</td>
             </tr>
             <tr>
-                <td>결제 (Google Play 결제)</td>
-                <td>주문·결제 수단 정보는 Google Play가 직접 수집·처리하며 앱은 접근하지 않습니다. 앱은 구매 상태(광고 제거 여부)만 기기에 저장합니다.</td>
-                <td>Google LLC (Google Play) 서버</td>
+                <td>결제 (Android: Google Play 결제 · iOS: App Store 결제)</td>
+                <td>주문·결제 수단 정보는 Google Play 또는 App Store가 직접 수집·처리하며 앱은 접근하지 않습니다. 앱은 구매 상태(광고 제거 여부)만 기기에 저장합니다.</td>
+                <td>Google LLC (Google Play) 서버 · Apple Inc. (App Store) 서버</td>
             </tr>
             <tr>
                 <td>전망·근거 데이터 수신</td>
@@ -118,16 +118,16 @@
             </tr>
         </table>
         <div class="note">
-            Firebase 및 AdMob이 사용하는 식별자(앱 인스턴스 ID, Crashlytics 설치 UUID, 광고 ID, FCM 등록 토큰)는 가명 식별자로, 이용자의 이름·이메일·전화번호 등 직접 식별 정보와 연결되지 않습니다. 관심 지역은 기기에만 저장되므로 회사는 이용자의 거주지나 관심 지역을 알 수 없습니다. 다만 관심 지역 알림을 켜면 해당 지역의 알림 주제 구독 정보가 Google(FCM)에 저장되며, 알림을 끄면 구독이 해제됩니다.
+            Firebase 및 AdMob이 사용하는 식별자(앱 인스턴스 ID, Crashlytics 설치 UUID, 광고 ID(Android)·공급업체 식별자(IDFV, iOS), FCM 등록 토큰)는 가명 식별자로, 이용자의 이름·이메일·전화번호 등 직접 식별 정보와 연결되지 않습니다. 관심 지역은 기기에만 저장되므로 회사는 이용자의 거주지나 관심 지역을 알 수 없습니다. 다만 관심 지역 알림을 켜면 해당 지역의 알림 주제 구독 정보가 Google(FCM)에 저장되며, 알림을 끄면 구독이 해제됩니다.
         </div>
 
         <h2>2. 개인정보 수집 방법</h2>
         <ul>
             <li><strong>앱 설정·이용 상태</strong>: 이용자가 앱에서 직접 설정·이용한 내용이 기기에 자동 저장됩니다.</li>
-            <li><strong>광고 데이터</strong>: Google AdMob SDK가 광고를 요청·표시하는 과정에서 자동 수집합니다. 광고 제거를 구매하면 광고 SDK를 통한 수집이 중단됩니다.</li>
+            <li><strong>광고 데이터</strong>: Google AdMob SDK가 광고를 요청·표시하는 과정에서 자동 수집합니다. iOS에서는 앱 추적 투명성(ATT) 권한을 요청하지 않으므로 광고 식별자(IDFA)가 수집되지 않고 비개인화 광고만 표시됩니다. 광고 제거를 구매하면 광고 SDK를 통한 수집이 중단됩니다.</li>
             <li><strong>앱 사용 통계·크래시 리포트·원격 설정</strong>: Firebase SDK가 앱 실행·사용 과정에서 자동으로 수집·전송합니다.</li>
             <li><strong>푸시 알림</strong>: 이용자가 앱 설정에서 알림을 켤 때 Firebase Cloud Messaging SDK가 등록 토큰을 발급하고 선택한 알림 주제를 구독합니다.</li>
-            <li><strong>결제</strong>: 이용자가 광고 제거를 구매할 때 Google Play 결제 시스템이 처리합니다.</li>
+            <li><strong>결제</strong>: 이용자가 광고 제거를 구매할 때 Google Play(Android) 또는 App Store(iOS) 결제 시스템이 처리합니다.</li>
         </ul>
 
         <h2>3. 개인정보 수집 및 이용 목적</h2>
@@ -169,7 +169,7 @@
             </tr>
             <tr>
                 <td>결제 데이터</td>
-                <td>Google Play 정책에 따름. 회사는 결제 정보를 보관하지 않습니다</td>
+                <td>Google Play(Android) · App Store(iOS) 정책에 따름. 회사는 결제 정보를 보관하지 않습니다</td>
             </tr>
         </table>
 
@@ -182,24 +182,29 @@
             </tr>
             <tr>
                 <td>Google LLC (AdMob)</td>
-                <td>Android 광고 ID, 앱 세트 ID, IP 주소, 광고 상호작용, 진단 정보</td>
+                <td>광고 ID·앱 세트 ID(Android) 또는 공급업체 식별자(IDFV, iOS), IP 주소, 광고 상호작용, 진단 정보</td>
                 <td>광고 제공 및 성과 측정, 무효 트래픽 방지</td>
             </tr>
             <tr>
                 <td>Google LLC (Firebase Analytics · Crashlytics · Remote Config · Cloud Messaging)</td>
-                <td>앱 인스턴스 ID, 광고 ID, 기기 정보, 이용 이벤트, 대략적 위치, 크래시 정보, 설치 UUID, 원격 설정 조회 정보, FCM 등록 토큰·구독 주제</td>
+                <td>앱 인스턴스 ID, 광고 ID(Android), 기기 정보, 이용 이벤트, 대략적 위치, 크래시 정보, 설치 UUID, 원격 설정 조회 정보, FCM 등록 토큰·구독 주제</td>
                 <td>이용 통계 분석, 안정성 개선, 원격 설정, 푸시 알림 발송</td>
             </tr>
             <tr>
                 <td>Google LLC (Google Play)</td>
-                <td>주문·결제 정보 (Google Play가 직접 수집)</td>
+                <td>주문·결제 정보 (Google Play가 직접 수집 — Android)</td>
+                <td>인앱 결제 처리 및 구매 복원</td>
+            </tr>
+            <tr>
+                <td>Apple Inc. (App Store)</td>
+                <td>주문·결제 정보 (App Store가 직접 수집 — iOS)</td>
                 <td>인앱 결제 처리 및 구매 복원</td>
             </tr>
         </table>
         <p>광고 제거를 구매하면 AdMob에 대한 데이터 제공이 중단됩니다. Firebase Analytics 및 Crashlytics는 앱 품질 개선 목적으로 구매자에게도 동일하게 동작합니다.</p>
 
         <h2>6. 개인정보의 국외 이전</h2>
-        <p>위 항목의 데이터는 Google LLC의 서버(미국 등)로 전송됩니다.</p>
+        <p>위 항목의 데이터는 Google LLC의 서버(미국 등)로 전송되며, iOS 결제 정보는 Apple Inc.가 직접 처리합니다.</p>
         <table>
             <tr>
                 <th>항목</th>
@@ -207,7 +212,7 @@
             </tr>
             <tr>
                 <td>이전받는 자</td>
-                <td>Google LLC (1600 Amphitheatre Parkway, Mountain View, CA 94043, USA) — <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">개인정보처리방침</a></td>
+                <td>Google LLC (1600 Amphitheatre Parkway, Mountain View, CA 94043, USA) — <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">개인정보처리방침</a><br>Apple Inc. (One Apple Park Way, Cupertino, CA 95014, USA — iOS 결제) — <a href="https://www.apple.com/kr/legal/privacy/" target="_blank" rel="noopener noreferrer">개인정보처리방침</a></td>
             </tr>
             <tr>
                 <td>이전 항목</td>
@@ -235,7 +240,7 @@
             <strong>「내년 집값」 데이터 삭제 요청 방법</strong><br>
             ① <a href="mailto:contact@pocketlabs.kr?subject=%5B%EB%82%B4%EB%85%84%20%EC%A7%91%EA%B0%92%5D%20%EB%8D%B0%EC%9D%B4%ED%84%B0%20%EC%82%AD%EC%A0%9C%20%EC%9A%94%EC%B2%AD">contact@pocketlabs.kr</a>로 제목 「[내년 집값] 데이터 삭제 요청」 메일을 보냅니다.<br>
             ② 회사는 이용자를 식별할 정보를 보유하지 않으므로, 본문에 Firebase 앱 인스턴스 ID 또는 광고 ID(확인 방법을 회신으로 안내)를 적어 주시면 해당 식별자에 연결된 Analytics·Crashlytics 데이터의 삭제를 Google에 요청합니다.<br>
-            ③ 기기에 저장된 설정·이용 상태는 앱 삭제로 즉시 제거됩니다. 결제 기록은 Google Play가 보관하며 회사는 접근할 수 없습니다(제1조·제4조 참조).<br>
+            ③ 기기에 저장된 설정·이용 상태는 앱 삭제로 즉시 제거됩니다. 결제 기록은 Google Play(Android) 또는 App Store(iOS)가 보관하며 회사는 접근할 수 없습니다(제1조·제4조 참조).<br>
             처리 기간: 접수 후 10일 이내 회신·조치.
         </div>
         <p>권리 행사는 아래 이메일을 통해 요청할 수 있으며, 회사는 지체 없이 조치하겠습니다. 회사는 이용자를 식별할 수 있는 정보를 보유하지 않으므로, 삭제 요청 시 Firebase·AdMob 식별자(앱 인스턴스 ID 등) 확인을 요청드릴 수 있습니다.</p>
@@ -278,13 +283,14 @@
         <p>본 앱은 14세 미만 아동을 대상으로 하지 않으며, 14세 미만 아동의 개인정보를 의도적으로 수집하지 않습니다. 14세 미만 아동의 개인정보가 수집된 사실을 알게 된 경우 해당 정보를 지체 없이 삭제하겠습니다.</p>
 
         <h2>12. 광고 제거 구매 시 변경 사항</h2>
-        <p>광고 제거를 구매하면 앱 내 광고가 표시되지 않으며, AdMob SDK를 통한 광고 데이터 수집이 중단됩니다. 구매 상태는 Google Play 구매 내역으로 복원되며, 기기에는 구매 여부만 저장됩니다.</p>
+        <p>광고 제거를 구매하면 앱 내 광고가 표시되지 않으며, AdMob SDK를 통한 광고 데이터 수집이 중단됩니다. 구매 상태는 Google Play(Android) 또는 App Store(iOS) 구매 내역으로 복원되며, 기기에는 구매 여부만 저장됩니다.</p>
         <p>Firebase Analytics(앱 사용 통계) 및 Crashlytics(크래시 리포트)는 앱의 안정성과 품질 개선 목적으로 구매자에게도 동일하게 동작합니다.</p>
 
         <h2>13. 동의 철회 및 설정 변경 방법</h2>
         <div class="note">
             <strong>광고 ID</strong>: Android 설정 &gt; Google &gt; 광고(기기에 따라 설정 &gt; 보안 및 개인정보 보호 &gt; 개인정보 보호 &gt; 광고)에서 "광고 ID 삭제" 또는 "광고 맞춤설정 선택 해제"를 선택할 수 있습니다.<br>
-            <strong>푸시 알림</strong>: 앱 설정 화면의 알림 토글, 또는 Android 설정 &gt; 앱 &gt; 내년 집값 &gt; 알림에서 끌 수 있습니다.
+            <strong>iOS</strong>: 앱은 앱 추적 투명성(ATT) 권한을 요청하지 않고 광고 식별자(IDFA)를 수집하지 않으므로 별도의 추적 설정이 없습니다. 광고 제거를 구매하면 광고 SDK를 통한 수집이 중단됩니다.<br>
+            <strong>푸시 알림</strong>: 앱 설정 화면의 알림 토글, 또는 Android 설정 &gt; 앱 &gt; 내년 집값 &gt; 알림 / iOS 설정 &gt; 알림 &gt; 내년 집값에서 끌 수 있습니다.
         </div>
         <p>Firebase Analytics 및 Crashlytics 데이터 수집은 앱 내 별도 비활성화 옵션을 제공하지 않습니다. 수집을 완전히 중단하려면 앱을 삭제할 수 있으며, 기존에 수집된 데이터의 즉시 삭제는 <strong>9. 개인정보 보호책임자</strong>의 이메일로 요청할 수 있습니다.</p>
 
