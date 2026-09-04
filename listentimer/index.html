@@ -1,87 +1,758 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>ListenTimer</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0A0A0A">
-    <!-- 다국어 분기 페이지 — 검색엔진은 각 언어 페이지를 직접 인덱싱하도록 hreflang 명시 -->
-    <link rel="alternate" hreflang="ko" href="https://pocketlabs.kr/listentimer/ko/">
-    <link rel="alternate" hreflang="en" href="https://pocketlabs.kr/listentimer/en/">
-    <link rel="alternate" hreflang="ja" href="https://pocketlabs.kr/listentimer/ja/">
-    <link rel="alternate" hreflang="x-default" href="https://pocketlabs.kr/listentimer/en/">
-    <!-- Next-page 폰트 핸드셰이크 cold connect 비용 절감 — redirect 후 곧바로 폰트 로드 -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <script>
-        // 브라우저 언어 우선순위 배열 전체를 훑어 첫 매칭 언어로 분기.
-        // navigator.languages = 사용자가 시스템에 등록한 모든 우선순위 언어 (예: ['ko', 'en-US']).
-        // 단일 navigator.language만 보면 영문 OS + 한글 보조 사용자가 영문 페이지로 잘못 떨어진다.
-        (function() {
-            var langs = (navigator.languages && navigator.languages.length)
-                ? navigator.languages
-                : [navigator.language || navigator.userLanguage || 'en'];
-            var target = './en/';
-            for (var i = 0; i < langs.length; i++) {
-                var l = (langs[i] || '').toLowerCase();
-                if (l.indexOf('ko') === 0) { target = './ko/'; break; }
-                if (l.indexOf('ja') === 0) { target = './ja/'; break; }
-                if (l.indexOf('en') === 0) { break; }   // 명시적 en 발견 시 즉시 종료(빠른 분기)
-            }
-            location.replace(target);
-        })();
-    </script>
-    <style>
-        body {
-            background: #0A0A0A;
-            color: #888;
-            font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans JP', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            font-size: 0.95em;
-            padding: 24px;
-        }
-        .picker {
-            text-align: center;
-            max-width: 320px;
-        }
-        .picker h1 {
-            color: #EAEAEA;
-            font-size: 1.4em;
-            font-weight: 600;
-            margin: 0 0 16px;
-            letter-spacing: -0.01em;
-        }
-        .picker p {
-            margin: 0 0 24px;
-            line-height: 1.5;
-        }
-        .picker a {
-            display: inline-block;
-            color: #4F8FFF;
-            text-decoration: none;
-            padding: 10px 16px;
-            margin: 4px;
-            border-radius: 100px;
-            border: 1px solid #222;
-            min-height: 44px;
-            line-height: 24px;
-        }
-        .picker a:hover { background: #141414; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ListenTimer — Reads every second of your workout aloud</title>
+<meta name="description" content="ListenTimer is a voice interval and workout timer for iPhone that counts every second of the countdown out loud — 1 to 300 seconds per interval, alone or in routines of up to 10 sets.">
+<meta name="theme-color" content="#000000">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta property="og:title" content="ListenTimer — Reads every second of your workout aloud">
+<meta property="og:description" content="Eyes on your form, not on your screen. Work. Rest. Repeat — and hear every second of it.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pocketlabs.kr/listentimer/en/">
+<meta property="og:image" content="https://pocketlabs.kr/listentimer/assets/og_1200x630.png">
+<link rel="canonical" href="https://pocketlabs.kr/listentimer/en/">
+<link rel="alternate" hreflang="en" href="https://pocketlabs.kr/listentimer/en/">
+<link rel="alternate" hreflang="ko" href="https://pocketlabs.kr/listentimer/ko/">
+<link rel="alternate" hreflang="ja" href="https://pocketlabs.kr/listentimer/ja/">
+<link rel="alternate" hreflang="x-default" href="https://pocketlabs.kr/listentimer/">
+<!-- Direction A - Editorial. Tokens below are copied from the PocketLabs / ListenTimer design system (app source of truth). -->
+<style>
+/* ListenTimer app color tokens → web
+ * Source of truth: ios/ListenTimer/Utilities/Constants.swift (enum AppColors), 2026-09-04 (v1.3.2)
+ * px = pt 1:1. Dark only — the app has no light mode (LISTEN_TIMER.md §4.8).
+ */
+:root {
+  /* surfaces */
+  --lt-bg:               #000000; /* AppColors.background — pure black (OLED) */
+  --lt-surface:          #111116; /* AppColors.surface — sheet/button surface */
+  --lt-border:           #1C1C24; /* AppColors.border — hairlines, ring track */
+  --lt-card-surface:     #1A1A22; /* AppColors.cardSurface — hero card, benefit cards */
+  --lt-card-border:      #383844; /* AppColors.cardBorder — 1.25pt card border */
+  --lt-card-add-border:  #2E2E3A; /* AppColors.cardAddBorder — dashed "+ add" */
+  --lt-row-surface:      #14141A; /* AppColors.mainRowSurface — preset list rows */
+  --lt-nested-surface:   #131319; /* AppColors.nestedSurface — settings sub-block */
+  --lt-ad-slot:          #0B0B0F; /* AppColors.adSlotSurface */
+
+  /* text (contrast vs #000) */
+  --lt-text:             #FFFFFF; /* AppColors.textPrimary — numbers, titles (21:1) */
+  --lt-text-secondary:   #B0B0C0; /* AppColors.textSecondary — info labels (~9:1) */
+  --lt-text-tertiary:    #A5A5B2; /* AppColors.textTertiary — subtitles (~8.6:1) */
+  --lt-text-muted:       #8E8E9A; /* AppColors.textMuted / mainTextTertiary (6.5:1) */
+  --lt-text-muted-soft:  #7A7A8C; /* AppColors.mainTextTertiarySoft */
+  --lt-text-disabled:    #48485A; /* AppColors.textDisabled — true disabled only (~2.4:1) */
+  --lt-row-title:        #E8E8F0; /* AppColors.mainRowTitleText */
+  --lt-selected-text:    #5EA9FF; /* AppColors.mainSelectedText — "Selected · ready" label */
+
+  /* semantic */
+  --lt-accent:           #0A84FF; /* AppColors.accent — start button, selected preset (iOS system blue) */
+  --lt-danger:           #FF3B30; /* AppColors.danger — stop */
+  --lt-warning:          #FFB800; /* AppColors.warning — final 10 s (amber) */
+  --lt-success:          #30D158; /* AppColors.success — progress ring, completed */
+  --lt-success-deep:     #1EA34A; /* AppColors.successDeep */
+  --lt-last-run-star:    #FFD166; /* AppColors.mainLastRunStar — ★ last used (NOT the PRO gold) */
+
+  /* PRO gold — PremiumBadgeView.proGradient: goldLight (top-leading) → goldDark (bottom-trailing) */
+  --lt-gold-light:       #FFD700; /* AppColors.goldLight */
+  --lt-gold-dark:        #FFA500; /* AppColors.goldDark */
+  --lt-pro-gradient:     linear-gradient(to bottom right, #FFD700, #FFA500);
+
+  /* routine stage colors (segmented ring): work = success, rest = accent */
+  --lt-stage-work:       #30D158;
+  --lt-stage-rest:       #0A84FF;
+}
+
+/* ListenTimer typography → web
+ * Source: ios/ListenTimer/Utilities/Constants.swift (enum AppFonts) + LISTEN_TIMER.md §4.3
+ * The app uses the system font (SF Pro) and SF Pro Rounded for the big number.
+ * On the web, prefer the system stack (matches the app on Apple devices, zero external fetch).
+ */
+:root {
+  --lt-font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+                  "Helvetica Neue", Arial, "Noto Sans KR", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  --lt-font-rounded: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* app scale (pt) */
+  --lt-size-display: 96px;  /* countdown number — bold, rounded (§4.3) */
+  --lt-size-button:  17px;  /* AppFonts.button — semibold */
+  --lt-size-titlebar:16px;  /* AppFonts.titleBar — medium */
+  --lt-size-caption: 14px;  /* sub label ("sec", "/ 60 s") — regular */
+  --lt-size-badge:   11px;  /* PremiumBadgeView .standard — weight 900 (black), tracking 1px */
+  --lt-size-badge-compact: 9px; /* .compact — tracking 0.6px */
+}
+.lt-display { font: 700 var(--lt-size-display)/1 var(--lt-font-rounded); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.lt-button-label { font: 600 var(--lt-size-button)/1.2 var(--lt-font-sans); }
+.lt-titlebar { font: 500 var(--lt-size-titlebar)/1.2 var(--lt-font-sans); }
+.lt-caption { font: 400 var(--lt-size-caption)/1.4 var(--lt-font-sans); color: var(--lt-text-secondary); }
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;background:#000}
+body{margin:0;background:var(--lt-bg);color:var(--lt-text);font-family:var(--lt-font-sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--lt-accent);text-decoration:none}
+a:hover{color:#5EA9FF}
+img{height:auto}
+:focus-visible{outline:2px solid var(--lt-accent);outline-offset:3px;border-radius:4px}
+.lt-badge{display:inline-block;font:900 11px/13px -apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:6px;color:#000;background:linear-gradient(to bottom right,#FFD700,#FFA500);vertical-align:middle;white-space:nowrap}
+.lt-badge--compact{font-size:9px;line-height:11px;letter-spacing:.6px;padding:2px 5px;border-radius:4px}
+.a-nav a:hover{color:#fff;background:var(--lt-surface)}
+.a-navrow{-ms-overflow-style:none;scrollbar-width:none}
+.a-navrow::-webkit-scrollbar{display:none}
+.a-navrow a{white-space:nowrap;flex:0 0 auto}
+.a-tick{color:var(--lt-text-disabled)}
+.a-tick:last-child{color:var(--lt-warning)}
+.a-pro-row div:nth-child(2)::before,.a-pro-row div:nth-child(3)::before{color:var(--lt-text-muted);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-right:8px}
+.a-pro-row div:nth-child(2)::before{content:'Free'}
+.a-pro-row div:nth-child(3)::before{content:'PRO'}
+@media (min-width:768px){
+  .a-wrap{padding:0 24px !important}
+  .a-two{grid-template-columns:1fr 1fr !important;gap:24px !important}
+  .a-feat{grid-template-columns:56px 1fr 168px !important;gap:28px !important}
+  .a-facts dl{grid-template-columns:220px 1fr !important}
+  .a-facts dt{padding:16px 0 !important}
+  .a-facts dd{border-top:1px solid var(--lt-border) !important;padding:16px 0 !important}
+  .a-voices{grid-template-columns:1fr 1fr 1fr !important}
+  .a-voice-wide{grid-column:1/-1 !important}
+  .a-navrow{flex-wrap:wrap !important;overflow-x:visible !important}
+  .a-made{grid-template-columns:1fr 1fr !important}
+  .a-pro-head{display:grid !important}
+  .a-pro-row{grid-template-columns:1fr 132px 132px !important;align-items:center !important;gap:16px !important;padding:14px 0 !important}
+  .a-pro-row div:nth-child(2)::before,.a-pro-row div:nth-child(3)::before{content:none !important}
+  .a-hero-note{max-width:640px !important}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none !important;animation:none !important}}
+</style>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "Organization",
+   "@id": "https://pocketlabs.kr/#org",
+   "name": "PocketLabs",
+   "url": "https://pocketlabs.kr/",
+   "email": "contact@pocketlabs.kr",
+   "logo": "https://pocketlabs.kr/listentimer/assets/app_icon.png"
+  },
+  {
+   "@type": "MobileApplication",
+   "@id": "https://pocketlabs.kr/listentimer/#app",
+   "name": "ListenTimer",
+   "alternateName": [
+    "듣는타이머",
+    "リッスンタイマー"
+   ],
+   "url": "https://pocketlabs.kr/listentimer/en/",
+   "installUrl": "https://apps.apple.com/app/id6769309369",
+   "operatingSystem": "iOS 17.0 or later; watchOS 10.0 or later (Premium)",
+   "applicationCategory": "HealthApplication",
+   "softwareVersion": "1.3.2",
+   "dateModified": "2026-09-05",
+   "inLanguage": [
+    "en",
+    "ja",
+    "ko"
+   ],
+   "author": {
+    "@id": "https://pocketlabs.kr/#org"
+   },
+   "publisher": {
+    "@id": "https://pocketlabs.kr/#org"
+   },
+   "description": "Counts every second of the countdown out loud — 1 to 300 seconds per interval, alone or in routines of up to 10 sets. Work. Rest. Repeat — and hear every second of it.",
+   "featureList": [
+    "Per-second voice countdown",
+    "Speaking interval",
+    "Routines (Tabata) — work and rest alternate automatically, with a spoken cue at every phase change",
+    "Presets",
+    "Background playback — the count keeps running even when your screen is locked",
+    "Plays nicely with your music and podcasts — audio ducking dips the music just for the count, then brings it right back",
+    "Lock Screen & Dynamic Island (Live Activity)",
+    "Home Screen & Lock Screen widgets",
+    "Siri & Shortcuts",
+    "Apple Watch",
+    "Haptics",
+    "Records & My Rhythm"
+   ],
+   "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+    "description": "Free download with ads. Premium is a one-time in-app purchase, not a subscription."
+   }
+  },
+  {
+   "@type": "FAQPage",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "Does ListenTimer really speak every second?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Every second of the countdown is read aloud, from the first second to the last — up to 300 seconds per interval. In the 10-second interval mode, the final 10 seconds are still counted one by one."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Does it keep counting with the screen locked or the phone in my pocket?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. The count runs in the background, and a Live Activity shows it on the Lock Screen."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Will it interrupt my music or podcast?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Audio ducking lowers the music just for the count, then brings it right back."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Can I use it for HIIT or Tabata?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Build a routine with work and rest phases and up to 10 sets. Every phase change is announced."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "How is it different from interval timers that only beep when a round ends?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Most interval timers cue you only at the boundaries — the end of a round, or the last few seconds. ListenTimer counts every single second out loud, so you always know where you are without looking at the screen."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Is Premium a subscription?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. It is a one-time purchase. The price is shown in the App Store for your country."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Is there a free trial?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. All Premium features are free to try for 3 days, once per Apple Account. Tap the gold \"3-day trial\" chip on the main screen and watch one short ad."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Does it work on Apple Watch?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes, with Premium. Start and control the timer from your wrist, start with one tap from the complication, and your presets sync automatically. The Watch works as a remote for the iPhone timer — the iPhone plays the voice."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Can I start a timer without opening the app?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes, with Premium: from a Home Screen or Lock Screen widget, with Siri or a Shortcut, or from your Apple Watch. Without Premium, those taps open the app and you start from there."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Which voices and languages are available?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Seven voice characters — Default Female and Default Male are free; Yoga Instructor, Drill Sergeant, The Reaper, News Anchor and Late-night DJ come with Premium. Voices and the app are available in English, Japanese and Korean, following your iPhone language."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Does it need an account or an internet connection?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. There is no account, and all voices are bundled in the app, so the timer works offline. Only the App Store purchase and the optional ads need a connection."
+     }
+    }
+   ]
+  }
+ ]
+}
+</script>
 </head>
 <body>
-    <!-- JS 비활성 환경 fallback — 사용자가 직접 언어를 선택할 수 있도록 명시적 picker 표시.
-         JS 환경에서는 위 스크립트가 즉시 location.replace로 분기하므로 이 화면은 표시되지 않는다. -->
-    <div class="picker">
-        <h1>ListenTimer</h1>
-        <p>Select a language to continue:</p>
-        <a href="./ko/" hreflang="ko" lang="ko">한국어</a>
-        <a href="./en/" hreflang="en" lang="en">English</a>
-        <a href="./ja/" hreflang="ja" lang="ja">日本語</a>
+<div style="background:#000;color:#fff;font-family:var(--lt-font-sans);min-height:100vh;padding-bottom:1px">
+
+  <header id="top" style="border-bottom:1px solid var(--lt-border)">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:20px;padding:28px 0 24px">
+        <img src="./assets/app_icon.png" alt="ListenTimer app icon" style="width:96px;height:96px;border-radius:22px;display:block;box-shadow:0 0 0 1px rgba(255,255,255,.06)">
+        <div style="flex:1;min-width:200px">
+          <div style="font-size:26px;font-weight:700;letter-spacing:-.02em;line-height:1.1">ListenTimer</div>
+          <div style="font-size:15px;color:var(--lt-text-tertiary);margin-top:4px">Voice interval &amp; workout timer</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:4px">
+          <a href="./en/" hreflang="en" lang="en" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:13px;color:#fff;font-weight:600" aria-current="page">English</a>
+          <a href="./ko/" hreflang="ko" lang="ko" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:13px;color:var(--lt-text-muted);border-radius:100px">한국어</a>
+          <a href="./ja/" hreflang="ja" lang="ja" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:13px;color:var(--lt-text-muted);border-radius:100px">日本語</a>
+          <a href="https://apps.apple.com/app/id6769309369" aria-label="Download ListenTimer on the App Store" style="display:inline-flex;align-items:center;min-height:44px;padding:0 18px;margin-left:8px;border-radius:100px;background:#fff;color:#000;font-size:14px;font-weight:600">App Store</a>
+        </div>
+      </div>
     </div>
+  </header>
+
+  <nav class="a-nav" aria-label="Sections" style="position:sticky;top:0;z-index:20;background:rgba(0,0,0,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--lt-border)">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <div class="a-navrow" style="display:flex;flex-wrap:nowrap;overflow-x:auto;gap:2px;padding:4px 0">
+        <a href="#every-second" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;border-radius:100px;font-size:13px;color:var(--lt-text-tertiary)">Every second</a>
+        <a href="#facts" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;border-radius:100px;font-size:13px;color:var(--lt-text-tertiary)">At a glance</a>
+        <a href="#features" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;border-radius:100px;font-size:13px;color:var(--lt-text-tertiary)">Features</a>
+        <a href="#voices" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;border-radius:100px;font-size:13px;color:var(--lt-text-tertiary)">Voices</a>
+        <a href="#pro" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;border-radius:100px;font-size:13px;color:var(--lt-text-tertiary)">Free vs PRO</a>
+        <a href="#made-for" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;border-radius:100px;font-size:13px;color:var(--lt-text-tertiary)">Made for</a>
+        <a href="#faq" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;border-radius:100px;font-size:13px;color:var(--lt-text-tertiary)">FAQ</a>
+        <a href="#download" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;border-radius:100px;font-size:13px;color:var(--lt-text-tertiary)">Download</a>
+      </div>
+    </div>
+  </nav>
+
+  <section id="hero" style="padding:56px 0 64px">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <h1 style="margin:0;font-size:clamp(40px,9.2vw,86px);line-height:1.02;letter-spacing:-.045em;font-weight:700;max-width:15ch;text-wrap:pretty">Eyes on your form, not on your screen.</h1>
+      <p style="margin:28px 0 0;font-size:clamp(20px,3.4vw,28px);line-height:1.3;letter-spacing:-.02em;color:#fff;font-weight:500;max-width:22ch">Work. Rest. Repeat — and hear every second of it.</p>
+      <p class="a-hero-note" style="margin:24px 0 0;font-size:17px;line-height:1.62;color:var(--lt-text-secondary);max-width:56ch;text-wrap:pretty">Set your intervals, then keep your eyes on your form. ListenTimer reads each second out loud through the whole round, so you always know where you are without looking. Planks, dead hangs, stretches, and breath work all work the same way.</p>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin-top:36px">
+        <a href="https://apps.apple.com/app/id6769309369" aria-label="Download ListenTimer on the App Store" style="display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 28px;border-radius:14px;background:var(--lt-accent);color:#fff;font-size:17px;font-weight:600">Download on the App Store</a>
+      </div>
+      <p style="margin:18px 0 0;font-size:13px;line-height:1.7;color:var(--lt-text-muted)">Free with ads · Premium is a one-time purchase, not a subscription · iPhone (iOS 17 or later) · Apple Watch with Premium</p>
+      <ul style="list-style:none;margin:28px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px">
+        <li style="font-size:13px;color:var(--lt-text-secondary);background:var(--lt-surface);border:1px solid var(--lt-border);padding:7px 14px;border-radius:100px">Counts every second out loud</li>
+        <li style="font-size:13px;color:var(--lt-text-secondary);background:var(--lt-surface);border:1px solid var(--lt-border);padding:7px 14px;border-radius:100px">Screen locked? Still counting</li>
+        <li style="font-size:13px;color:var(--lt-text-secondary);background:var(--lt-surface);border:1px solid var(--lt-border);padding:7px 14px;border-radius:100px">Music keeps playing</li>
+        <li style="font-size:13px;color:var(--lt-text-secondary);background:var(--lt-surface);border:1px solid var(--lt-border);padding:7px 14px;border-radius:100px">HIIT</li>
+        <li style="font-size:13px;color:var(--lt-text-secondary);background:var(--lt-surface);border:1px solid var(--lt-border);padding:7px 14px;border-radius:100px">Tabata</li>
+        <li style="font-size:13px;color:var(--lt-text-secondary);background:var(--lt-surface);border:1px solid var(--lt-border);padding:7px 14px;border-radius:100px">planks</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="every-second" style="border-top:1px solid var(--lt-border);padding:72px 0">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <p style="margin:0 0 20px;font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--lt-text-muted)">The difference</p>
+      <h2 style="margin:0;font-size:clamp(32px,7vw,68px);line-height:1.05;letter-spacing:-.04em;font-weight:700;max-width:18ch;text-wrap:pretty">Not just the final countdown. Every second.</h2>
+      <div aria-hidden="true" style="display:flex;flex-wrap:wrap;gap:10px;margin:32px 0 0;font-family:var(--lt-font-rounded);font-size:clamp(18px,3.4vw,30px);font-weight:700;letter-spacing:-.02em">
+        <span class="a-tick">10</span><span class="a-tick">9</span><span class="a-tick">8</span><span class="a-tick">7</span><span class="a-tick">6</span><span class="a-tick">5</span><span class="a-tick">4</span><span class="a-tick">3</span><span class="a-tick">2</span><span class="a-tick">1</span>
+      </div>
+      <div class="a-two" style="display:grid;grid-template-columns:1fr;gap:20px;margin-top:36px">
+        <div>
+          <p style="margin:0 0 18px;font-size:17px;line-height:1.65;color:var(--lt-text-secondary);text-wrap:pretty">Most interval timers only cue you at the boundaries — a beep when a round ends, maybe the last few seconds. ListenTimer is a talking timer: it counts every single second out loud, from the first second to the last, so your eyes stay on your form during planks, stretches, dead hangs, Tabata rounds and HIIT circuits.</p>
+          <p style="margin:0 0 18px;font-size:17px;line-height:1.65;color:var(--lt-text-secondary);text-wrap:pretty">The count keeps running with the screen locked and the phone in your pocket. Your music or podcast stays on — the voice dips it just for the count, then brings it right back.</p>
+          <p style="margin:0;font-size:17px;line-height:1.65;color:var(--lt-text-secondary);text-wrap:pretty">And when a phase changes, you hear it: rest, next set, done. No looking down. No guessing.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;align-content:start">
+          <figure style="margin:0">
+            <picture><source srcset="./assets/lifestyle/en/yoga.webp" type="image/webp"><img src="./assets/lifestyle/en/yoga.png" alt="A woman holding a yoga pose while ListenTimer counts a 60-second hold" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:800/1734;object-fit:cover;border-radius:20px;background:var(--lt-surface)"></picture>
+            <figcaption style="margin-top:10px;font-size:12px;line-height:1.5;color:var(--lt-text-muted)">L1 · Yoga — a 60-second hold, counted out loud</figcaption>
+          </figure>
+          <figure style="margin:0">
+            <picture><source srcset="./assets/lifestyle/en/pullup.webp" type="image/webp"><img src="./assets/lifestyle/en/pullup.png" alt="A man holding a dead hang while ListenTimer counts a 60-second hold" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:800/1734;object-fit:cover;border-radius:20px;background:var(--lt-surface)"></picture>
+            <figcaption style="margin-top:10px;font-size:12px;line-height:1.5;color:var(--lt-text-muted)">L2 · Pull-up — the dead hang, ears on the count</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="facts" class="a-facts" style="border-top:1px solid var(--lt-border);padding:72px 0">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <h2 style="margin:0 0 32px;font-size:clamp(26px,4.4vw,40px);line-height:1.1;letter-spacing:-.03em;font-weight:700">ListenTimer at a glance</h2>
+      <dl style="margin:0;display:grid;grid-template-columns:1fr;gap:0;font-size:15px;line-height:1.6;border-bottom:1px solid var(--lt-border)">
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">Product</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff;border-top:0">ListenTimer — Voice interval &amp; workout timer</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">Developer</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">PocketLabs (pocketlabs.kr)</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">Category</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">Health &amp; Fitness</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">Devices</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">iPhone, iOS 17 or later · Apple Watch, watchOS 10 or later (Premium — the Watch is a remote for the iPhone timer; the iPhone plays the voice)</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">What it does</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">Counts every second of the countdown out loud — 1 to 300 seconds per interval, alone or in routines of up to 10 sets</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">Made for</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">HIIT, Tabata, circuits, boxing rounds, planks, dead hangs, pull-ups, stretches, yoga, breath work</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">Music &amp; podcasts</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">Yes — audio ducking dips the music just for the count, then brings it right back</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">Screen locked / background</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">Yes — the count keeps running even when your screen is locked; a Live Activity shows it on the Lock Screen</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">Voices</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">7 characters — 2 free, 5 Premium · English, Japanese, Korean · follows your iPhone language</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">Pricing</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">Free download with a banner ad. Premium is a one-time in-app purchase, not a subscription. 3-day free trial, once per Apple Account</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">Privacy</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">No account. No microphone, contacts, location, camera, or health data access. Tracking permission is asked only for personalized ads — declining changes nothing in the app</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">Support</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff"><a href="mailto:contact@pocketlabs.kr">contact@pocketlabs.kr</a> · <a href="https://pocketlabs.kr/listentimer-support/en/">Support page</a> · <a href="https://pocketlabs.kr/listentimer-privacy/en/">Privacy policy</a></dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">Version</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">Version 1.3.2 on the App Store (released September 2, 2026). This page was updated on 2026-09-05</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section id="features" style="border-top:1px solid var(--lt-border);padding:72px 0">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <h2 style="margin:0 0 8px;font-size:clamp(26px,4.4vw,40px);line-height:1.1;letter-spacing:-.03em;font-weight:700">Everything ListenTimer does</h2>
+      <p style="margin:0 0 40px;font-size:14px;color:var(--lt-text-muted)">Twelve features. Each one: what it is, and when you use it.</p>
+
+      <article id="f1" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F1</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">Per-second voice countdown</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">A voice reads every second of the countdown, from the first second to the last — 1 to 300 seconds per interval.</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">Use it for</span> planks, dead hangs, stretches, breath work: anything where you can't look down.</p>
+        </div>
+        <figure style="margin:0;max-width:168px">
+          <picture><source srcset="./assets/en/S2_timer_running.webp" type="image/webp"><img src="./assets/en/S2_timer_running.png" alt="Timer running — circular progress ring with the big countdown number" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:1320/2868;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S2 · Timer running — ring and big number</figcaption>
+        </figure>
+      </article>
+
+      <article id="f2" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F2</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">Speaking interval</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">Choose every second (default), every 10 seconds with the final 10 counted one by one, or — with Premium — your own interval, every N seconds (1–60).</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">Use it for</span> whatever you pick, the last 10 seconds are always counted one by one and every phase start and end is announced.</p>
+          <div style="display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding-top:12px;border-top:1px solid var(--lt-border)"><span class="lt-badge lt-badge--compact">PRO</span><span style="font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">Custom speaking interval — your own interval, every N seconds (1–60).</span></div>
+        </div>
+        <figure style="margin:0;max-width:168px">
+          <picture><source srcset="./assets/en/S7_interval_settings.webp" type="image/webp"><img src="./assets/en/S7_interval_settings.png" alt="The speaking interval settings screen — every second, every 10 seconds, or a custom interval" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:1320/2868;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S7 · Speaking interval settings</figcaption>
+        </figure>
+      </article>
+
+      <article id="f3" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F3</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">Routines (Tabata) — work and rest alternate automatically, with a spoken cue at every phase change</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">Set work (1–300 s), rest (1–300 s) and 2 to 10 sets; ListenTimer runs the whole circuit and announces every change.</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">Use it for</span> Tabata, HIIT circuits, boxing rounds, interval runs.</p>
+        </div>
+        <figure style="margin:0;max-width:168px">
+          <picture><source srcset="./assets/en/S4_routine_edit.webp" type="image/webp"><img src="./assets/en/S4_routine_edit.png" alt="The routine editor — work time, rest time and the number of sets" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:1320/2868;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S4 · Routine editor — work, rest, sets</figcaption>
+        </figure>
+      </article>
+
+      <article id="f4" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F4</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">Presets</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">Save up to 12 timers. Your last-used one sits at the top as a big card — one tap to start. Add, delete and reorder freely.</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">Use it for</span> "the same thing as yesterday" in one tap.</p>
+        </div>
+        <figure style="margin:0;max-width:168px">
+          <picture><source srcset="./assets/en/S1_main_idle.webp" type="image/webp"><img src="./assets/en/S1_main_idle.png" alt="The main screen — the last-used preset on a large card above the preset list" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:1320/2868;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S1 · Main screen — last-used preset on top</figcaption>
+        </figure>
+      </article>
+
+      <article id="f5" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F5</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">Background playback — the count keeps running even when your screen is locked</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">Lock the phone, put it in your pocket or on the floor — the voice carries on.</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">Use it for</span> anything that isn't at a desk.</p>
+        </div>
+        <div></div>
+      </article>
+
+      <article id="f6" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F6</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">Plays nicely with your music and podcasts — audio ducking dips the music just for the count, then brings it right back</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">Your own music stays on; the count is layered over it.</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">Use it for</span> training with headphones or a speaker.</p>
+        </div>
+        <div></div>
+      </article>
+
+      <article id="f7" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F7</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">Lock Screen &amp; Dynamic Island (Live Activity)</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">See the timer on your Lock Screen and in the Dynamic Island — the count, the current phase and set — without unlocking. With Premium, pause, resume or stop right from the Lock Screen.</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">Use it for</span> a glance at the locked phone between sets.</p>
+          <div style="display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding-top:12px;border-top:1px solid var(--lt-border)"><span class="lt-badge lt-badge--compact">PRO</span><span style="font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">Pause, resume and stop right from the Lock Screen.</span></div>
+        </div>
+        <figure style="margin:0;max-width:168px">
+          <picture><source srcset="./assets/en/S6_lockscreen.webp" type="image/webp"><img src="./assets/en/S6_lockscreen.png" alt="The Lock Screen showing the ListenTimer Live Activity with the remaining count" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:1320/2868;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S6 · Lock Screen and widget</figcaption>
+        </figure>
+      </article>
+
+      <article id="f8" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F8</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">Home Screen &amp; Lock Screen widgets</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">A widget shows your last-used or a pinned preset; tapping it opens the app. With Premium, ▶ starts the timer right from the widget — no app to open — and the widget shows pause and stop while a session runs.</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">Use it for</span> starting from the Home Screen before your phone goes in the armband.</p>
+          <div style="display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding-top:12px;border-top:1px solid var(--lt-border)"><span class="lt-badge lt-badge--compact">PRO</span><span style="font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">Instant start from the widget — ▶ starts the timer without opening the app.</span></div>
+        </div>
+        <figure style="margin:0;max-width:168px">
+          <picture><source srcset="./assets/en/S6_home_widget.webp" type="image/webp"><img src="./assets/en/S6_home_widget.png" alt="A Home Screen widget showing a ListenTimer preset ready to start" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:1320/2868;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S6 · Home Screen widget</figcaption>
+        </figure>
+      </article>
+
+      <article id="f9" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F9</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">Siri &amp; Shortcuts <span class="lt-badge">PRO</span></h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">Say it or tap a shortcut to start your last preset without opening the app (without Premium, the app opens instead).</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">Use it for</span> hands full, phone across the room.</p>
+        </div>
+        <div></div>
+      </article>
+
+      <article id="f10" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F10</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">Apple Watch <span class="lt-badge">PRO</span></h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">Start and control timers right from your wrist. Start instantly with one tap from your Apple Watch complication. All presets sync to your Apple Watch automatically. Your wrist taps along at the 10-second warning and at the finish. The Watch works as a remote for the iPhone timer, which plays the voice.</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">Use it for</span> not even taking the phone out.</p>
+        </div>
+        <figure style="margin:0;max-width:168px">
+          <picture><source srcset="./assets/en/S8_watch.webp" type="image/webp"><img src="./assets/en/S8_watch.png" alt="The Apple Watch screen during a routine — the ring and the seconds left" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:396/484;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S8 · Apple Watch — one tap from the wrist</figcaption>
+        </figure>
+      </article>
+
+      <article id="f11" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F11</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">Haptics</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">Your wrist taps along, even when your ears are covered (Apple Watch); the iPhone taps at the 10-second warning and at the finish; iPhone haptics can be turned off in Settings.</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">Use it for</span> loud gyms, no headphones.</p>
+        </div>
+        <div></div>
+      </article>
+
+      <article id="f12" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border);border-bottom:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F12</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">Records &amp; My Rhythm</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">Monthly calendar stats — see which days you trained at a glance, plus a daily list of what you finished. With Premium, "My Rhythm" adds weekly, monthly and overall insights about your pattern.</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">Use it for</span> seeing the month fill up.</p>
+          <div style="display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding-top:12px;border-top:1px solid var(--lt-border)"><span class="lt-badge lt-badge--compact">PRO</span><span style="font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">My Rhythm — weekly, monthly and overall insights about your pattern.</span></div>
+        </div>
+        <figure style="margin:0;max-width:168px">
+          <picture><source srcset="./assets/en/S5_records.webp" type="image/webp"><img src="./assets/en/S5_records.png" alt="The records screen — a monthly calendar with the days you trained marked" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:1320/2868;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S5 · Records — the monthly calendar</figcaption>
+        </figure>
+      </article>
+    </div>
+  </section>
+
+  <section id="voices" style="padding:72px 0">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <h2 style="margin:0;font-size:clamp(26px,4.4vw,40px);line-height:1.1;letter-spacing:-.03em;font-weight:700">Seven voices. Two are free.</h2>
+      <p style="margin:16px 0 32px;font-size:19px;line-height:1.5;color:#fff;max-width:40ch">Each character brings a different tone to your training rhythm.</p>
+      <div class="a-voices" style="display:grid;grid-template-columns:1fr;gap:1px;background:var(--lt-border);border:1px solid var(--lt-border);border-radius:20px;overflow:hidden">
+        <div style="background:#000;padding:22px 20px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:17px;font-weight:600">Default Female</span><span style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--lt-success)">Free</span></div>
+          <p style="margin:8px 0 0;font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">A calm, clear default voice.</p>
+        </div>
+        <div style="background:#000;padding:22px 20px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:17px;font-weight:600">Default Male</span><span style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--lt-success)">Free</span></div>
+          <p style="margin:8px 0 0;font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">A natural, steady male voice.</p>
+        </div>
+        <div style="background:#000;padding:22px 20px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:17px;font-weight:600">Yoga Instructor</span><span class="lt-badge lt-badge--compact">PRO</span></div>
+          <p style="margin:8px 0 0;font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">A gentle, peaceful yoga instructor.</p>
+        </div>
+        <div style="background:#000;padding:22px 20px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:17px;font-weight:600">Drill Sergeant</span><span class="lt-badge lt-badge--compact">PRO</span></div>
+          <p style="margin:8px 0 0;font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">A forceful voice that pushes your limits.</p>
+        </div>
+        <div style="background:#000;padding:22px 20px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:17px;font-weight:600">The Reaper</span><span class="lt-badge lt-badge--compact">PRO</span></div>
+          <p style="margin:8px 0 0;font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">A chilling voice that counts down time.</p>
+        </div>
+        <div style="background:#000;padding:22px 20px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:17px;font-weight:600">News Anchor</span><span class="lt-badge lt-badge--compact">PRO</span></div>
+          <p style="margin:8px 0 0;font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">A precise, straightforward news voice.</p>
+        </div>
+        <div class="a-voice-wide" style="background:#000;padding:22px 20px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:17px;font-weight:600">Late-night DJ</span><span class="lt-badge lt-badge--compact">PRO</span></div>
+          <p style="margin:8px 0 0;font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">A soothing late-night radio voice.</p>
+        </div>
+      </div>
+      <div class="a-two" style="display:grid;grid-template-columns:1fr;gap:24px;margin-top:32px;align-items:start">
+        <div>
+          <p style="margin:0 0 12px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">Every voice can be previewed in the app before you choose. Voices are generated with a high-quality neural TTS and bundled in the app — no internet needed during a workout.</p>
+          <p style="margin:0;font-size:14px;line-height:1.6;color:var(--lt-text-muted)">Available in English, Japanese and Korean; the app follows your iPhone language.</p>
+        </div>
+        <figure style="margin:0;max-width:200px">
+          <picture><source srcset="./assets/en/S3_character_sheet.webp" type="image/webp"><img src="./assets/en/S3_character_sheet.png" alt="Voice character sheet — choosing a voice in ListenTimer" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:1320/2868;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S3 · Voice character sheet</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="pro" style="border-top:1px solid var(--lt-border);padding:72px 0">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <h2 style="margin:0;font-size:clamp(26px,4.4vw,40px);line-height:1.1;letter-spacing:-.03em;font-weight:700">Everything free, or everything unlocked.</h2>
+      <p style="margin:20px 0 12px;font-size:17px;line-height:1.65;color:var(--lt-text-secondary);max-width:62ch;text-wrap:pretty">ListenTimer is free with a banner ad. Premium is a one-time purchase — not a subscription — and unlocks everything below on this iPhone and your Apple Watch. Try all of Premium free for 3 days, once per Apple Account: tap the gold "3-day trial" chip on the main screen and watch one short ad.</p>
+      <p style="margin:0 0 36px;font-size:15px;color:var(--lt-text-muted)">The price is shown in the App Store for your country.</p>
+
+      <div class="a-pro-head" style="display:none;grid-template-columns:1fr 132px 132px;gap:16px;padding:0 0 10px;border-bottom:1px solid var(--lt-card-border);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--lt-text-muted)">
+        <div>Feature</div><div>Free</div><div>PRO</div>
+      </div>
+
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">Per-second voice countdown, 1–300 s per interval</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">Speaking interval: every second · every 10 s + final 10</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">Custom speaking interval (every N seconds, 1–60)</div><div style="color:var(--lt-text-muted)">—</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">Voices: Default Female, Default Male</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">Voices: Yoga Instructor, Drill Sergeant, The Reaper, News Anchor, Late-night DJ</div><div style="color:var(--lt-text-secondary)">preview only</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">Routines (Tabata): work · rest · up to 10 sets</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">Presets: up to 12</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">Background playback · music and podcasts keep playing</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">Live Activity on the Lock Screen &amp; Dynamic Island (see the timer)</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">Pause · resume · stop from the Lock Screen</div><div style="color:var(--lt-text-muted)">—</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">Home Screen &amp; Lock Screen widgets (see the timer, tap opens the app)</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">Instant start from a widget, without opening the app</div><div style="color:var(--lt-text-muted)">—</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">Start with Siri or a Shortcut without opening the app</div><div style="color:var(--lt-text-secondary)">opens the app</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">Apple Watch: start and control from your wrist, complication, presets sync, wrist haptics</div><div style="color:var(--lt-text-muted)">—</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">Haptics on iPhone</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">Records: monthly calendar &amp; daily list</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">My Rhythm insights (detailed records &amp; stats)</div><div style="color:var(--lt-text-secondary)">example only</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-card-border);font-size:15px">
+        <div style="color:#fff">Ads</div><div style="color:var(--lt-text-secondary)">banner</div><div style="color:var(--lt-text-secondary)">none</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="made-for" style="padding:72px 0">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <h2 style="margin:0 0 32px;font-size:clamp(26px,4.4vw,40px);line-height:1.1;letter-spacing:-.03em;font-weight:700">Made for you if</h2>
+      <ul class="a-made" style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr;gap:2px">
+        <li style="display:flex;gap:14px;align-items:flex-start;padding:18px 0;border-top:1px solid var(--lt-border);font-size:18px;line-height:1.45;color:#fff;letter-spacing:-.01em"><span aria-hidden="true" style="color:var(--lt-success);font-size:15px;line-height:1.7">✓</span><span>You train in rounds — HIIT, Tabata, circuits, boxing, or CrossFit</span></li>
+        <li style="display:flex;gap:14px;align-items:flex-start;padding:18px 0;border-top:1px solid var(--lt-border);font-size:18px;line-height:1.45;color:#fff;letter-spacing:-.01em"><span aria-hidden="true" style="color:var(--lt-success);font-size:15px;line-height:1.7">✓</span><span>You can't or don't want to look at the screen mid-workout</span></li>
+        <li style="display:flex;gap:14px;align-items:flex-start;padding:18px 0;border-top:1px solid var(--lt-border);font-size:18px;line-height:1.45;color:#fff;letter-spacing:-.01em"><span aria-hidden="true" style="color:var(--lt-success);font-size:15px;line-height:1.7">✓</span><span>You train static holds — planks, dead hangs, pull-ups</span></li>
+        <li style="display:flex;gap:14px;align-items:flex-start;padding:18px 0;border-top:1px solid var(--lt-border);font-size:18px;line-height:1.45;color:#fff;letter-spacing:-.01em"><span aria-hidden="true" style="color:var(--lt-success);font-size:15px;line-height:1.7">✓</span><span>You need time awareness during yoga, meditation, or breath work</span></li>
+        <li style="display:flex;gap:14px;align-items:flex-start;padding:18px 0;border-top:1px solid var(--lt-border);border-bottom:1px solid var(--lt-border);font-size:18px;line-height:1.45;color:#fff;letter-spacing:-.01em"><span aria-hidden="true" style="color:var(--lt-success);font-size:15px;line-height:1.7">✓</span><span>You want a one-tap workout timer from your Apple Watch</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="faq" style="padding:72px 0">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <h2 style="margin:0 0 36px;font-size:clamp(26px,4.4vw,40px);line-height:1.1;letter-spacing:-.03em;font-weight:700">Common questions</h2>
+      <div style="max-width:68ch">
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">Does ListenTimer really speak every second?</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">Yes. Every second of the countdown is read aloud, from the first second to the last — up to 300 seconds per interval. In the 10-second interval mode, the final 10 seconds are still counted one by one.</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">Does it keep counting with the screen locked or the phone in my pocket?</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">Yes. The count runs in the background, and a Live Activity shows it on the Lock Screen.</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">Will it interrupt my music or podcast?</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">No. Audio ducking lowers the music just for the count, then brings it right back.</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">Can I use it for HIIT or Tabata?</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">Yes. Build a routine with work and rest phases and up to 10 sets. Every phase change is announced.</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">How is it different from interval timers that only beep when a round ends?</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">Most interval timers cue you only at the boundaries — the end of a round, or the last few seconds. ListenTimer counts every single second out loud, so you always know where you are without looking at the screen.</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">Is Premium a subscription?</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">No. It is a one-time purchase. The price is shown in the App Store for your country.</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">Is there a free trial?</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">Yes. All Premium features are free to try for 3 days, once per Apple Account. Tap the gold "3-day trial" chip on the main screen and watch one short ad.</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">Does it work on Apple Watch?</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">Yes, with Premium. Start and control the timer from your wrist, start with one tap from the complication, and your presets sync automatically. The Watch works as a remote for the iPhone timer — the iPhone plays the voice.</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">Can I start a timer without opening the app?</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">Yes, with Premium: from a Home Screen or Lock Screen widget, with Siri or a Shortcut, or from your Apple Watch. Without Premium, those taps open the app and you start from there.</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">Which voices and languages are available?</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">Seven voice characters — Default Female and Default Male are free; Yoga Instructor, Drill Sergeant, The Reaper, News Anchor and Late-night DJ come with Premium. Voices and the app are available in English, Japanese and Korean, following your iPhone language.</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border);border-bottom:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">Does it need an account or an internet connection?</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">No. There is no account, and all voices are bundled in the app, so the timer works offline. Only the App Store purchase and the optional ads need a connection.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="download" style="padding:88px 0 96px;border-top:1px solid var(--lt-border)">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <h2 style="margin:0;font-size:clamp(32px,6vw,58px);line-height:1.05;letter-spacing:-.04em;font-weight:700;max-width:20ch">Train without watching the clock.</h2>
+      <p style="margin:24px 0 32px;font-size:17px;line-height:1.6;color:var(--lt-text-secondary);max-width:56ch;text-wrap:pretty">Start free with the two default voices. Unlock everything with a one-time purchase — or try all of Premium free for 3 days.</p>
+      <a href="https://apps.apple.com/app/id6769309369" aria-label="Download ListenTimer on the App Store" style="display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 28px;border-radius:14px;background:var(--lt-accent);color:#fff;font-size:17px;font-weight:600">Download on the App Store</a>
+    </div>
+  </section>
+
+  <footer id="footer" style="border-top:1px solid var(--lt-border);padding:40px 0 56px">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <div style="display:flex;flex-wrap:wrap;gap:2px;margin-bottom:16px">
+        <a href="https://pocketlabs.kr/listentimer-support/en/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:14px;color:var(--lt-text-secondary);border-radius:8px">Support</a>
+        <a href="https://pocketlabs.kr/listentimer-privacy/en/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:14px;color:var(--lt-text-secondary);border-radius:8px">Privacy</a>
+        <a href="https://pocketlabs.kr/listentimer-terms/en/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:14px;color:var(--lt-text-secondary);border-radius:8px">Terms</a>
+        <a href="mailto:contact@pocketlabs.kr" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:14px;color:var(--lt-text-secondary);border-radius:8px">Contact (contact@pocketlabs.kr)</a>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:2px;margin-bottom:20px">
+        <a href="./en/" hreflang="en" lang="en" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:14px;color:#fff;font-weight:600" aria-current="page">English</a>
+        <a href="./ko/" hreflang="ko" lang="ko" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:14px;color:var(--lt-text-secondary);border-radius:8px">한국어</a>
+        <a href="./ja/" hreflang="ja" lang="ja" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:14px;color:var(--lt-text-secondary);border-radius:8px">日本語</a>
+      </div>
+      <p style="margin:0;font-size:13px;line-height:1.8;color:var(--lt-text-muted)">© 2026 PocketLabs<br>ListenTimer 1.3.2 · Page updated 2026-09-05</p>
+    </div>
+  </footer>
+</div>
 </body>
 </html>

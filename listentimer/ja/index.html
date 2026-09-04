@@ -1,607 +1,770 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>リッスンタイマー — 画面を見ない、音声カウントダウン</title>
-    <meta name="description" content="プランク・デッドハング・ストレッチ中、画面を見られない時に音声が毎秒数字を読み上げます。Apple Watchのコンプリケーションからワンタップで起動。音楽を流したまま自然に共存。">
-    <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta name="theme-color" content="#0A0A0A">
-    <meta property="og:title" content="リッスンタイマー — 画面を見ない、音声カウントダウン">
-    <meta property="og:description" content="動きに集中。カウントダウンは耳で。耐える一秒一秒を声でカウントするタイマー。">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://pocketlabs.kr/listentimer/ja/">
-    <meta property="og:image" content="https://pocketlabs.kr/listentimer/assets/app_icon.png">
-    <link rel="canonical" href="https://pocketlabs.kr/listentimer/ja/">
-    <link rel="alternate" hreflang="ko" href="https://pocketlabs.kr/listentimer/ko/">
-    <link rel="alternate" hreflang="en" href="https://pocketlabs.kr/listentimer/en/">
-    <link rel="alternate" hreflang="ja" href="https://pocketlabs.kr/listentimer/ja/">
-    <link rel="alternate" hreflang="x-default" href="https://pocketlabs.kr/listentimer/en/">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://apps.apple.com">
-    <!-- Noto Sans JP는 weight 400/700만 — 500은 본문 비중이 낮고 글리프 페이로드(~70KB) 절감 우선 -->
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital,wght@0,400;1,400&family=Noto+Sans+JP:wght@400;700&display=swap"
-          media="print" onload="this.media='all'">
-    <noscript>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital,wght@0,400;1,400&family=Noto+Sans+JP:wght@400;700&display=swap">
-    </noscript>
-    <style>
-        :root {
-            --bg: #0A0A0A;
-            --surface: #141414;
-            --surface-hover: #1A1A1A;
-            --text: #EAEAEA;
-            --text-dim: #888;
-            --text-dimmer: #666;
-            --accent: #4F8FFF;
-            --accent-2: #7C5CFC;
-            --accent-glow: rgba(79, 143, 255, 0.10);
-            --premium: #FFB800;
-            --success: #30D158;
-            --border: #222;
-            --border-soft: #1c1c1c;
-            /* 일본어: Noto Sans JP를 명시적으로 우선해 가나·한자 가독성 확보 */
-            --sans: 'DM Sans', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic', sans-serif;
-            --serif: 'Instrument Serif', Georgia, 'Hiragino Mincho ProN', serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>リッスンタイマー — 音声インターバル・ワークアウトタイマー</title>
+<meta name="description" content="リッスンタイマーはカウントダウンの1秒ごとを声で数える iPhone の音声インターバル・ワークアウトタイマーです。インターバルあたり1〜300秒、単独または最大10セットのルーティンで使えます。">
+<meta name="theme-color" content="#000000">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta property="og:title" content="リッスンタイマー — 音声インターバル・ワークアウトタイマー">
+<meta property="og:description" content="画面ではなく、フォームに集中。運動して、休んで、また繰り返す — その一秒一秒を、耳で聴いてみませんか。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pocketlabs.kr/listentimer/ja/">
+<meta property="og:image" content="https://pocketlabs.kr/listentimer/assets/og_1200x630.png">
+<link rel="canonical" href="https://pocketlabs.kr/listentimer/ja/">
+<link rel="alternate" hreflang="en" href="https://pocketlabs.kr/listentimer/en/">
+<link rel="alternate" hreflang="ko" href="https://pocketlabs.kr/listentimer/ko/">
+<link rel="alternate" hreflang="ja" href="https://pocketlabs.kr/listentimer/ja/">
+<link rel="alternate" hreflang="x-default" href="https://pocketlabs.kr/listentimer/">
+<!-- Direction A - Editorial. Tokens below are copied from the PocketLabs / ListenTimer design system (app source of truth). -->
+<style>
+/* ListenTimer app color tokens → web
+ * Source of truth: ios/ListenTimer/Utilities/Constants.swift (enum AppColors), 2026-09-04 (v1.3.2)
+ * px = pt 1:1. Dark only — the app has no light mode (LISTEN_TIMER.md §4.8).
+ */
+:root {
+  /* surfaces */
+  --lt-bg:               #000000; /* AppColors.background — pure black (OLED) */
+  --lt-surface:          #111116; /* AppColors.surface — sheet/button surface */
+  --lt-border:           #1C1C24; /* AppColors.border — hairlines, ring track */
+  --lt-card-surface:     #1A1A22; /* AppColors.cardSurface — hero card, benefit cards */
+  --lt-card-border:      #383844; /* AppColors.cardBorder — 1.25pt card border */
+  --lt-card-add-border:  #2E2E3A; /* AppColors.cardAddBorder — dashed "+ add" */
+  --lt-row-surface:      #14141A; /* AppColors.mainRowSurface — preset list rows */
+  --lt-nested-surface:   #131319; /* AppColors.nestedSurface — settings sub-block */
+  --lt-ad-slot:          #0B0B0F; /* AppColors.adSlotSurface */
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body {
-            font-family: var(--sans);
-            background: var(--bg); color: var(--text);
-            -webkit-font-smoothing: antialiased;
-            min-height: 100vh; line-height: 1.6;
-            overflow-x: hidden;
-        }
-        section { padding: 0 24px; }
-        .container { max-width: 980px; margin: 0 auto; }
-        .section-label {
-            text-align: center;
-            font-size: 0.78em; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 0.16em;
-            color: var(--accent); margin-bottom: 16px;
-            opacity: 0; animation: fadeUp 0.6s 0.1s forwards;
-        }
-        .section-title {
-            text-align: center;
-            font-size: 2em; font-weight: 600;
-            letter-spacing: -0.02em; margin-bottom: 48px;
-            opacity: 0; animation: fadeUp 0.6s 0.2s forwards;
-        }
+  /* text (contrast vs #000) */
+  --lt-text:             #FFFFFF; /* AppColors.textPrimary — numbers, titles (21:1) */
+  --lt-text-secondary:   #B0B0C0; /* AppColors.textSecondary — info labels (~9:1) */
+  --lt-text-tertiary:    #A5A5B2; /* AppColors.textTertiary — subtitles (~8.6:1) */
+  --lt-text-muted:       #8E8E9A; /* AppColors.textMuted / mainTextTertiary (6.5:1) */
+  --lt-text-muted-soft:  #7A7A8C; /* AppColors.mainTextTertiarySoft */
+  --lt-text-disabled:    #48485A; /* AppColors.textDisabled — true disabled only (~2.4:1) */
+  --lt-row-title:        #E8E8F0; /* AppColors.mainRowTitleText */
+  --lt-selected-text:    #5EA9FF; /* AppColors.mainSelectedText — "Selected · ready" label */
 
-        .hero {
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            text-align: center;
-            padding: 100px 24px 80px;
-            position: relative; overflow: hidden;
-        }
-        .hero::before {
-            content: ''; position: absolute;
-            top: -150px; left: 50%;
-            transform: translateX(-50%);
-            width: 800px; height: 800px;
-            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 65%);
-            pointer-events: none; z-index: 0;
-        }
-        .hero > * { position: relative; z-index: 1; }
-        .hero-icon {
-            width: 96px; height: 96px;
-            border-radius: 22px; display: block;
-            box-shadow: 0 10px 40px rgba(79, 143, 255, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.06);
-            margin-bottom: 28px;
-            opacity: 0; animation: fadeUp 0.6s 0.1s forwards;
-        }
-        .hero-title {
-            font-size: 2.7em; font-weight: 700;
-            letter-spacing: -0.02em; line-height: 1.1;
-            margin-bottom: 14px;
-            opacity: 0; animation: fadeUp 0.6s 0.2s forwards;
-        }
-        .hero-subtitle {
-            font-size: 1.1em; color: var(--text-dim);
-            font-weight: 400; max-width: 480px;
-            margin: 0 auto 28px;
-            opacity: 0; animation: fadeUp 0.6s 0.3s forwards;
-        }
-        .hero-subtitle em {
-            font-style: normal; color: var(--text); font-weight: 500;
-        }
-        .trust-strip {
-            display: flex; gap: 8px;
-            justify-content: center; flex-wrap: wrap;
-            margin-bottom: 36px;
-            opacity: 0; animation: fadeUp 0.6s 0.35s forwards;
-        }
-        .trust-pill {
-            font-size: 0.78em; font-weight: 500;
-            color: var(--text-dim);
-            background: var(--surface);
-            border: 1px solid var(--border);
-            padding: 6px 14px; border-radius: 100px;
-            letter-spacing: -0.01em;
-        }
-        .download-btn {
-            display: inline-flex; align-items: center; gap: 10px;
-            background: var(--text); color: var(--bg);
-            padding: 14px 28px; border-radius: 100px;
-            font-size: 0.95em; font-weight: 600;
-            text-decoration: none; letter-spacing: -0.01em;
-            transition: transform 0.15s ease, box-shadow 0.25s ease;
-            box-shadow: 0 6px 24px rgba(255, 255, 255, 0.08);
-            opacity: 0; animation: fadeUp 0.6s 0.4s forwards;
-            border: none; font-family: inherit;
-        }
-        .download-btn .arrow {
-            font-size: 1.1em; transition: transform 0.2s ease;
-        }
-        .hero-note {
-            margin-top: 14px;
-            font-size: 0.82em;
-            color: var(--text-dimmer);
-            opacity: 0; animation: fadeUp 0.6s 0.5s forwards;
-        }
+  /* semantic */
+  --lt-accent:           #0A84FF; /* AppColors.accent — start button, selected preset (iOS system blue) */
+  --lt-danger:           #FF3B30; /* AppColors.danger — stop */
+  --lt-warning:          #FFB800; /* AppColors.warning — final 10 s (amber) */
+  --lt-success:          #30D158; /* AppColors.success — progress ring, completed */
+  --lt-success-deep:     #1EA34A; /* AppColors.successDeep */
+  --lt-last-run-star:    #FFD166; /* AppColors.mainLastRunStar — ★ last used (NOT the PRO gold) */
 
-        .lifestyle {
-            padding: 60px 24px 80px;
-            border-top: 1px solid var(--border-soft);
-            border-bottom: 1px solid var(--border-soft);
-        }
-        .lifestyle-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr);
-            gap: 20px; max-width: 900px; margin: 0 auto;
-        }
-        .lifestyle-card {
-            border-radius: 24px; overflow: hidden;
-            background: #000;
-            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.04);
-            transition: transform 0.4s ease;
-            opacity: 0; animation: fadeUp 0.7s 0.15s forwards;
-        }
-        .lifestyle-card:nth-child(2) { animation-delay: 0.25s; }
-        .lifestyle-card img { display: block; width: 100%; height: auto; }
+  /* PRO gold — PremiumBadgeView.proGradient: goldLight (top-leading) → goldDark (bottom-trailing) */
+  --lt-gold-light:       #FFD700; /* AppColors.goldLight */
+  --lt-gold-dark:        #FFA500; /* AppColors.goldDark */
+  --lt-pro-gradient:     linear-gradient(to bottom right, #FFD700, #FFA500);
 
-        .lang-switch {
-            display: flex; justify-content: center;
-            gap: 4px; margin-bottom: 28px; flex-wrap: wrap;
-        }
-        .lang-switch a, .lang-switch .current {
-            font-size: 0.85em; color: var(--text-dim);
-            text-decoration: none; padding: 8px 14px;
-            border-radius: 100px; border: 1px solid transparent;
-            transition: color 0.2s, background 0.2s, border-color 0.2s;
-            display: inline-flex;
-            align-items: center;
-            min-height: 44px;
-        }
-        .lang-switch .current {
-            color: var(--text); border-color: var(--border);
-            background: var(--surface); font-weight: 500;
-        }
+  /* routine stage colors (segmented ring): work = success, rest = accent */
+  --lt-stage-work:       #30D158;
+  --lt-stage-rest:       #0A84FF;
+}
 
-        .features { padding: 100px 24px 80px; }
-        .features-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
-        }
-        .feature-card {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 20px; padding: 32px 28px;
-            transition: background 0.25s, border-color 0.25s, transform 0.25s;
-        }
-        .feature-icon {
-            width: 48px; height: 48px; border-radius: 12px;
-            background: var(--accent-glow);
-            border: 1px solid rgba(79, 143, 255, 0.18);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.4em; margin-bottom: 20px;
-        }
-        .feature-card h3 {
-            font-size: 1.1em; font-weight: 600;
-            letter-spacing: -0.01em; margin-bottom: 8px;
-        }
-        .feature-card p { font-size: 0.92em; color: var(--text-dim); line-height: 1.6; }
+/* ListenTimer typography → web
+ * Source: ios/ListenTimer/Utilities/Constants.swift (enum AppFonts) + LISTEN_TIMER.md §4.3
+ * The app uses the system font (SF Pro) and SF Pro Rounded for the big number.
+ * On the web, prefer the system stack (matches the app on Apple devices, zero external fetch).
+ */
+:root {
+  --lt-font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+                  "Helvetica Neue", Arial, "Noto Sans KR", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  --lt-font-rounded: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, sans-serif;
 
-        .screenshots {
-            padding: 80px 24px;
-            background: radial-gradient(ellipse at center, rgba(79, 143, 255, 0.04), transparent 70%);
-        }
-        .screenshots-grid {
-            display: flex; justify-content: center; gap: 24px;
-            flex-wrap: wrap;
-            opacity: 0; animation: fadeUp 0.8s 0.3s forwards;
-        }
-        .screenshot-item { display: flex; flex-direction: column; align-items: center; }
-        .device-frame {
-            width: 250px; border-radius: 32px; overflow: hidden;
-            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.06), 0 0 0 8px #0d0d0d;
-            transition: transform 0.4s ease;
-        }
-        .device-frame img { display: block; width: 100%; height: auto; background: #000; }
-        .device-caption {
-            margin-top: 16px; font-size: 0.85em;
-            color: var(--text-dim); text-align: center;
-            max-width: 200px; line-height: 1.5;
-        }
+  /* app scale (pt) */
+  --lt-size-display: 96px;  /* countdown number — bold, rounded (§4.3) */
+  --lt-size-button:  17px;  /* AppFonts.button — semibold */
+  --lt-size-titlebar:16px;  /* AppFonts.titleBar — medium */
+  --lt-size-caption: 14px;  /* sub label ("sec", "/ 60 s") — regular */
+  --lt-size-badge:   11px;  /* PremiumBadgeView .standard — weight 900 (black), tracking 1px */
+  --lt-size-badge-compact: 9px; /* .compact — tracking 0.6px */
+}
+.lt-display { font: 700 var(--lt-size-display)/1 var(--lt-font-rounded); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.lt-button-label { font: 600 var(--lt-size-button)/1.2 var(--lt-font-sans); }
+.lt-titlebar { font: 500 var(--lt-size-titlebar)/1.2 var(--lt-font-sans); }
+.lt-caption { font: 400 var(--lt-size-caption)/1.4 var(--lt-font-sans); color: var(--lt-text-secondary); }
 
-        .characters { padding: 100px 24px 60px; }
-        .characters-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
-        }
-        .character-card {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 20px; padding: 28px 24px; position: relative;
-            transition: background 0.25s, border-color 0.25s;
-        }
-        .character-badge {
-            display: inline-block;
-            font-size: 0.68em; font-weight: 700;
-            letter-spacing: 0.1em;
-            padding: 4px 10px; border-radius: 100px;
-            margin-bottom: 16px;
-        }
-        .character-badge.free {
-            color: var(--success);
-            background: rgba(48, 209, 88, 0.10);
-            border: 1px solid rgba(48, 209, 88, 0.25);
-        }
-        .character-badge.premium {
-            color: var(--premium);
-            background: rgba(255, 184, 0, 0.10);
-            border: 1px solid rgba(255, 184, 0, 0.25);
-        }
-        .character-card h3 { font-size: 1.05em; font-weight: 600; margin-bottom: 8px; }
-        .character-card p { font-size: 0.88em; color: var(--text-dim); line-height: 1.55; }
-        .characters-note {
-            text-align: center; margin-top: 32px;
-            font-size: 0.88em; color: var(--text-dim);
-        }
-        .characters-note strong { color: var(--text); font-weight: 600; }
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;background:#000}
+body{margin:0;background:var(--lt-bg);color:var(--lt-text);font-family:var(--lt-font-sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--lt-accent);text-decoration:none}
+a:hover{color:#5EA9FF}
+img{height:auto}
+:focus-visible{outline:2px solid var(--lt-accent);outline-offset:3px;border-radius:4px}
+.lt-badge{display:inline-block;font:900 11px/13px -apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:6px;color:#000;background:linear-gradient(to bottom right,#FFD700,#FFA500);vertical-align:middle;white-space:nowrap}
+.lt-badge--compact{font-size:9px;line-height:11px;letter-spacing:.6px;padding:2px 5px;border-radius:4px}
+.a-nav a:hover{color:#fff;background:var(--lt-surface)}
+.a-navrow{-ms-overflow-style:none;scrollbar-width:none}
+.a-navrow::-webkit-scrollbar{display:none}
+.a-navrow a{white-space:nowrap;flex:0 0 auto}
+.a-tick{color:var(--lt-text-disabled)}
+.a-tick:last-child{color:var(--lt-warning)}
+.a-pro-row div:nth-child(2)::before,.a-pro-row div:nth-child(3)::before{color:var(--lt-text-muted);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-right:8px}
+.a-pro-row div:nth-child(2)::before{content:'無料'}
+.a-pro-row div:nth-child(3)::before{content:'PRO'}
+@media (min-width:768px){
+  .a-wrap{padding:0 24px !important}
+  .a-two{grid-template-columns:1fr 1fr !important;gap:24px !important}
+  .a-feat{grid-template-columns:56px 1fr 168px !important;gap:28px !important}
+  .a-facts dl{grid-template-columns:220px 1fr !important}
+  .a-facts dt{padding:16px 0 !important}
+  .a-facts dd{border-top:1px solid var(--lt-border) !important;padding:16px 0 !important}
+  .a-voices{grid-template-columns:1fr 1fr 1fr !important}
+  .a-voice-wide{grid-column:1/-1 !important}
+  .a-navrow{flex-wrap:wrap !important;overflow-x:visible !important}
+  .a-made{grid-template-columns:1fr 1fr !important}
+  .a-pro-head{display:grid !important}
+  .a-pro-row{grid-template-columns:1fr 132px 132px !important;align-items:center !important;gap:16px !important;padding:14px 0 !important}
+  .a-pro-row div:nth-child(2)::before,.a-pro-row div:nth-child(3)::before{content:none !important}
+  .a-hero-note{max-width:640px !important}
+}
+/* Japanese typography: kinsoku line breaking, relax Latin tracking */
+h1,h2,h3,dt,dd,li,figcaption,p{line-break:strict;overflow-wrap:normal}
 
-        .premium-section { padding: 60px 24px 100px; }
-        .premium-card {
-            max-width: 480px; margin: 0 auto;
-            background: linear-gradient(180deg, var(--surface), #0f0f0f);
-            border: 1px solid rgba(255, 184, 0, 0.22);
-            border-radius: 24px; padding: 40px 36px;
-            position: relative; overflow: hidden;
-        }
-        .premium-card::before {
-            content: ''; position: absolute;
-            top: -50%; right: -30%;
-            width: 280px; height: 280px;
-            background: radial-gradient(circle, rgba(255, 184, 0, 0.08) 0%, transparent 65%);
-            pointer-events: none;
-        }
-        .premium-card > * { position: relative; }
-        .premium-badge {
-            display: inline-block;
-            font-size: 0.7em; font-weight: 700;
-            letter-spacing: 0.14em; color: var(--premium);
-            background: rgba(255, 184, 0, 0.10);
-            border: 1px solid rgba(255, 184, 0, 0.25);
-            padding: 5px 12px; border-radius: 100px;
-            margin-bottom: 20px;
-        }
-        .premium-price {
-            display: flex; align-items: baseline;
-            flex-wrap: wrap; gap: 10px; margin-bottom: 24px;
-        }
-        .premium-price .amount {
-            font-size: 2.4em; font-weight: 700; letter-spacing: -0.03em;
-        }
-        .premium-price .period { font-size: 0.92em; color: var(--text-dim); }
-        .premium-list { list-style: none; padding: 0; }
-        .premium-list li {
-            padding: 10px 0; font-size: 0.95em; color: var(--text);
-            display: flex; align-items: center; gap: 12px;
-            border-bottom: 1px solid var(--border-soft);
-        }
-        .premium-list li:last-child { border-bottom: none; }
-        .premium-list li::before {
-            content: '✓'; color: var(--premium);
-            font-weight: 700; font-size: 1em;
-        }
-
-        .cta {
-            padding: 100px 24px; text-align: center;
-            border-top: 1px solid var(--border-soft);
-            background: linear-gradient(180deg, transparent, rgba(79, 143, 255, 0.03));
-        }
-        .cta-headline {
-            font-family: var(--serif);
-            font-size: 1.9em; font-weight: 400;
-            margin-bottom: 14px; letter-spacing: -0.01em;
-        }
-        .cta p { font-size: 1.02em; color: var(--text-dim); margin-bottom: 32px; }
-
-        footer {
-            border-top: 1px solid var(--border-soft);
-            padding: 48px 24px 56px;
-            text-align: center;
-        }
-        .footer-links {
-            display: flex; justify-content: center;
-            gap: 8px; margin-bottom: 24px; flex-wrap: wrap;
-        }
-        .footer-links a {
-            color: var(--text-dim); text-decoration: none;
-            font-size: 0.88em;
-            padding: 10px 14px; border-radius: 8px;
-            transition: color 0.2s, background 0.2s;
-            display: inline-flex; align-items: center;
-            min-height: 44px;
-        }
-        footer .copyright {
-            font-size: 0.82em; color: var(--text-dim); line-height: 1.8;
-        }
-        footer .copyright a {
-            color: var(--text-dim); text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        @media (hover: hover) {
-            .feature-card:hover { background: var(--surface-hover); border-color: #2a2a2a; transform: translateY(-2px); }
-            .character-card:hover { background: var(--surface-hover); border-color: #2a2a2a; }
-            .download-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(255, 255, 255, 0.12); }
-            .download-btn:hover .arrow { transform: translateX(3px); }
-            .device-frame:hover { transform: translateY(-4px); }
-            .lifestyle-card:hover { transform: translateY(-4px); }
-            .footer-links a:hover { color: var(--text); background: var(--surface); }
-            .lang-switch a:hover { color: var(--text); background: var(--surface); }
-            footer .copyright a:hover { color: var(--text); }
-        }
-        .download-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
-        .footer-links a:focus-visible,
-        .lang-switch a:focus-visible,
-        footer .copyright a:focus-visible {
-            outline: 2px solid var(--accent); outline-offset: 2px;
-        }
-
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(16px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        @media (max-width: 720px) {
-            .hero { padding: 80px 20px 60px; }
-            .hero-icon { width: 80px; height: 80px; border-radius: 18px; }
-            .hero-title { font-size: 2em; }
-            .hero-subtitle { font-size: 0.95em; }
-            .lifestyle { padding: 40px 16px 60px; }
-            .lifestyle-grid { grid-template-columns: 1fr; gap: 14px; max-width: 360px; }
-            .lifestyle-card { border-radius: 20px; }
-            .features { padding: 70px 20px 50px; }
-            .features-grid { grid-template-columns: 1fr; gap: 12px; }
-            .feature-card { padding: 26px 24px; }
-            .screenshots { padding: 60px 20px; }
-            .device-frame { width: 200px; box-shadow: 0 16px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06), 0 0 0 6px #0d0d0d; }
-            .device-caption { max-width: 180px; }
-            .characters { padding: 70px 20px 40px; }
-            .characters-grid { grid-template-columns: 1fr; gap: 12px; }
-            .premium-section { padding: 40px 20px 80px; }
-            .premium-card { padding: 32px 28px; }
-            .premium-price .amount { font-size: 2em; }
-            .cta { padding: 80px 20px; }
-            .cta-headline { font-size: 1.6em; }
-            .section-title { font-size: 1.6em; margin-bottom: 36px; }
-            footer { padding: 40px 20px 48px; }
-            .footer-links { gap: 4px; }
-        }
-        @media (max-width: 360px) {
-            .hero-title { font-size: 1.7em; }
-            .premium-price .amount { font-size: 1.7em; }
-            .trust-pill { font-size: 0.72em; padding: 5px 10px; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation: none !important;
-                transition: none !important;
-                scroll-behavior: auto !important;
-            }
-            .hero-icon, .hero-title, .hero-subtitle, .trust-strip, .download-btn,
-            .hero-note, .section-label, .section-title, .screenshots-grid,
-            .lifestyle-card {
-                opacity: 1 !important;
-                transform: none !important;
-            }
-        }
-    </style>
+h1,h2,h3{letter-spacing:.005em !important}
+h1{line-height:1.18 !important}
+h2{line-height:1.24 !important}
+h3{line-height:1.45 !important}
+.a-tick{letter-spacing:normal !important}
+li{white-space:nowrap}
+#every-second li,#made-for li,#facts dd,#pro div{white-space:normal}
+figcaption{text-wrap:balance}
+p,dd{text-wrap:pretty}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none !important;animation:none !important}}
+</style>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "Organization",
+   "@id": "https://pocketlabs.kr/#org",
+   "name": "PocketLabs",
+   "url": "https://pocketlabs.kr/",
+   "email": "contact@pocketlabs.kr",
+   "logo": "https://pocketlabs.kr/listentimer/assets/app_icon.png"
+  },
+  {
+   "@type": "MobileApplication",
+   "@id": "https://pocketlabs.kr/listentimer/#app",
+   "name": "ListenTimer",
+   "alternateName": [
+    "듣는타이머",
+    "リッスンタイマー"
+   ],
+   "url": "https://pocketlabs.kr/listentimer/ja/",
+   "installUrl": "https://apps.apple.com/app/id6769309369",
+   "operatingSystem": "iOS 17.0 or later; watchOS 10.0 or later (Premium)",
+   "applicationCategory": "HealthApplication",
+   "softwareVersion": "1.3.2",
+   "dateModified": "2026-09-05",
+   "inLanguage": [
+    "en",
+    "ja",
+    "ko"
+   ],
+   "author": {
+    "@id": "https://pocketlabs.kr/#org"
+   },
+   "publisher": {
+    "@id": "https://pocketlabs.kr/#org"
+   },
+   "description": "カウントダウンの1秒ごとを声で数えます — インターバルあたり1〜300秒、単独または最大10セットのルーティンで。運動して、休んで、また繰り返す — その一秒一秒を、耳で聴いてみませんか。",
+   "featureList": [
+    "1秒ごとの音声カウントダウン",
+    "音声間隔",
+    "ルーティン（タバタ）— 運動と休憩が自動で交互に進み、フェーズが変わるたびに音声で知らせます",
+    "プリセット",
+    "バックグラウンド再生 — 画面をロックしてもカウントは続きます",
+    "音楽やポッドキャストと自然に共存 — オーディオダッキングでカウントの間だけ音楽を下げ、すぐに元に戻します",
+    "ロック画面＆ダイナミックアイランド（ライブアクティビティ）",
+    "ホーム画面＆ロック画面ウィジェット",
+    "Siri＆ショートカット",
+    "Apple Watch",
+    "触覚フィードバック",
+    "記録＆自分のリズム"
+   ],
+   "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+    "description": "Free download with ads. Premium is a one-time in-app purchase, not a subscription."
+   }
+  },
+  {
+   "@type": "FAQPage",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "本当に1秒ごとに読み上げますか？",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "はい。カウントダウンの1秒ごとを、最初の1秒から最後の1秒まで読み上げます — インターバルあたり最大300秒。10秒間隔モードでも、ラスト10秒は1つずつ数えます。"
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "画面をロックしたり、端末をポケットに入れてもカウントは続きますか？",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "はい。カウントはバックグラウンドで続き、ライブアクティビティがロック画面に表示します。"
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "音楽やポッドキャストを止めてしまいますか？",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "いいえ。オーディオダッキングがカウントの間だけ音楽を下げ、すぐに元に戻します。"
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "HIIT やタバタに使えますか？",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "はい。運動と休憩のフェーズ、最大10セットでルーティンを組めます。フェーズの変化はすべて音声で知らせます。"
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "ラウンド終了時にビープが鳴るだけのインターバルタイマーと何が違いますか？",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "ほとんどのインターバルタイマーは境目でしか合図しません — ラウンドの終わり、または最後の数秒。リッスンタイマーは1秒ごとを声で数えるので、画面を見なくても今どこにいるかが常にわかります。"
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "プレミアムはサブスクリプションですか？",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "いいえ。買い切りです。価格は国ごとに App Store に表示されます。"
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "無料体験はありますか？",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "はい。プレミアムの全機能を Apple アカウントごとに1回、3日間無料で試せます。メイン画面のゴールドの「3日体験」ボタンをタップして、短い広告を1本見てください。"
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Apple Watch でも使えますか？",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "はい、プレミアムで。手首からタイマーを開始・操作でき、コンプリケーションから1タップで開始、プリセットは自動で同期します。Watch は iPhone のタイマーのリモコンとして動作し、音声は iPhone が再生します。"
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "アプリを開かずにタイマーを開始できますか？",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "はい、プレミアムで：ホーム画面やロック画面のウィジェット、Siri やショートカット、または Apple Watch から。プレミアムがない場合はタップでアプリが開き、そこから開始します。"
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "どのボイスと言語に対応していますか？",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "7つのボイスキャラクター — スタンダード（女性）とスタンダード（男性）は無料、ヨガ講師・鬼軍曹・鬼師範・ニュースアナウンサー・癒しアナウンサーはプレミアムに含まれます。ボイスとアプリは英語・日本語・韓国語に対応し、iPhone の言語設定に従います。"
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "アカウントやインターネット接続は必要ですか？",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "いいえ。アカウントはなく、すべてのボイスがアプリに内蔵されているため、タイマーはオフラインで動作します。App Store での購入と任意の広告にのみ接続が必要です。"
+     }
+    }
+   ]
+  }
+ ]
+}
+</script>
 </head>
 <body>
+<div style="background:#000;color:#fff;font-family:var(--lt-font-sans);min-height:100vh;padding-bottom:1px">
 
-    <section class="hero">
-        <img class="hero-icon"
-             src="../assets/app_icon.png"
-             alt="リッスンタイマー アプリアイコン"
-             width="96" height="96"
-             fetchpriority="high">
-        <h1 class="hero-title">リッスンタイマー</h1>
-        <p class="hero-subtitle">画面を見なくても続く、音声カウント<br>音声が<em>毎秒の数字</em>を読み上げます。</p>
-
-        <div class="trust-strip" aria-label="アプリの主な特徴">
-            <span class="trust-pill">毎秒の音声カウント</span>
-            <span class="trust-pill">買い切り · サブスクなし</span>
-            <span class="trust-pill">プランク · デッドハング · ヨガ</span>
+  <header id="top" style="border-bottom:1px solid var(--lt-border)">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:20px;padding:28px 0 24px">
+        <img src="../assets/app_icon.png" alt="リッスンタイマーアプリアイコン" style="width:96px;height:96px;border-radius:22px;display:block;box-shadow:0 0 0 1px rgba(255,255,255,.06)">
+        <div style="flex:1;min-width:200px">
+          <div style="font-size:26px;font-weight:700;letter-spacing:-.02em;line-height:1.1">リッスンタイマー</div>
+          <div style="font-size:15px;color:var(--lt-text-tertiary);margin-top:4px">声で数えるインターバル&amp;筋トレタイマー</div>
         </div>
-
-        <a href="https://apps.apple.com/jp/app/id6769309369"
-           class="download-btn">
-            App Storeでダウンロード <span class="arrow" aria-hidden="true">→</span>
-        </a>
-        <p class="hero-note">iOS 17以上 · iPhone · Apple Watch<br>米国・カナダ・日本・オーストラリア・ニュージーランド・韓国で配信中</p>
-    </section>
-
-    <section class="lifestyle" aria-label="ライフスタイルプレビュー">
-        <div class="lifestyle-grid">
-            <div class="lifestyle-card">
-                <picture>
-                    <source srcset="../assets/lifestyle/ja/yoga.webp" type="image/webp">
-                    <img src="../assets/lifestyle/ja/yoga.png"
-                         alt="ヨガポーズを維持する女性とリッスンタイマーが60秒のカウントダウンを表示中の画面"
-                         width="800" height="1734"
-                         loading="lazy" decoding="async">
-                </picture>
-            </div>
-            <div class="lifestyle-card">
-                <picture>
-                    <source srcset="../assets/lifestyle/ja/pullup.webp" type="image/webp">
-                    <img src="../assets/lifestyle/ja/pullup.png"
-                         alt="懸垂の姿勢を維持する男性とリッスンタイマーが60秒のカウントダウンを表示中の画面"
-                         width="800" height="1734"
-                         loading="lazy" decoding="async">
-                </picture>
-            </div>
+        <div style="display:flex;align-items:center;gap:4px">
+          <a href="../en/" hreflang="en" lang="en" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:13px;color:var(--lt-text-muted)">English</a>
+          <a href="../ko/" hreflang="ko" lang="ko" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:13px;color:var(--lt-text-muted);border-radius:100px">한국어</a>
+          <span lang="ja" aria-current="page" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:13px;color:#fff;font-weight:600;border-radius:100px">日本語</span>
+          <a href="https://apps.apple.com/app/id6769309369" aria-label="App Storeでリッスンタイマーをダウンロード" style="display:inline-flex;align-items:center;min-height:44px;padding:0 18px;margin-left:8px;border-radius:100px;background:#fff;color:#000;font-size:14px;font-weight:600">App Store</a>
         </div>
-    </section>
+      </div>
+    </div>
+  </header>
 
-    <section class="features">
-        <div class="container">
-            <p class="section-label">Features</p>
-            <h2 class="section-title">画面を見なくても、時間は流れる</h2>
+  <nav class="a-nav" aria-label="セクション" style="position:sticky;top:0;z-index:20;background:rgba(0,0,0,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--lt-border)">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <div class="a-navrow" style="display:flex;flex-wrap:nowrap;overflow-x:auto;gap:2px;padding:4px 0">
+        <a href="#every-second" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;border-radius:100px;font-size:13px;color:var(--lt-text-tertiary)">1秒ごと</a>
+        <a href="#facts" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;border-radius:100px;font-size:13px;color:var(--lt-text-tertiary)">一目で</a>
+        <a href="#features" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;border-radius:100px;font-size:13px;color:var(--lt-text-tertiary)">機能</a>
+        <a href="#voices" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;border-radius:100px;font-size:13px;color:var(--lt-text-tertiary)">ボイス</a>
+        <a href="#pro" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;border-radius:100px;font-size:13px;color:var(--lt-text-tertiary)">無料 vs PRO</a>
+        <a href="#made-for" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;border-radius:100px;font-size:13px;color:var(--lt-text-tertiary)">こんな人に</a>
+        <a href="#faq" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;border-radius:100px;font-size:13px;color:var(--lt-text-tertiary)">よくある質問</a>
+        <a href="#download" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;border-radius:100px;font-size:13px;color:var(--lt-text-tertiary)">ダウンロード</a>
+      </div>
+    </div>
+  </nav>
 
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon" aria-hidden="true">🔢</div>
-                    <h3>毎秒の音声カウントダウン</h3>
-                    <p>1秒ごと、または10秒ごと+最後の10秒は1秒ごと。画面を見なくても、時間は耳から流れていきます。</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon" aria-hidden="true">⌚</div>
-                    <h3>Apple Watch ワンタップで開始</h3>
-                    <p>コンプリケーションから即座にスタート。iPhoneを取り出したり画面をつけたりする必要はありません。</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon" aria-hidden="true">🎵</div>
-                    <h3>音楽との自然な共存</h3>
-                    <p>自動ダッキング。音声が流れる瞬間だけ音楽が少し小さくなり、すぐに元の音量に戻ります。</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon" aria-hidden="true">💤</div>
-                    <h3>バックグラウンド再生 + 手首のハプティクス</h3>
-                    <p>音楽再生中なら画面をロックしてもカウントが続きます。手首のハプティクスで、イヤホンを外していても気づけます。</p>
-                </div>
-            </div>
+  <section id="hero" style="padding:56px 0 64px">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <h1 style="margin:0;font-size:clamp(40px,9.2vw,86px);line-height:1.02;letter-spacing:-.045em;font-weight:700;max-width:8em;text-wrap:pretty">画面ではなく、<span style="white-space:nowrap">フォーム</span>に集中。</h1>
+      <p style="margin:28px 0 0;font-size:clamp(20px,3.4vw,28px);line-height:1.3;letter-spacing:-.02em;color:#fff;font-weight:500;max-width:11em">運動して、休んで、また繰り返す — その一秒一秒を、耳で聴いてみませんか。</p>
+      <p class="a-hero-note" style="margin:24px 0 0;font-size:17px;line-height:1.62;color:var(--lt-text-secondary);max-width:30em;text-wrap:pretty">インターバルを設定したら、あとはフォームに集中するだけ。リッスンタイマーがラウンドの間ずっと毎秒を読み上げてくれるので、画面を見なくても今何秒かがわかります。プランク、デッドハング、ストレッチ、呼吸瞑想も同じようにお使いいただけます。</p>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin-top:36px">
+        <a href="https://apps.apple.com/app/id6769309369" aria-label="App Storeでリッスンタイマーをダウンロード" style="display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 28px;border-radius:14px;background:var(--lt-accent);color:#fff;font-size:17px;font-weight:600">App Storeでダウンロード</a>
+      </div>
+      <p style="margin:18px 0 0;font-size:13px;line-height:1.7;color:var(--lt-text-muted)">広告付きで無料 · プレミアムはサブスクリプションではなく買い切り · iPhone（iOS 17 以降） · Apple Watch はプレミアムで</p>
+      <ul style="list-style:none;margin:28px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px">
+        <li style="font-size:13px;color:var(--lt-text-secondary);background:var(--lt-surface);border:1px solid var(--lt-border);padding:7px 14px;border-radius:100px">1秒ごとを声でカウント</li>
+        <li style="font-size:13px;color:var(--lt-text-secondary);background:var(--lt-surface);border:1px solid var(--lt-border);padding:7px 14px;border-radius:100px">画面をロックしてもカウント継続</li>
+        <li style="font-size:13px;color:var(--lt-text-secondary);background:var(--lt-surface);border:1px solid var(--lt-border);padding:7px 14px;border-radius:100px">音楽は流れたまま</li>
+        <li style="font-size:13px;color:var(--lt-text-secondary);background:var(--lt-surface);border:1px solid var(--lt-border);padding:7px 14px;border-radius:100px">HIIT</li>
+        <li style="font-size:13px;color:var(--lt-text-secondary);background:var(--lt-surface);border:1px solid var(--lt-border);padding:7px 14px;border-radius:100px">タバタ</li>
+        <li style="font-size:13px;color:var(--lt-text-secondary);background:var(--lt-surface);border:1px solid var(--lt-border);padding:7px 14px;border-radius:100px">プランク</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="every-second" style="border-top:1px solid var(--lt-border);padding:72px 0">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <p style="margin:0 0 20px;font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--lt-text-muted)">違い</p>
+      <h2 style="margin:0;font-size:clamp(32px,7vw,68px);line-height:1.05;letter-spacing:-.04em;font-weight:700;max-width:13em;text-wrap:pretty">最後の<span style="white-space:nowrap">カウントダウン</span>だけじゃない。1秒ごとに。</h2>
+      <div aria-hidden="true" style="display:flex;flex-wrap:wrap;gap:10px;margin:32px 0 0;font-family:var(--lt-font-rounded);font-size:clamp(18px,3.4vw,30px);font-weight:700;letter-spacing:-.02em">
+        <span class="a-tick">10</span><span class="a-tick">9</span><span class="a-tick">8</span><span class="a-tick">7</span><span class="a-tick">6</span><span class="a-tick">5</span><span class="a-tick">4</span><span class="a-tick">3</span><span class="a-tick">2</span><span class="a-tick">1</span>
+      </div>
+      <div class="a-two" style="display:grid;grid-template-columns:1fr;gap:20px;margin-top:36px">
+        <div>
+          <p style="margin:0 0 18px;font-size:17px;line-height:1.65;color:var(--lt-text-secondary);text-wrap:pretty">ほとんどのインターバルタイマーは境目でしか合図しません — ラウンド終了のビープ、せいぜい最後の数秒。リッスンタイマーは話すタイマーです。最初の1秒から最後の1秒まで声で数えるので、プランク・ストレッチ・デッドハング・タバタのラウンド・HIITサーキットの間も、視線はフォームに残ります。</p>
+          <p style="margin:0 0 18px;font-size:17px;line-height:1.65;color:var(--lt-text-secondary);text-wrap:pretty">画面をロックしてポケットに入れてもカウントは続きます。音楽やポッドキャストはそのまま — カウントの間だけ音量を下げ、すぐに元に戻します。</p>
+          <p style="margin:0;font-size:17px;line-height:1.65;color:var(--lt-text-secondary);text-wrap:pretty">そしてフェーズが変わるたびに聞こえます：休憩、次のセット、完了。見下ろす必要はありません。推測する必要もありません。</p>
         </div>
-    </section>
-
-    <section class="screenshots">
-        <div class="container">
-            <p class="section-label">Inside</p>
-            <h2 class="section-title">アプリの中身</h2>
-
-            <div class="screenshots-grid">
-                <div class="screenshot-item">
-                    <div class="device-frame">
-                        <picture>
-                            <source srcset="../assets/ja/02_timer_running.webp" type="image/webp">
-                            <img src="../assets/ja/02_timer_running.png"
-                                 alt="タイマー実行中の画面 — 大きなカウントダウン数字と円形プログレス"
-                                 width="600" height="1303"
-                                 loading="lazy" decoding="async">
-                        </picture>
-                    </div>
-                    <p class="device-caption">画面を見ずに、耳で時間を聴く</p>
-                </div>
-                <div class="screenshot-item">
-                    <div class="device-frame">
-                        <picture>
-                            <source srcset="../assets/ja/03_character_sheet.webp" type="image/webp">
-                            <img src="../assets/ja/03_character_sheet.png"
-                                 alt="音声キャラクター選択 — スタンダード、PTコーチ、ヨガインストラクター"
-                                 width="600" height="1303"
-                                 loading="lazy" decoding="async">
-                        </picture>
-                    </div>
-                    <p class="device-caption">3種類のキャラクター音声</p>
-                </div>
-                <div class="screenshot-item">
-                    <div class="device-frame">
-                        <picture>
-                            <source srcset="../assets/ja/04_premium_sheet.webp" type="image/webp">
-                            <img src="../assets/ja/04_premium_sheet.png"
-                                 alt="プレミアム案内 — 買い切りでキャラクター・Apple Watch連携・広告削除を解除"
-                                 width="600" height="1303"
-                                 loading="lazy" decoding="async">
-                        </picture>
-                    </div>
-                    <p class="device-caption">買い切りプレミアム</p>
-                </div>
-            </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;align-content:start">
+          <figure style="margin:0">
+            <picture><source srcset="../assets/lifestyle/ja/yoga.webp" type="image/webp"><img src="../assets/lifestyle/ja/yoga.png" alt="ヨガのポーズを維持する女性と60秒のホールドをカウントするリッスンタイマー" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:800/1734;object-fit:cover;border-radius:20px;background:var(--lt-surface)"></picture>
+            <figcaption style="margin-top:10px;font-size:12px;line-height:1.5;color:var(--lt-text-muted)">L1 · ヨガ — 60秒のホールドを声でカウント</figcaption>
+          </figure>
+          <figure style="margin:0">
+            <picture><source srcset="../assets/lifestyle/ja/pullup.webp" type="image/webp"><img src="../assets/lifestyle/ja/pullup.png" alt="デッドハングを維持する男性と60秒のホールドをカウントするリッスンタイマー" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:800/1734;object-fit:cover;border-radius:20px;background:var(--lt-surface)"></picture>
+            <figcaption style="margin-top:10px;font-size:12px;line-height:1.5;color:var(--lt-text-muted)">L2 · 懸垂 — デッドハング、耳でカウント</figcaption>
+          </figure>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <section class="characters">
-        <div class="container">
-            <p class="section-label">Voices</p>
-            <h2 class="section-title">3種類のキャラクター音声</h2>
+  <section id="facts" class="a-facts" style="border-top:1px solid var(--lt-border);padding:72px 0">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <h2 style="margin:0 0 32px;font-size:clamp(26px,4.4vw,40px);line-height:1.1;letter-spacing:-.03em;font-weight:700"><span style="white-space:nowrap">リッスンタイマー</span>を一目で</h2>
+      <dl style="margin:0;display:grid;grid-template-columns:1fr;gap:0;font-size:15px;line-height:1.6;border-bottom:1px solid var(--lt-border)">
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">製品</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff;border-top:0">リッスンタイマー — 声で数えるインターバル&amp;筋トレタイマー</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">開発者</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">PocketLabs (pocketlabs.kr)</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">カテゴリ</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">ヘルスケア/フィットネス</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">対応デバイス</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">iPhone、iOS 17 以降 · Apple Watch、watchOS 10 以降（プレミアム — Watch は iPhone のタイマーのリモコンで、音声は iPhone が再生します）</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">できること</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">カウントダウンの1秒ごとを声で数えます — インターバルあたり1〜300秒、単独または最大10セットのルーティンで</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">向いている運動</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">HIIT、タバタ、サーキット、ボクシングのラウンド、プランク、デッドハング、懸垂、ストレッチ、ヨガ、呼吸法</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">音楽・ポッドキャスト</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">はい — オーディオダッキングでカウントの間だけ音楽を下げ、すぐに元に戻します</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">画面ロック / バックグラウンド</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">はい — 画面をロックしてもカウントは続き、ライブアクティビティがロック画面に表示されます</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">ボイス</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">7キャラクター — 2つ無料、5つプレミアム · 英語・日本語・韓国語 · iPhone の言語設定に従います</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">価格</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">バナー広告付きで無料ダウンロード。プレミアムはサブスクリプションではなく買い切りのアプリ内課金。3日間の無料体験は Apple アカウントごとに1回</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">プライバシー</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">アカウント不要。マイク・連絡先・位置情報・カメラ・ヘルスデータにはアクセスしません。トラッキングの許可はパーソナライズ広告のためだけに求め、拒否してもアプリの動作は変わりません</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">サポート</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff"><a href="mailto:contact@pocketlabs.kr">contact@pocketlabs.kr</a> · <a href="https://pocketlabs.kr/listentimer-support/ja/">サポートページ</a> · <a href="https://pocketlabs.kr/listentimer-privacy/ja/">プライバシーポリシー</a></dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">バージョン</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">App Store のバージョン 1.3.2（2026年9月2日リリース）。このページは 2026-09-05 に更新されました</dd>
+      </dl>
+    </div>
+  </section>
 
-            <div class="characters-grid">
-                <div class="character-card">
-                    <span class="character-badge free">FREE</span>
-                    <h3>スタンダード</h3>
-                    <p>落ち着いた、はっきりした声。どんなトレーニングにも自然に馴染みます。</p>
-                </div>
-                <div class="character-card">
-                    <span class="character-badge premium">PREMIUM</span>
-                    <h3>PTコーチ</h3>
-                    <p>エネルギッシュなPTコーチの声。高強度の姿勢キープ・インターバルに最適。</p>
-                </div>
-                <div class="character-card">
-                    <span class="character-badge premium">PREMIUM</span>
-                    <h3>ヨガインストラクター</h3>
-                    <p>穏やかで落ち着いた呼吸トーン。ヨガ・瞑想・ストレッチに最適。</p>
-                </div>
-            </div>
-            <p class="characters-note"><strong>キャラクターごとに異なるトーン</strong>で、トレーニングのリズムを作ります — ヨガには穏やかなトーン、高強度には力強いトーン。</p>
+  <section id="features" style="border-top:1px solid var(--lt-border);padding:72px 0">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <h2 style="margin:0 0 8px;font-size:clamp(26px,4.4vw,40px);line-height:1.1;letter-spacing:-.03em;font-weight:700"><span style="white-space:nowrap">リッスンタイマー</span>にできること</h2>
+      <p style="margin:0 0 40px;font-size:14px;color:var(--lt-text-muted)">機能12個。それぞれ何で、いつ使うのか。</p>
+
+      <article id="f1" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F1</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">1秒ごとの音声<span style="white-space:nowrap">カウントダウン</span></h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">音声がカウントダウンの1秒ごとを、最初の1秒から最後の1秒まで読み上げます — インターバルあたり1〜300秒。</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">こんな時に</span> プランク、デッドハング、ストレッチ、呼吸法 — 見下ろせないあらゆる場面。</p>
         </div>
-    </section>
+        <figure style="margin:0;max-width:168px">
+          <picture><source srcset="../assets/ja/S2_timer_running.webp" type="image/webp"><img src="../assets/ja/S2_timer_running.png" alt="タイマー実行中 — 円形の進行リングと大きなカウントダウン数字" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:1320/2868;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S2 · タイマー実行中 — リングと大きな数字</figcaption>
+        </figure>
+      </article>
 
-    <section class="premium-section">
-        <div class="container">
-            <div class="premium-card">
-                <span class="premium-badge">PREMIUM</span>
-                <div class="premium-price">
-                    <span class="amount">¥500</span>
-                    <span class="period">税込 · 買い切り · サブスクではありません</span>
-                </div>
-                <ul class="premium-list">
-                    <li>PTコーチ + ヨガインストラクターを解除</li>
-                    <li>Apple Watch連携 (コンプリケーション · 単独実行)</li>
-                    <li>アプリ内広告を削除</li>
-                </ul>
-            </div>
+      <article id="f2" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F2</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">音声間隔</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">1秒ごと（デフォルト）、10秒ごと＋ラスト10秒は1つずつ、またはプレミアムで自分の間隔（N秒ごと、1〜60）を選べます。</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">こんな時に</span> どれを選んでもラスト10秒は必ず1つずつ数え、すべてのフェーズの開始と終了を知らせます。</p>
+          <div style="display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding-top:12px;border-top:1px solid var(--lt-border)"><span class="lt-badge lt-badge--compact">PRO</span><span style="font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">カスタム読み上げ間隔 — 自分の間隔（N秒ごと、1〜60）。</span></div>
         </div>
-    </section>
+        <figure style="margin:0;max-width:168px">
+          <picture><source srcset="../assets/ja/S7_interval_settings.webp" type="image/webp"><img src="../assets/ja/S7_interval_settings.png" alt="音声間隔の設定画面 — 1秒ごと、10秒ごと、カスタム間隔から選択" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:1320/2868;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S7 · 音声間隔の設定</figcaption>
+        </figure>
+      </article>
 
-    <section class="cta">
-        <p class="cta-headline">今すぐ、画面を見ないトレーニングへ。</p>
-        <p>スタンダード音声で無料スタート。買い切り ¥500 で、すべて永続解除。</p>
-        <a href="https://apps.apple.com/jp/app/id6769309369"
-           class="download-btn">
-            App Storeでダウンロード <span class="arrow" aria-hidden="true">→</span>
-        </a>
-    </section>
-
-    <footer>
-        <nav class="lang-switch" aria-label="言語選択">
-            <a href="../ko/" hreflang="ko" lang="ko">한국어</a>
-            <a href="../en/" hreflang="en" lang="en">English</a>
-            <span class="current" aria-current="page">日本語</span>
-        </nav>
-        <div class="footer-links">
-            <a href="https://pocketlabs.kr/listentimer-support/ja/">サポート</a>
-            <a href="https://pocketlabs.kr/listentimer-privacy/ja/">プライバシー</a>
-            <a href="https://pocketlabs.kr/listentimer-terms/ja/">利用規約</a>
-            <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#99;&#111;&#110;&#116;&#97;&#99;&#116;&#64;&#112;&#111;&#99;&#107;&#101;&#116;&#108;&#97;&#98;&#115;&#46;&#107;&#114;">お問い合わせ</a>
+      <article id="f3" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F3</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600"><span style="white-space:nowrap">ルーティン</span>（<span style="white-space:nowrap">タバタ</span>）— 運動と休憩が自動で交互に進み、フェーズが変わるたびに音声で知らせます</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">運動（1〜300秒）、休憩（1〜300秒）、2〜10セットを設定すれば、リッスンタイマーがサーキット全体を進めてすべての変化を知らせます。</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">こんな時に</span> タバタ、HIITサーキット、ボクシングのラウンド、インターバル走。</p>
         </div>
-        <p class="copyright">
-            &copy; 2026 PocketLabs. All rights reserved.<br>
-            <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#99;&#111;&#110;&#116;&#97;&#99;&#116;&#64;&#112;&#111;&#99;&#107;&#101;&#116;&#108;&#97;&#98;&#115;&#46;&#107;&#114;">&#99;&#111;&#110;&#116;&#97;&#99;&#116;&#64;&#112;&#111;&#99;&#107;&#101;&#116;&#108;&#97;&#98;&#115;&#46;&#107;&#114;</a>
-        </p>
-    </footer>
+        <figure style="margin:0;max-width:168px">
+          <picture><source srcset="../assets/ja/S4_routine_edit.webp" type="image/webp"><img src="../assets/ja/S4_routine_edit.png" alt="ルーティン編集画面 — 運動時間、休憩時間、セット数の入力" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:1320/2868;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S4 · ルーティン編集 — 運動、休憩、セット</figcaption>
+        </figure>
+      </article>
 
+      <article id="f4" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F4</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600"><span style="white-space:nowrap">プリセット</span></h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">タイマーを最大12個まで保存。最後に使ったものが大きなカードで一番上に並び、1タップで開始できます。追加・削除・並べ替えは自由です。</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">こんな時に</span> 「昨日と同じ」を1タップで。</p>
+        </div>
+        <figure style="margin:0;max-width:168px">
+          <picture><source srcset="../assets/ja/S1_main_idle.webp" type="image/webp"><img src="../assets/ja/S1_main_idle.png" alt="メイン画面 — 大きなカードに表示された最後に使ったプリセットとプリセット一覧" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:1320/2868;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S1 · メイン画面 — 最後に使ったプリセットが一番上</figcaption>
+        </figure>
+      </article>
+
+      <article id="f5" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F5</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600"><span style="white-space:nowrap">バックグラウンド</span>再生 — 画面をロックしてもカウントは続きます</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">端末をロックしてポケットに入れても、床に置いても、音声は続きます。</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">こんな時に</span> デスクの前ではないすべての運動。</p>
+        </div>
+        <div></div>
+      </article>
+
+      <article id="f6" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F6</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">音楽や<span style="white-space:nowrap">ポッドキャスト</span>と自然に共存 — オーディオダッキングでカウントの間だけ音楽を下げ、すぐに元に戻します</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">自分の音楽はそのまま流れ、カウントがその上に重なります。</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">こんな時に</span> ヘッドホンやスピーカーでのトレーニング。</p>
+        </div>
+        <div></div>
+      </article>
+
+      <article id="f7" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F7</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">ロック画面＆<span style="white-space:nowrap">ダイナミックアイランド</span>（<span style="white-space:nowrap">ライブアクティビティ</span>）</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">ロックを解除せずに、ロック画面とダイナミックアイランドでタイマーを確認 — カウント、現在のフェーズ、セットまで。プレミアムならロック画面から一時停止・再開・停止ができます。</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">こんな時に</span> セットの合間にロック画面をちらっと見る時。</p>
+          <div style="display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding-top:12px;border-top:1px solid var(--lt-border)"><span class="lt-badge lt-badge--compact">PRO</span><span style="font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">ロック画面から一時停止・再開・停止。</span></div>
+        </div>
+        <figure style="margin:0;max-width:168px">
+          <picture><source srcset="../assets/ja/S6_lockscreen.webp" type="image/webp"><img src="../assets/ja/S6_lockscreen.png" alt="ロック画面に表示されたリッスンタイマーのライブアクティビティと残りのカウント" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:1320/2868;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S6 · ロック画面とウィジェット</figcaption>
+        </figure>
+      </article>
+
+      <article id="f8" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F8</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">ホーム画面＆ロック画面<span style="white-space:nowrap">ウィジェット</span></h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">ウィジェットが最後に使ったプリセットまたはピン留めしたプリセットを表示し、タップするとアプリが開きます。プレミアムなら ▶ でウィジェットから直接タイマーを開始でき — アプリを開く必要はありません — 実行中はウィジェットに一時停止と停止が表示されます。</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">こんな時に</span> 端末をアームバンドに入れる前に、ホーム画面から始める時。</p>
+          <div style="display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding-top:12px;border-top:1px solid var(--lt-border)"><span class="lt-badge lt-badge--compact">PRO</span><span style="font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">ウィジェットから即スタート — ▶ でアプリを開かずにタイマーを開始。</span></div>
+        </div>
+        <figure style="margin:0;max-width:168px">
+          <picture><source srcset="../assets/ja/S6_home_widget.webp" type="image/webp"><img src="../assets/ja/S6_home_widget.png" alt="リッスンタイマーのプリセットを表示するホーム画面ウィジェット" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:1320/2868;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S6 · ホーム画面ウィジェット</figcaption>
+        </figure>
+      </article>
+
+      <article id="f9" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F9</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">Siri＆<span style="white-space:nowrap">ショートカット</span> <span class="lt-badge">PRO</span></h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">話しかけるかショートカットをタップすれば、アプリを開かずに最後のプリセットを開始します（プレミアムがない場合はアプリが開きます）。</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">こんな時に</span> 手がふさがっていて、端末は部屋の向こう。</p>
+        </div>
+        <div></div>
+      </article>
+
+      <article id="f10" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F10</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">Apple Watch <span class="lt-badge">PRO</span></h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">手首から直接タイマーを開始・操作できます。Apple Watch のコンプリケーションから1タップで即スタート。すべてのプリセットが Apple Watch に自動で同期します。10秒前の警告とフィニッシュで手首が一緒にタップします。Watch は音声を再生する iPhone のタイマーのリモコンとして動作します。</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">こんな時に</span> 端末を取り出しもしない時。</p>
+        </div>
+        <figure style="margin:0;max-width:168px">
+          <picture><source srcset="../assets/ja/S8_watch.webp" type="image/webp"><img src="../assets/ja/S8_watch.png" alt="ルーティン実行中の Apple Watch 画面 — リングと残り秒数" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:396/484;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S8 · Apple Watch — 手首から1タップ</figcaption>
+        </figure>
+      </article>
+
+      <article id="f11" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F11</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">触覚フィードバック</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">耳がふさがっていても手首が一緒にタップします（Apple Watch）。iPhone は10秒前の警告とフィニッシュで振動し、iPhone の触覚フィードバックは設定でオフにできます。</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">こんな時に</span> うるさいジム、ヘッドホンなし。</p>
+        </div>
+        <div></div>
+      </article>
+
+      <article id="f12" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border);border-bottom:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F12</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">記録＆<span style="white-space:nowrap">自分のリズム</span></h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">月間カレンダーの統計 — どの日にトレーニングしたかを一目で確認でき、その日に完了した内容の一覧もつきます。プレミアムでは「自分のリズム」が週間・月間・全体のパターン分析を加えます。</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">こんな時に</span> ひと月が埋まっていくのを見る時。</p>
+          <div style="display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding-top:12px;border-top:1px solid var(--lt-border)"><span class="lt-badge lt-badge--compact">PRO</span><span style="font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">自分のリズム — 週間・月間・全体のパターン分析。</span></div>
+        </div>
+        <figure style="margin:0;max-width:168px">
+          <picture><source srcset="../assets/ja/S5_records.webp" type="image/webp"><img src="../assets/ja/S5_records.png" alt="記録画面 — トレーニングした日が印された月間カレンダー" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:1320/2868;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S5 · 記録 — 月間カレンダー</figcaption>
+        </figure>
+      </article>
+    </div>
+  </section>
+
+  <section id="voices" style="padding:72px 0">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <h2 style="margin:0;font-size:clamp(26px,4.4vw,40px);line-height:1.1;letter-spacing:-.03em;font-weight:700">7つの<span style="white-space:nowrap">ボイス</span>。2つは無料。</h2>
+      <p style="margin:16px 0 32px;font-size:19px;line-height:1.5;color:#fff;max-width:24em">キャラクターごとに異なるトーンで、トレーニングのリズムを作ります。</p>
+      <div class="a-voices" style="display:grid;grid-template-columns:1fr;gap:1px;background:var(--lt-border);border:1px solid var(--lt-border);border-radius:20px;overflow:hidden">
+        <div style="background:#000;padding:22px 20px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:17px;font-weight:600">スタンダード（女性）</span><span style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--lt-success)">無料</span></div>
+          <p style="margin:8px 0 0;font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">落ち着いて明瞭なデフォルトの声。</p>
+        </div>
+        <div style="background:#000;padding:22px 20px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:17px;font-weight:600">スタンダード（男性）</span><span style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--lt-success)">無料</span></div>
+          <p style="margin:8px 0 0;font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">自然で安定した男性の声。</p>
+        </div>
+        <div style="background:#000;padding:22px 20px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:17px;font-weight:600">ヨガ講師</span><span class="lt-badge lt-badge--compact">PRO</span></div>
+          <p style="margin:8px 0 0;font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">穏やかで静かなヨガ講師。</p>
+        </div>
+        <div style="background:#000;padding:22px 20px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:17px;font-weight:600">鬼軍曹</span><span class="lt-badge lt-badge--compact">PRO</span></div>
+          <p style="margin:8px 0 0;font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">限界まで押し上げる力強い声。</p>
+        </div>
+        <div style="background:#000;padding:22px 20px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:17px;font-weight:600">鬼師範</span><span class="lt-badge lt-badge--compact">PRO</span></div>
+          <p style="margin:8px 0 0;font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">時間を数え下げる冷たい声。</p>
+        </div>
+        <div style="background:#000;padding:22px 20px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:17px;font-weight:600">ニュースアナウンサー</span><span class="lt-badge lt-badge--compact">PRO</span></div>
+          <p style="margin:8px 0 0;font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">正確で率直なニュースの声。</p>
+        </div>
+        <div class="a-voice-wide" style="background:#000;padding:22px 20px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:17px;font-weight:600">癒しアナウンサー</span><span class="lt-badge lt-badge--compact">PRO</span></div>
+          <p style="margin:8px 0 0;font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">心地よい深夜ラジオの声。</p>
+        </div>
+      </div>
+      <div class="a-two" style="display:grid;grid-template-columns:1fr;gap:24px;margin-top:32px;align-items:start">
+        <div>
+          <p style="margin:0 0 12px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">選ぶ前にアプリですべてのボイスを試聴できます。ボイスは高品質なニューラルTTSで生成しアプリに内蔵しているため、ワークアウト中にインターネットは必要ありません。</p>
+          <p style="margin:0;font-size:14px;line-height:1.6;color:var(--lt-text-muted)">英語・日本語・韓国語に対応し、アプリは iPhone の言語設定に従います。</p>
+        </div>
+        <figure style="margin:0;max-width:200px">
+          <picture><source srcset="../assets/ja/S3_character_sheet.webp" type="image/webp"><img src="../assets/ja/S3_character_sheet.png" alt="ボイスキャラクターシート — リッスンタイマーでボイスを選ぶ" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:1320/2868;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S3 · ボイスキャラクターシート</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="pro" style="border-top:1px solid var(--lt-border);padding:72px 0">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <h2 style="margin:0;font-size:clamp(26px,4.4vw,40px);line-height:1.1;letter-spacing:-.03em;font-weight:700">すべて無料か、すべて解放か。</h2>
+      <p style="margin:20px 0 12px;font-size:17px;line-height:1.65;color:var(--lt-text-secondary);max-width:34em;text-wrap:pretty">リッスンタイマーはバナー広告付きで無料です。プレミアムはサブスクリプションではなく買い切りで、この iPhone と Apple Watch で以下のすべてを解放します。Apple アカウントごとに1回、プレミアム全機能を3日間無料で試せます：メイン画面のゴールドの「3日体験」ボタンをタップして、短い広告を1本見るだけです。</p>
+      <p style="margin:0 0 36px;font-size:15px;color:var(--lt-text-muted)">価格は国ごとに App Store に表示されます。</p>
+
+      <div class="a-pro-head" style="display:none;grid-template-columns:1fr 132px 132px;gap:16px;padding:0 0 10px;border-bottom:1px solid var(--lt-card-border);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--lt-text-muted)">
+        <div>機能</div><div>無料</div><div>PRO</div>
+      </div>
+
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">1秒ごとの音声カウントダウン、インターバルあたり1〜300秒</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">音声間隔：1秒ごと · 10秒ごと＋ラスト10秒</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">カスタム読み上げ間隔（N秒ごと、1〜60）</div><div style="color:var(--lt-text-muted)">—</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">ボイス：スタンダード（女性）、スタンダード（男性）</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">ボイス：ヨガ講師、鬼軍曹、鬼師範、ニュースアナウンサー、癒しアナウンサー</div><div style="color:var(--lt-text-secondary)">試聴のみ</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">ルーティン（タバタ）：運動 · 休憩 · 最大10セット</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">プリセット：最大12個</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">バックグラウンド再生 · 音楽とポッドキャストは流れたまま</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">ロック画面＆ダイナミックアイランドのライブアクティビティ（タイマーの確認）</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">ロック画面から一時停止 · 再開 · 停止</div><div style="color:var(--lt-text-muted)">—</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">ホーム画面＆ロック画面ウィジェット（タイマーの確認、タップでアプリが開く）</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">アプリを開かずにウィジェットから即スタート</div><div style="color:var(--lt-text-muted)">—</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">アプリを開かずに Siri やショートカットで開始</div><div style="color:var(--lt-text-secondary)">アプリが開く</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">Apple Watch：手首から開始・操作、コンプリケーション、プリセット同期、手首の触覚</div><div style="color:var(--lt-text-muted)">—</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">iPhone の触覚フィードバック</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">記録：月間カレンダー＆日別リスト</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">自分のリズムの分析（詳細な記録＆統計）</div><div style="color:var(--lt-text-secondary)">例のみ</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-card-border);font-size:15px">
+        <div style="color:#fff">広告</div><div style="color:var(--lt-text-secondary)">バナー</div><div style="color:var(--lt-text-secondary)">なし</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="made-for" style="padding:72px 0">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <h2 style="margin:0 0 32px;font-size:clamp(26px,4.4vw,40px);line-height:1.1;letter-spacing:-.03em;font-weight:700">こんな方におすすめ</h2>
+      <ul class="a-made" style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr;gap:2px">
+        <li style="display:flex;gap:14px;align-items:flex-start;padding:18px 0;border-top:1px solid var(--lt-border);font-size:18px;line-height:1.45;color:#fff;letter-spacing:-.01em"><span aria-hidden="true" style="color:var(--lt-success);font-size:15px;line-height:1.7">✓</span><span>ラウンドで繰り返すトレーニングをされる方 — HIIT・タバタ・サーキット・ボクシング・クロスフィット</span></li>
+        <li style="display:flex;gap:14px;align-items:flex-start;padding:18px 0;border-top:1px solid var(--lt-border);font-size:18px;line-height:1.45;color:#fff;letter-spacing:-.01em"><span aria-hidden="true" style="color:var(--lt-success);font-size:15px;line-height:1.7">✓</span><span>トレーニング中に画面を見られない、または見たくない方</span></li>
+        <li style="display:flex;gap:14px;align-items:flex-start;padding:18px 0;border-top:1px solid var(--lt-border);font-size:18px;line-height:1.45;color:#fff;letter-spacing:-.01em"><span aria-hidden="true" style="color:var(--lt-success);font-size:15px;line-height:1.7">✓</span><span>プランク・デッドハング・プルアップなど、姿勢キープが重要なトレーニングをされる方</span></li>
+        <li style="display:flex;gap:14px;align-items:flex-start;padding:18px 0;border-top:1px solid var(--lt-border);font-size:18px;line-height:1.45;color:#fff;letter-spacing:-.01em"><span aria-hidden="true" style="color:var(--lt-success);font-size:15px;line-height:1.7">✓</span><span>呼吸瞑想・ヨガ動作で時間の認識が必要な方</span></li>
+        <li style="display:flex;gap:14px;align-items:flex-start;padding:18px 0;border-top:1px solid var(--lt-border);border-bottom:1px solid var(--lt-border);font-size:18px;line-height:1.45;color:#fff;letter-spacing:-.01em"><span aria-hidden="true" style="color:var(--lt-success);font-size:15px;line-height:1.7">✓</span><span>Apple Watch からワンタップでトレーニングタイマーを起動したい方</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="faq" style="padding:72px 0">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <h2 style="margin:0 0 36px;font-size:clamp(26px,4.4vw,40px);line-height:1.1;letter-spacing:-.03em;font-weight:700">よくある質問</h2>
+      <div style="max-width:38em">
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">本当に1秒ごとに読み上げますか？</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">はい。カウントダウンの1秒ごとを、最初の1秒から最後の1秒まで読み上げます — インターバルあたり最大300秒。10秒間隔モードでも、ラスト10秒は1つずつ数えます。</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">画面をロックしたり、端末をポケットに入れてもカウントは続きますか？</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">はい。カウントはバックグラウンドで続き、ライブアクティビティがロック画面に表示します。</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">音楽や<span style="white-space:nowrap">ポッドキャスト</span>を止めてしまいますか？</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">いいえ。オーディオダッキングがカウントの間だけ音楽を下げ、すぐに元に戻します。</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">HIIT や<span style="white-space:nowrap">タバタ</span>に使えますか？</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">はい。運動と休憩のフェーズ、最大10セットでルーティンを組めます。フェーズの変化はすべて音声で知らせます。</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">ラウンド終了時にビープが鳴るだけの<span style="white-space:nowrap">インターバル</span>タイマーと何が違いますか？</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">ほとんどのインターバルタイマーは境目でしか合図しません — ラウンドの終わり、または最後の数秒。リッスンタイマーは1秒ごとを声で数えるので、画面を見なくても今どこにいるかが常にわかります。</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">プレミアムはサブスクリプションですか？</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">いいえ。買い切りです。価格は国ごとに App Store に表示されます。</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">無料体験はありますか？</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">はい。プレミアムの全機能を Apple アカウントごとに1回、3日間無料で試せます。メイン画面のゴールドの「3日体験」ボタンをタップして、短い広告を1本見てください。</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">Apple Watch でも使えますか？</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">はい、プレミアムで。手首からタイマーを開始・操作でき、コンプリケーションから1タップで開始、プリセットは自動で同期します。Watch は iPhone のタイマーのリモコンとして動作し、音声は iPhone が再生します。</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">アプリを開かずにタイマーを開始できますか？</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">はい、プレミアムで：ホーム画面やロック画面のウィジェット、Siri やショートカット、または Apple Watch から。プレミアムがない場合はタップでアプリが開き、そこから開始します。</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">どの<span style="white-space:nowrap">ボイス</span>と言語に対応していますか？</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">7つのボイスキャラクター — スタンダード（女性）とスタンダード（男性）は無料、ヨガ講師・鬼軍曹・鬼師範・ニュースアナウンサー・癒しアナウンサーはプレミアムに含まれます。ボイスとアプリは英語・日本語・韓国語に対応し、iPhone の言語設定に従います。</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border);border-bottom:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">アカウントやインターネット接続は必要ですか？</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">いいえ。アカウントはなく、すべてのボイスがアプリに内蔵されているため、タイマーはオフラインで動作します。App Store での購入と任意の広告にのみ接続が必要です。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="download" style="padding:88px 0 96px;border-top:1px solid var(--lt-border)">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <h2 style="margin:0;font-size:clamp(32px,6vw,58px);line-height:1.05;letter-spacing:-.04em;font-weight:700;max-width:14em">時計を見ずに<span style="white-space:nowrap">トレーニング</span>。</h2>
+      <p style="margin:24px 0 32px;font-size:17px;line-height:1.6;color:var(--lt-text-secondary);max-width:30em;text-wrap:pretty">デフォルトの2つのボイスで無料で始められます。買い切りですべて解放 — またはプレミアム全機能を3日間無料で試せます。</p>
+      <a href="https://apps.apple.com/app/id6769309369" aria-label="App Storeでリッスンタイマーをダウンロード" style="display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 28px;border-radius:14px;background:var(--lt-accent);color:#fff;font-size:17px;font-weight:600">App Storeでダウンロード</a>
+    </div>
+  </section>
+
+  <footer id="footer" style="border-top:1px solid var(--lt-border);padding:40px 0 56px">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <div style="display:flex;flex-wrap:wrap;gap:2px;margin-bottom:16px">
+        <a href="https://pocketlabs.kr/listentimer-support/ja/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:14px;color:var(--lt-text-secondary);border-radius:8px">サポート</a>
+        <a href="https://pocketlabs.kr/listentimer-privacy/ja/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:14px;color:var(--lt-text-secondary);border-radius:8px">プライバシーポリシー</a>
+        <a href="https://pocketlabs.kr/listentimer-terms/ja/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:14px;color:var(--lt-text-secondary);border-radius:8px">利用規約</a>
+        <a href="mailto:contact@pocketlabs.kr" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:14px;color:var(--lt-text-secondary);border-radius:8px">お問い合わせ (contact@pocketlabs.kr)</a>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:2px;margin-bottom:20px">
+        <a href="../en/" hreflang="en" lang="en" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:14px;color:var(--lt-text-muted)">English</a>
+        <a href="../ko/" hreflang="ko" lang="ko" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:14px;color:var(--lt-text-secondary);border-radius:8px">한국어</a>
+        <span lang="ja" aria-current="page" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:14px;color:#fff;font-weight:600;border-radius:8px">日本語</span>
+      </div>
+      <p style="margin:0;font-size:13px;line-height:1.8;color:var(--lt-text-muted)">© 2026 PocketLabs<br>リッスンタイマー 1.3.2 · ページ更新 2026-09-05</p>
+    </div>
+  </footer>
+</div>
 </body>
 </html>
