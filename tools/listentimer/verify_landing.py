@@ -44,8 +44,32 @@ PAGES = {
 }
 ASSETS_ROOT = Path("listentimer/assets")
 
-STORE_URL = "https://apps.apple.com/app/id6769309369"
+STORE_URL = "https://apps.apple.com/app/id6769309369"  # 규격 URL — JSON-LD installUrl 전용(추적 파라미터 없음)
 STORE_URL_COUNT = 3  # 헤더 · 히어로 · 다운로드
+
+# ASC 캠페인 링크(App Analytics → Acquisition → Campaigns · 2026-09-05 생성 · Linear POC-48 후속 ①).
+# pt = 개발자 계정당 1개(비밀 아님) · ct = 유입 페이지 라벨 · mt=8 = App Store.
+# 루트(x-default)는 en 본문 복제라 web_en을 공유한다 — 지표당 최소 임계 5(Apple 문서)라 root/en으로 쪼개면 둘 다 미표시.
+STORE_PT = "128189793"
+STORE_CAMPAIGN_BASE = "https://apps.apple.com/app/apple-store/id6769309369"
+PAGE_CT = {
+    "listentimer/index.html": "web_en",
+    "listentimer/en/index.html": "web_en",
+    "listentimer/ko/index.html": "web_ko",
+    "listentimer/ja/index.html": "web_ja",
+}
+
+
+def campaign_url(ct):
+    """Apple 캠페인 링크 형식 — developer.apple.com/help/app-store-connect/view-app-analytics/manage-campaigns.
+
+    ct는 30자 이내·앞뒤 공백 금지(Apple 규칙), pt는 숫자 — 상수를 잘못 고치면 여기서 먼저 걸린다.
+    """
+    if not re.fullmatch(r"\d+", STORE_PT):
+        fail("11 스토어 URL", "pt는 숫자여야 한다: %r" % STORE_PT)
+    if not (0 < len(ct) <= 30) or ct != ct.strip():
+        fail("11 스토어 URL", "ct 형식 위반(1~30자 · 앞뒤 공백 금지): %r" % ct)
+    return "%s?pt=%s&ct=%s&mt=8" % (STORE_CAMPAIGN_BASE, STORE_PT, ct)
 
 # 구 세대 문안의 화석 — 하나라도 살아 있으면 1.3.2 현행화가 덜 끝난 것이다
 BANNED_TOKENS = ["$2.99", "PT Coach", "3종", "Three character", "three voices"]
@@ -126,16 +150,23 @@ def check_text_layer(rel, text):
             fail("10 img 속성", "%s: <img>에 width/height 속성 — %s" % (rel, tag[:90]))
 
     # 스토어프런트 세그먼트(/us/·/kr/·/jp/)가 남으면 다른 나라 방문자가 오배송된다 —
-    # 페이지 안의 모든 형태가 규격 URL이어야 한다(JSON-LD installUrl 포함).
-    urls = re.findall(r"https://apps\.apple\.com/\S*?id6769309369", text)
-    bad = [u for u in urls if u != STORE_URL]
+    # 페이지 안의 모든 형태는 두 규격 중 하나여야 한다: JSON-LD installUrl = 추적 없는 규격 URL,
+    # 방문자 링크(href) = 이 페이지의 ASC 캠페인 URL(pt·ct·mt). 속성 안의 &amp;는 복호한 뒤 대조한다.
+    expected_href = campaign_url(PAGE_CT[rel])
+    urls = [htmlmod.unescape(u) for u in re.findall(r'https://apps\.apple\.com/[^"\s<]*', text)]
+    bad = [u for u in urls if u not in (STORE_URL, expected_href)]
     if bad:
         fail("11 스토어 URL", "%s: 규격 밖 URL %s" % (rel, sorted(set(bad))))
-    # 방문자가 누를 수 있는 링크는 정확히 3곳(헤더 · 히어로 · 다운로드)이다.
-    # 전체 등장 횟수는 4회 — 나머지 1회는 JSON-LD의 installUrl(링크가 아님)이라 따로 센다.
-    hrefs = re.findall(r'href="(https://apps\.apple\.com/\S*?id6769309369)"', text)
+    # 방문자가 누를 수 있는 링크는 정확히 3곳(헤더 · 히어로 · 다운로드)이고 전부 이 페이지의 캠페인 URL이다.
+    # 전체 등장은 4회 — 나머지 1회는 JSON-LD의 installUrl(링크가 아님 · 규격 URL 유지)이라 따로 센다.
+    hrefs = [htmlmod.unescape(u) for u in re.findall(r'href="(https://apps\.apple\.com/[^"]*)"', text)]
     if len(hrefs) != STORE_URL_COUNT:
         fail("11 스토어 URL", "%s: 스토어 링크 %d회 (기대 %d회)" % (rel, len(hrefs), STORE_URL_COUNT))
+    wrong = [u for u in hrefs if u != expected_href]
+    if wrong:
+        fail("11 스토어 URL", "%s: 캠페인 URL 아님 %s (기대 %s)" % (rel, sorted(set(wrong)), expected_href))
+    if urls.count(STORE_URL) != 1:
+        fail("11 스토어 URL", "%s: 규격 URL(installUrl 전용) %d회 (기대 1회)" % (rel, urls.count(STORE_URL)))
 
 
 # ── ④ hreflang · canonical ─────────────────────────────────────────────────
