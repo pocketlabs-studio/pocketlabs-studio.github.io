@@ -1,825 +1,769 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>듣는타이머 — 운동 중 손 안 대고 음성 카운트</title>
-    <meta name="description" content="플랭크·데드행·풀업 등 운동 중 화면을 볼 수 없을 때, 매초 숫자를 음성으로 읽어주는 운동 타이머. Apple Watch 한 탭 시작, 음악과 자연스럽게 공존.">
-    <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta name="theme-color" content="#0A0A0A">
-    <meta property="og:title" content="듣는타이머 — 운동 중 손 안 대고 음성 카운트">
-    <meta property="og:description" content="화면을 볼 수 없을 때 귀로 시간을 듣는 운동 타이머. 음성이 매초 카운트해 줍니다.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://pocketlabs.kr/listentimer/ko/">
-    <meta property="og:image" content="https://pocketlabs.kr/listentimer/assets/app_icon.png">
-    <link rel="canonical" href="https://pocketlabs.kr/listentimer/ko/">
-    <!-- hreflang: 다국어 페이지 간 SEO 연결 — 검색엔진이 사용자 언어에 맞는 페이지를 안내 -->
-    <link rel="alternate" hreflang="ko" href="https://pocketlabs.kr/listentimer/ko/">
-    <link rel="alternate" hreflang="en" href="https://pocketlabs.kr/listentimer/en/">
-    <link rel="alternate" hreflang="ja" href="https://pocketlabs.kr/listentimer/ja/">
-    <link rel="alternate" hreflang="x-default" href="https://pocketlabs.kr/listentimer/en/">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://apps.apple.com">
-    <!-- 비동기 폰트 로딩 (media swap 트릭) — render-blocking 제거로 LCP 300~500ms 단축.
-         opsz/wght variable axis는 사용처 없어 wght만 명시해 폰트 파일 크기 절감. -->
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital,wght@0,400;1,400&display=swap"
-          media="print" onload="this.media='all'">
-    <noscript>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital,wght@0,400;1,400&display=swap">
-    </noscript>
-    <style>
-        :root {
-            --bg: #0A0A0A;
-            --surface: #141414;
-            --surface-hover: #1A1A1A;
-            --text: #EAEAEA;
-            --text-dim: #888;
-            --text-dimmer: #666;          /* AA 대비 충족 (이전 #555보다 한 단계 밝음) */
-            --accent: #4F8FFF;
-            --accent-2: #7C5CFC;
-            --accent-glow: rgba(79, 143, 255, 0.10);
-            --premium: #FFB800;     /* 앱 warning 색 일치 */
-            --success: #30D158;     /* 앱 completed 색 일치 */
-            --border: #222;
-            --border-soft: #1c1c1c;
-            /* 한글 fallback: Apple SD Gothic Neo를 -apple-system보다 앞에 둬 iOS Safari에서 의도된 한글 글리프 사용 */
-            --sans: 'DM Sans', 'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, sans-serif;
-            --serif: 'Instrument Serif', Georgia, 'Apple SD Gothic Neo', serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>듣는타이머 — 화면 안 보고 매초 듣는 음성 운동 타이머</title>
+<meta name="description" content="듣는타이머는 카운트다운의 매초를 소리로 세어 주는 iPhone 음성 인터벌·운동 타이머입니다. 인터벌당 1~300초, 단독 또는 최대 10세트 루틴으로 사용합니다.">
+<meta name="theme-color" content="#000000">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta property="og:title" content="듣는타이머 — 화면 안 보고 매초 듣는 음성 운동 타이머">
+<meta property="og:description" content="화면이 아니라, 자세에 집중하세요. 운동하고, 쉬고, 다시 반복 — 그 매초를 귀로 들어보세요.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pocketlabs.kr/listentimer/ko/">
+<meta property="og:image" content="https://pocketlabs.kr/listentimer/assets/og_1200x630.png">
+<link rel="canonical" href="https://pocketlabs.kr/listentimer/ko/">
+<link rel="alternate" hreflang="en" href="https://pocketlabs.kr/listentimer/en/">
+<link rel="alternate" hreflang="ko" href="https://pocketlabs.kr/listentimer/ko/">
+<link rel="alternate" hreflang="ja" href="https://pocketlabs.kr/listentimer/ja/">
+<link rel="alternate" hreflang="x-default" href="https://pocketlabs.kr/listentimer/">
+<!-- Direction A - Editorial. Tokens below are copied from the PocketLabs / ListenTimer design system (app source of truth). -->
+<style>
+/* ListenTimer app color tokens → web
+ * Source of truth: ios/ListenTimer/Utilities/Constants.swift (enum AppColors), 2026-09-04 (v1.3.2)
+ * px = pt 1:1. Dark only — the app has no light mode (LISTEN_TIMER.md §4.8).
+ */
+:root {
+  /* surfaces */
+  --lt-bg:               #000000; /* AppColors.background — pure black (OLED) */
+  --lt-surface:          #111116; /* AppColors.surface — sheet/button surface */
+  --lt-border:           #1C1C24; /* AppColors.border — hairlines, ring track */
+  --lt-card-surface:     #1A1A22; /* AppColors.cardSurface — hero card, benefit cards */
+  --lt-card-border:      #383844; /* AppColors.cardBorder — 1.25pt card border */
+  --lt-card-add-border:  #2E2E3A; /* AppColors.cardAddBorder — dashed "+ add" */
+  --lt-row-surface:      #14141A; /* AppColors.mainRowSurface — preset list rows */
+  --lt-nested-surface:   #131319; /* AppColors.nestedSurface — settings sub-block */
+  --lt-ad-slot:          #0B0B0F; /* AppColors.adSlotSurface */
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+  /* text (contrast vs #000) */
+  --lt-text:             #FFFFFF; /* AppColors.textPrimary — numbers, titles (21:1) */
+  --lt-text-secondary:   #B0B0C0; /* AppColors.textSecondary — info labels (~9:1) */
+  --lt-text-tertiary:    #A5A5B2; /* AppColors.textTertiary — subtitles (~8.6:1) */
+  --lt-text-muted:       #8E8E9A; /* AppColors.textMuted / mainTextTertiary (6.5:1) */
+  --lt-text-muted-soft:  #7A7A8C; /* AppColors.mainTextTertiarySoft */
+  --lt-text-disabled:    #48485A; /* AppColors.textDisabled — true disabled only (~2.4:1) */
+  --lt-row-title:        #E8E8F0; /* AppColors.mainRowTitleText */
+  --lt-selected-text:    #5EA9FF; /* AppColors.mainSelectedText — "Selected · ready" label */
 
-        body {
-            font-family: var(--sans);
-            background: var(--bg);
-            color: var(--text);
-            -webkit-font-smoothing: antialiased;
-            min-height: 100vh;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
+  /* semantic */
+  --lt-accent:           #0A84FF; /* AppColors.accent — start button, selected preset (iOS system blue) */
+  --lt-danger:           #FF3B30; /* AppColors.danger — stop */
+  --lt-warning:          #FFB800; /* AppColors.warning — final 10 s (amber) */
+  --lt-success:          #30D158; /* AppColors.success — progress ring, completed */
+  --lt-success-deep:     #1EA34A; /* AppColors.successDeep */
+  --lt-last-run-star:    #FFD166; /* AppColors.mainLastRunStar — ★ last used (NOT the PRO gold) */
 
-        /* ================= LAYOUT ================= */
-        section { padding: 0 24px; }
-        .container { max-width: 980px; margin: 0 auto; }
-        .section-label {
-            text-align: center;
-            font-size: 0.78em;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.16em;
-            color: var(--accent);
-            margin-bottom: 16px;
-            opacity: 0; animation: fadeUp 0.6s 0.1s forwards;
-        }
-        .section-title {
-            text-align: center;
-            font-size: 2em;
-            font-weight: 600;
-            letter-spacing: -0.02em;
-            margin-bottom: 48px;
-            opacity: 0; animation: fadeUp 0.6s 0.2s forwards;
-        }
+  /* PRO gold — PremiumBadgeView.proGradient: goldLight (top-leading) → goldDark (bottom-trailing) */
+  --lt-gold-light:       #FFD700; /* AppColors.goldLight */
+  --lt-gold-dark:        #FFA500; /* AppColors.goldDark */
+  --lt-pro-gradient:     linear-gradient(to bottom right, #FFD700, #FFA500);
 
-        /* ================= HERO ================= */
-        .hero {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 100px 24px 80px;
-            position: relative;
-            overflow: hidden;
-        }
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -150px; left: 50%;
-            transform: translateX(-50%);
-            width: 800px; height: 800px;
-            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 65%);
-            pointer-events: none;
-            z-index: 0;
-        }
-        .hero > * { position: relative; z-index: 1; }
+  /* routine stage colors (segmented ring): work = success, rest = accent */
+  --lt-stage-work:       #30D158;
+  --lt-stage-rest:       #0A84FF;
+}
 
-        .hero-icon {
-            width: 96px; height: 96px;
-            border-radius: 22px;
-            display: block;
-            box-shadow:
-                0 10px 40px rgba(79, 143, 255, 0.25),
-                0 0 0 1px rgba(255, 255, 255, 0.06);
-            margin-bottom: 28px;
-            opacity: 0; animation: fadeUp 0.6s 0.1s forwards;
-        }
+/* ListenTimer typography → web
+ * Source: ios/ListenTimer/Utilities/Constants.swift (enum AppFonts) + LISTEN_TIMER.md §4.3
+ * The app uses the system font (SF Pro) and SF Pro Rounded for the big number.
+ * On the web, prefer the system stack (matches the app on Apple devices, zero external fetch).
+ */
+:root {
+  --lt-font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+                  "Helvetica Neue", Arial, "Noto Sans KR", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  --lt-font-rounded: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, sans-serif;
 
-        .hero-title {
-            font-size: 3em;
-            font-weight: 700;
-            letter-spacing: -0.035em;
-            line-height: 1.1;
-            margin-bottom: 14px;
-            opacity: 0; animation: fadeUp 0.6s 0.2s forwards;
-        }
-        .hero-subtitle {
-            font-size: 1.15em;
-            color: var(--text-dim);
-            font-weight: 400;
-            max-width: 460px;
-            margin: 0 auto 28px;
-            opacity: 0; animation: fadeUp 0.6s 0.3s forwards;
-        }
-        .hero-subtitle em {
-            font-style: normal;
-            color: var(--text);
-            font-weight: 500;
-        }
+  /* app scale (pt) */
+  --lt-size-display: 96px;  /* countdown number — bold, rounded (§4.3) */
+  --lt-size-button:  17px;  /* AppFonts.button — semibold */
+  --lt-size-titlebar:16px;  /* AppFonts.titleBar — medium */
+  --lt-size-caption: 14px;  /* sub label ("sec", "/ 60 s") — regular */
+  --lt-size-badge:   11px;  /* PremiumBadgeView .standard — weight 900 (black), tracking 1px */
+  --lt-size-badge-compact: 9px; /* .compact — tracking 0.6px */
+}
+.lt-display { font: 700 var(--lt-size-display)/1 var(--lt-font-rounded); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.lt-button-label { font: 600 var(--lt-size-button)/1.2 var(--lt-font-sans); }
+.lt-titlebar { font: 500 var(--lt-size-titlebar)/1.2 var(--lt-font-sans); }
+.lt-caption { font: 400 var(--lt-size-caption)/1.4 var(--lt-font-sans); color: var(--lt-text-secondary); }
 
-        /* Trust strip — 신뢰 신호 3-pill */
-        .trust-strip {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 36px;
-            opacity: 0; animation: fadeUp 0.6s 0.35s forwards;
-        }
-        .trust-pill {
-            font-size: 0.78em;
-            font-weight: 500;
-            color: var(--text-dim);
-            background: var(--surface);
-            border: 1px solid var(--border);
-            padding: 6px 14px;
-            border-radius: 100px;
-            letter-spacing: -0.01em;
-        }
-
-        .download-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: var(--text);
-            color: var(--bg);
-            padding: 14px 28px;
-            border-radius: 100px;
-            font-size: 0.95em;
-            font-weight: 600;
-            text-decoration: none;
-            letter-spacing: -0.01em;
-            transition: transform 0.15s ease, box-shadow 0.25s ease;
-            box-shadow: 0 6px 24px rgba(255, 255, 255, 0.08);
-            opacity: 0; animation: fadeUp 0.6s 0.4s forwards;
-            border: none;
-            font-family: inherit;
-        }
-        .download-btn .arrow {
-            font-size: 1.1em;
-            transition: transform 0.2s ease;
-        }
-        .hero-note {
-            margin-top: 14px;
-            font-size: 0.82em;
-            color: var(--text-dimmer);
-            opacity: 0; animation: fadeUp 0.6s 0.5s forwards;
-        }
-
-        /* ================= LIFESTYLE ================= */
-        .lifestyle {
-            padding: 60px 24px 80px;
-            border-top: 1px solid var(--border-soft);
-            border-bottom: 1px solid var(--border-soft);
-        }
-        .lifestyle-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        .lifestyle-card {
-            border-radius: 24px;
-            overflow: hidden;
-            background: #000;
-            box-shadow:
-                0 16px 48px rgba(0, 0, 0, 0.55),
-                0 0 0 1px rgba(255, 255, 255, 0.04);
-            transition: transform 0.4s ease;
-            opacity: 0; animation: fadeUp 0.7s 0.15s forwards;
-        }
-        .lifestyle-card:nth-child(2) { animation-delay: 0.25s; }
-        .lifestyle-card img {
-            display: block;
-            width: 100%;
-            height: auto;
-        }
-
-        /* ================= LANG SWITCH ================= */
-        .lang-switch {
-            display: flex;
-            justify-content: center;
-            gap: 4px;
-            margin-bottom: 28px;
-            flex-wrap: wrap;
-        }
-        .lang-switch a, .lang-switch .current {
-            font-size: 0.85em;
-            color: var(--text-dim);
-            text-decoration: none;
-            padding: 8px 14px;
-            border-radius: 100px;
-            border: 1px solid transparent;
-            transition: color 0.2s, background 0.2s, border-color 0.2s;
-            display: inline-flex;
-            align-items: center;
-            min-height: 44px;
-        }
-        .lang-switch .current {
-            color: var(--text);
-            border-color: var(--border);
-            background: var(--surface);
-            font-weight: 500;
-        }
-
-        /* ================= FEATURES ================= */
-        .features { padding: 100px 24px 80px; }
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-        }
-        .feature-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 32px 28px;
-            transition: background 0.25s, border-color 0.25s, transform 0.25s;
-        }
-        .feature-icon {
-            width: 48px; height: 48px;
-            border-radius: 12px;
-            background: var(--accent-glow);
-            border: 1px solid rgba(79, 143, 255, 0.18);
-            display: flex;
-            align-items: center; justify-content: center;
-            font-size: 1.4em;
-            margin-bottom: 20px;
-        }
-        .feature-card h3 {
-            font-size: 1.1em;
-            font-weight: 600;
-            letter-spacing: -0.01em;
-            margin-bottom: 8px;
-        }
-        .feature-card p {
-            font-size: 0.92em;
-            color: var(--text-dim);
-            line-height: 1.6;
-        }
-
-        /* ================= SCREENSHOTS ================= */
-        .screenshots {
-            padding: 80px 24px;
-            background: radial-gradient(ellipse at center, rgba(79, 143, 255, 0.04), transparent 70%);
-        }
-        .screenshots-grid {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            flex-wrap: wrap;
-            opacity: 0; animation: fadeUp 0.8s 0.3s forwards;
-        }
-        .screenshot-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .device-frame {
-            width: 250px;
-            border-radius: 32px;
-            overflow: hidden;
-            box-shadow:
-                0 24px 64px rgba(0, 0, 0, 0.6),
-                0 0 0 1px rgba(255, 255, 255, 0.06),
-                0 0 0 8px #0d0d0d;     /* 가상의 베젤 */
-            transition: transform 0.4s ease;
-        }
-        .device-frame img {
-            display: block;
-            width: 100%;
-            height: auto;
-            background: #000;
-        }
-        .device-caption {
-            margin-top: 16px;
-            font-size: 0.85em;
-            color: var(--text-dim);
-            text-align: center;
-            max-width: 200px;
-            line-height: 1.5;
-        }
-
-        /* ================= CHARACTERS ================= */
-        .characters { padding: 100px 24px 60px; }
-        .characters-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-        }
-        .character-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 28px 24px;
-            position: relative;
-            transition: background 0.25s, border-color 0.25s;
-        }
-        .character-badge {
-            display: inline-block;
-            font-size: 0.68em;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            padding: 4px 10px;
-            border-radius: 100px;
-            margin-bottom: 16px;
-        }
-        .character-badge.free {
-            color: var(--success);
-            background: rgba(48, 209, 88, 0.10);
-            border: 1px solid rgba(48, 209, 88, 0.25);
-        }
-        .character-badge.premium {
-            color: var(--premium);
-            background: rgba(255, 184, 0, 0.10);
-            border: 1px solid rgba(255, 184, 0, 0.25);
-        }
-        .character-card h3 {
-            font-size: 1.05em;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        .character-card p {
-            font-size: 0.88em;
-            color: var(--text-dim);
-            line-height: 1.55;
-        }
-        .characters-note {
-            text-align: center;
-            margin-top: 32px;
-            font-size: 0.88em;
-            color: var(--text-dim);
-        }
-        .characters-note strong {
-            color: var(--text);
-            font-weight: 600;
-        }
-
-        /* ================= PREMIUM ================= */
-        .premium-section { padding: 60px 24px 100px; }
-        .premium-card {
-            max-width: 480px;
-            margin: 0 auto;
-            background: linear-gradient(180deg, var(--surface), #0f0f0f);
-            border: 1px solid rgba(255, 184, 0, 0.22);
-            border-radius: 24px;
-            padding: 40px 36px;
-            position: relative;
-            overflow: hidden;
-        }
-        .premium-card::before {
-            content: '';
-            position: absolute;
-            top: -50%; right: -30%;
-            width: 280px; height: 280px;
-            background: radial-gradient(circle, rgba(255, 184, 0, 0.08) 0%, transparent 65%);
-            pointer-events: none;
-        }
-        .premium-card > * { position: relative; }
-        .premium-badge {
-            display: inline-block;
-            font-size: 0.7em;
-            font-weight: 700;
-            letter-spacing: 0.14em;
-            color: var(--premium);
-            background: rgba(255, 184, 0, 0.10);
-            border: 1px solid rgba(255, 184, 0, 0.25);
-            padding: 5px 12px;
-            border-radius: 100px;
-            margin-bottom: 20px;
-        }
-        .premium-price {
-            display: flex;
-            align-items: baseline;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 24px;
-        }
-        .premium-price .amount {
-            font-size: 2.4em;
-            font-weight: 700;
-            letter-spacing: -0.03em;
-        }
-        .premium-price .period {
-            font-size: 0.92em;
-            color: var(--text-dim);
-        }
-        .premium-list {
-            list-style: none;
-            padding: 0;
-        }
-        .premium-list li {
-            padding: 10px 0;
-            font-size: 0.95em;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border-bottom: 1px solid var(--border-soft);
-        }
-        .premium-list li:last-child { border-bottom: none; }
-        .premium-list li::before {
-            content: '✓';
-            color: var(--premium);
-            font-weight: 700;
-            font-size: 1em;
-        }
-
-        /* ================= CTA ================= */
-        .cta {
-            padding: 100px 24px;
-            text-align: center;
-            border-top: 1px solid var(--border-soft);
-            background: linear-gradient(180deg, transparent, rgba(79, 143, 255, 0.03));
-        }
-        .cta-headline {
-            font-family: var(--serif);
-            font-size: 2em;
-            font-weight: 400;
-            margin-bottom: 14px;
-            letter-spacing: -0.01em;
-        }
-        .cta p {
-            font-size: 1.02em;
-            color: var(--text-dim);
-            margin-bottom: 32px;
-        }
-
-        /* ================= FOOTER ================= */
-        footer {
-            border-top: 1px solid var(--border-soft);
-            padding: 48px 24px 56px;
-            text-align: center;
-        }
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-        }
-        /* 터치 타겟 44pt 확보 — padding으로 시각 디자인은 유지 */
-        .footer-links a {
-            color: var(--text-dim);
-            text-decoration: none;
-            font-size: 0.88em;
-            padding: 10px 14px;
-            border-radius: 8px;
-            transition: color 0.2s, background 0.2s;
-            display: inline-flex;
-            align-items: center;
-            min-height: 44px;
-        }
-        footer .copyright {
-            font-size: 0.82em;
-            color: var(--text-dim);     /* AA 충족 — 이전 dimmer(#555) 사용 시 미달 */
-            line-height: 1.8;
-        }
-        footer .copyright a {
-            color: var(--text-dim);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        /* ================= INTERACTIONS — hover only on hover-capable devices ================= */
-        @media (hover: hover) {
-            .feature-card:hover {
-                background: var(--surface-hover);
-                border-color: #2a2a2a;
-                transform: translateY(-2px);
-            }
-            .character-card:hover {
-                background: var(--surface-hover);
-                border-color: #2a2a2a;
-            }
-            .download-btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 10px 32px rgba(255, 255, 255, 0.12);
-            }
-            .download-btn:hover .arrow {
-                transform: translateX(3px);
-            }
-            .device-frame:hover { transform: translateY(-4px); }
-            .lifestyle-card:hover { transform: translateY(-4px); }
-            .footer-links a:hover { color: var(--text); background: var(--surface); }
-            .lang-switch a:hover {
-                color: var(--text);
-                background: var(--surface);
-            }
-            footer .copyright a:hover { color: var(--text); }
-        }
-
-        /* ================= FOCUS (키보드 접근성) ================= */
-        .download-btn:focus-visible {
-            outline: 2px solid var(--accent);
-            outline-offset: 4px;
-        }
-        .footer-links a:focus-visible,
-        .lang-switch a:focus-visible,
-        footer .copyright a:focus-visible {
-            outline: 2px solid var(--accent);
-            outline-offset: 2px;
-        }
-
-        /* ================= ANIMATIONS ================= */
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(16px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ================= RESPONSIVE ================= */
-        @media (max-width: 720px) {
-            .hero { padding: 80px 20px 60px; }
-            .hero-icon { width: 80px; height: 80px; border-radius: 18px; }
-            .hero-title { font-size: 2.2em; }
-            .hero-subtitle { font-size: 1em; }
-
-            .lifestyle { padding: 40px 16px 60px; }
-            .lifestyle-grid {
-                grid-template-columns: 1fr;
-                gap: 14px;
-                max-width: 360px;
-            }
-            .lifestyle-card { border-radius: 20px; }
-
-            .features { padding: 70px 20px 50px; }
-            .features-grid {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-            .feature-card { padding: 26px 24px; }
-
-            .screenshots { padding: 60px 20px; }
-            .device-frame { width: 200px; box-shadow: 0 16px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06), 0 0 0 6px #0d0d0d; }
-            .device-caption { max-width: 180px; }
-
-            .characters { padding: 70px 20px 40px; }
-            .characters-grid {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-
-            .premium-section { padding: 40px 20px 80px; }
-            .premium-card { padding: 32px 28px; }
-            .premium-price .amount { font-size: 2em; }
-
-            .cta { padding: 80px 20px; }
-            .cta-headline { font-size: 1.7em; }
-
-            .section-title { font-size: 1.6em; margin-bottom: 36px; }
-
-            footer { padding: 40px 20px 48px; }
-            .footer-links { gap: 4px; }
-        }
-
-        /* 매우 좁은 폭 (iPhone SE 1세대 320px 등) 대응 */
-        @media (max-width: 360px) {
-            .hero-title { font-size: 1.9em; }
-            .premium-price .amount { font-size: 1.7em; }
-            .trust-pill { font-size: 0.72em; padding: 5px 10px; }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation: none !important;
-                transition: none !important;
-                scroll-behavior: auto !important;
-            }
-            /* fade 애니메이션 사용 요소가 opacity:0에 머무르지 않도록 명시 */
-            .hero-icon, .hero-title, .hero-subtitle, .trust-strip, .download-btn,
-            .hero-note, .section-label, .section-title, .screenshots-grid,
-            .lifestyle-card {
-                opacity: 1 !important;
-                transform: none !important;
-            }
-        }
-    </style>
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;background:#000}
+body{margin:0;background:var(--lt-bg);color:var(--lt-text);font-family:var(--lt-font-sans);-webkit-font-smoothing:antialiased;overflow-x:hidden;word-break:keep-all}
+a{color:var(--lt-accent);text-decoration:none}
+a:hover{color:#5EA9FF}
+img{height:auto}
+:focus-visible{outline:2px solid var(--lt-accent);outline-offset:3px;border-radius:4px}
+.lt-badge{display:inline-block;font:900 11px/13px -apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:6px;color:#000;background:linear-gradient(to bottom right,#FFD700,#FFA500);vertical-align:middle;white-space:nowrap}
+.lt-badge--compact{font-size:9px;line-height:11px;letter-spacing:.6px;padding:2px 5px;border-radius:4px}
+.a-nav a:hover{color:#fff;background:var(--lt-surface)}
+.a-navrow{-ms-overflow-style:none;scrollbar-width:none}
+.a-navrow::-webkit-scrollbar{display:none}
+.a-navrow a{white-space:nowrap;flex:0 0 auto}
+.a-tick{color:var(--lt-text-disabled)}
+.a-tick:last-child{color:var(--lt-warning)}
+.a-pro-row div:nth-child(2)::before,.a-pro-row div:nth-child(3)::before{color:var(--lt-text-muted);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-right:8px}
+.a-pro-row div:nth-child(2)::before{content:'무료'}
+.a-pro-row div:nth-child(3)::before{content:'PRO'}
+@media (min-width:768px){
+  .a-wrap{padding:0 24px !important}
+  .a-two{grid-template-columns:1fr 1fr !important;gap:24px !important}
+  .a-feat{grid-template-columns:56px 1fr 168px !important;gap:28px !important}
+  .a-facts dl{grid-template-columns:220px 1fr !important}
+  .a-facts dt{padding:16px 0 !important}
+  .a-facts dd{border-top:1px solid var(--lt-border) !important;padding:16px 0 !important}
+  .a-voices{grid-template-columns:1fr 1fr 1fr !important}
+  .a-voice-wide{grid-column:1/-1 !important}
+  .a-navrow{flex-wrap:wrap !important;overflow-x:visible !important}
+  .a-made{grid-template-columns:1fr 1fr !important}
+  .a-pro-head{display:grid !important}
+  .a-pro-row{grid-template-columns:1fr 132px 132px !important;align-items:center !important;gap:16px !important;padding:14px 0 !important}
+  .a-pro-row div:nth-child(2)::before,.a-pro-row div:nth-child(3)::before{content:none !important}
+  .a-hero-note{max-width:640px !important}
+}
+/* Korean typography: break at 어절 boundaries, relax Latin tracking */
+h1,h2,h3,dt,dd,li,figcaption,p{word-break:keep-all;line-break:strict}
+h1,h2,h3{letter-spacing:-.01em !important}
+h1{line-height:1.14 !important}
+h2{line-height:1.2 !important}
+h3{line-height:1.4 !important}
+.a-tick{letter-spacing:normal !important}
+li{white-space:nowrap}
+#every-second li,#made-for li,#facts dd,#pro div{white-space:normal}
+figcaption{text-wrap:balance}
+p,dd{text-wrap:pretty}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none !important;animation:none !important}}
+</style>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "Organization",
+   "@id": "https://pocketlabs.kr/#org",
+   "name": "PocketLabs",
+   "url": "https://pocketlabs.kr/",
+   "email": "contact@pocketlabs.kr",
+   "logo": "https://pocketlabs.kr/listentimer/assets/app_icon.png"
+  },
+  {
+   "@type": "MobileApplication",
+   "@id": "https://pocketlabs.kr/listentimer/#app",
+   "name": "ListenTimer",
+   "alternateName": [
+    "듣는타이머",
+    "リッスンタイマー"
+   ],
+   "url": "https://pocketlabs.kr/listentimer/ko/",
+   "installUrl": "https://apps.apple.com/app/id6769309369",
+   "operatingSystem": "iOS 17.0 or later; watchOS 10.0 or later (Premium)",
+   "applicationCategory": "HealthApplication",
+   "softwareVersion": "1.3.2",
+   "dateModified": "2026-09-05",
+   "inLanguage": [
+    "en",
+    "ja",
+    "ko"
+   ],
+   "author": {
+    "@id": "https://pocketlabs.kr/#org"
+   },
+   "publisher": {
+    "@id": "https://pocketlabs.kr/#org"
+   },
+   "description": "카운트다운의 매초를 소리로 세어 줍니다 — 인터벌당 1~300초, 단독 또는 최대 10세트 루틴으로. 운동하고, 쉬고, 다시 반복 — 그 매초를 귀로 들어보세요.",
+   "featureList": [
+    "매초 음성 카운트다운",
+    "읽기 간격",
+    "루틴(타바타) — 운동과 휴식이 자동으로 번갈아 가고, 구간이 바뀔 때마다 음성으로 알려 줍니다",
+    "프리셋",
+    "백그라운드 재생 — 화면을 잠가도 카운트가 계속됩니다",
+    "음악·팟캐스트와 잘 어울립니다 — 오디오 더킹으로 카운트 순간에만 음악을 낮추고, 곧바로 원래대로 돌립니다",
+    "잠금 화면 & 다이내믹 아일랜드 (라이브 액티비티)",
+    "홈 화면 & 잠금 화면 위젯",
+    "Siri & 단축어",
+    "Apple Watch",
+    "햅틱",
+    "기록 & 나의 리듬"
+   ],
+   "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+    "description": "Free download with ads. Premium is a one-time in-app purchase, not a subscription."
+   }
+  },
+  {
+   "@type": "FAQPage",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "정말 매초를 말해 주나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "예. 카운트다운의 매초를 처음 1초부터 마지막 1초까지 소리로 읽습니다 — 인터벌당 최대 300초. 10초 간격 모드에서도 마지막 10초는 하나씩 세어 줍니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "화면을 잠그거나 휴대폰을 주머니에 넣어도 계속 카운트되나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "예. 카운트는 백그라운드에서 계속되고, 라이브 액티비티가 잠금 화면에 표시합니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "음악이나 팟캐스트를 끊나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "아니요. 오디오 더킹이 카운트 순간에만 음악을 낮추고, 곧바로 원래대로 돌립니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "HIIT나 타바타에 쓸 수 있나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "예. 운동과 휴식 구간, 최대 10세트로 루틴을 만드세요. 모든 구간 변화를 음성으로 알려 줍니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "라운드가 끝날 때만 삐 소리를 내는 인터벌 타이머와 어떻게 다른가요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "대부분의 인터벌 타이머는 경계에서만 알려 줍니다 — 라운드가 끝날 때, 또는 마지막 몇 초. 듣는타이머는 매초를 소리로 세어 주기 때문에, 화면을 보지 않아도 지금 어디쯤인지 늘 알 수 있습니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "프리미엄은 구독인가요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "아니요. 1회 결제입니다. 가격은 국가별로 App Store에 표시됩니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "무료 체험이 있나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "예. 프리미엄 전체 기능을 Apple 계정당 1회, 3일간 무료로 써 볼 수 있습니다. 메인 화면의 금색 \"3일 체험\" 칩을 탭하고 짧은 광고 하나를 보세요."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Apple Watch에서도 되나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "예, 프리미엄에서. 손목에서 타이머를 시작하고 조작하며, 컴플리케이션에서 한 번 탭하면 시작되고, 프리셋은 자동으로 동기화됩니다. Watch는 iPhone 타이머의 리모컨으로 동작하며 음성은 iPhone이 재생합니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "앱을 열지 않고 타이머를 시작할 수 있나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "예, 프리미엄에서: 홈 화면이나 잠금 화면 위젯, Siri나 단축어, 또는 Apple Watch에서. 프리미엄이 없으면 해당 탭은 앱을 열고, 거기서 시작하게 됩니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "어떤 음성과 언어를 지원하나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "음성 캐릭터 7종 — 기본 여성과 기본 남성은 무료이고, 요가 선생님·지옥 조교·저승사자·뉴스 아나운서·라디오 DJ는 프리미엄에 포함됩니다. 음성과 앱은 영어, 일본어, 한국어를 지원하며 iPhone 언어 설정을 따릅니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "계정이나 인터넷 연결이 필요한가요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "아니요. 계정이 없고 모든 음성이 앱에 내장되어 있어 타이머는 오프라인에서 동작합니다. App Store 구입과 선택적 광고에만 연결이 필요합니다."
+     }
+    }
+   ]
+  }
+ ]
+}
+</script>
 </head>
 <body>
+<div style="background:#000;color:#fff;font-family:var(--lt-font-sans);min-height:100vh;padding-bottom:1px">
 
-    <!-- ════════ HERO ════════ -->
-    <section class="hero">
-        <img class="hero-icon"
-             src="../assets/app_icon.png"
-             alt="듣는타이머 앱 아이콘"
-             width="96" height="96"
-             fetchpriority="high">
-        <h1 class="hero-title">듣는타이머</h1>
-        <p class="hero-subtitle">운동 중 손 안 대고 음성 카운트<br>음성이 <em>매초 숫자</em>를 읽어 시간을 알려줍니다.</p>
-
-        <div class="trust-strip" aria-label="앱 핵심 신뢰 요소">
-            <span class="trust-pill">매초 음성 카운트</span>
-            <span class="trust-pill">1회 결제 · 구독 아님</span>
-            <span class="trust-pill">플랭크 · 데드행 · 요가</span>
+  <header id="top" style="border-bottom:1px solid var(--lt-border)">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:20px;padding:28px 0 24px">
+        <img src="../assets/app_icon.png" alt="듣는타이머 앱 아이콘" style="width:96px;height:96px;border-radius:22px;display:block;box-shadow:0 0 0 1px rgba(255,255,255,.06)">
+        <div style="flex:1;min-width:200px">
+          <div style="font-size:26px;font-weight:700;letter-spacing:-.02em;line-height:1.1">듣는타이머</div>
+          <div style="font-size:15px;color:var(--lt-text-tertiary);margin-top:4px">운동 중 손 안 대고 음성 카운트</div>
         </div>
-
-        <a href="https://apps.apple.com/kr/app/id6769309369"
-           class="download-btn">
-            App Store에서 다운로드 <span class="arrow" aria-hidden="true">→</span>
-        </a>
-        <p class="hero-note">iOS 17 이상 · iPhone · Apple Watch</p>
-    </section>
-
-    <!-- ════════ LIFESTYLE ════════ -->
-    <section class="lifestyle" aria-label="라이프스타일 미리보기">
-        <div class="lifestyle-grid">
-            <div class="lifestyle-card">
-                <picture>
-                    <source srcset="../assets/lifestyle/ko/yoga.webp" type="image/webp">
-                    <img src="../assets/lifestyle/ko/yoga.png"
-                         alt="요가 자세를 유지하는 여성과 60초 카운트다운을 표시 중인 듣는타이머 화면"
-                         width="800" height="1734"
-                         loading="lazy" decoding="async">
-                </picture>
-            </div>
-            <div class="lifestyle-card">
-                <picture>
-                    <source srcset="../assets/lifestyle/ko/pullup.webp" type="image/webp">
-                    <img src="../assets/lifestyle/ko/pullup.png"
-                         alt="턱걸이 자세를 유지하는 남성과 60초 카운트다운을 표시 중인 듣는타이머 화면"
-                         width="800" height="1734"
-                         loading="lazy" decoding="async">
-                </picture>
-            </div>
+        <div style="display:flex;align-items:center;gap:4px">
+          <a href="../en/" hreflang="en" lang="en" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:13px;color:var(--lt-text-muted)">English</a>
+          <span lang="ko" aria-current="page" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:13px;color:#fff;font-weight:600;border-radius:100px">한국어</span>
+          <a href="../ja/" hreflang="ja" lang="ja" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:13px;color:var(--lt-text-muted);border-radius:100px">日本語</a>
+          <a href="https://apps.apple.com/app/id6769309369" aria-label="App Store에서 듣는타이머 다운로드" style="display:inline-flex;align-items:center;min-height:44px;padding:0 18px;margin-left:8px;border-radius:100px;background:#fff;color:#000;font-size:14px;font-weight:600">App Store</a>
         </div>
-    </section>
+      </div>
+    </div>
+  </header>
 
-    <!-- ════════ FEATURES ════════ -->
-    <section class="features">
-        <div class="container">
-            <p class="section-label">Features</p>
-            <h2 class="section-title">화면을 보지 않아도 시간은 흐른다</h2>
+  <nav class="a-nav" aria-label="섹션" style="position:sticky;top:0;z-index:20;background:rgba(0,0,0,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--lt-border)">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <div class="a-navrow" style="display:flex;flex-wrap:nowrap;overflow-x:auto;gap:2px;padding:4px 0">
+        <a href="#every-second" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;border-radius:100px;font-size:13px;color:var(--lt-text-tertiary)">매초</a>
+        <a href="#facts" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;border-radius:100px;font-size:13px;color:var(--lt-text-tertiary)">한눈에 보기</a>
+        <a href="#features" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;border-radius:100px;font-size:13px;color:var(--lt-text-tertiary)">기능</a>
+        <a href="#voices" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;border-radius:100px;font-size:13px;color:var(--lt-text-tertiary)">음성</a>
+        <a href="#pro" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;border-radius:100px;font-size:13px;color:var(--lt-text-tertiary)">무료 vs PRO</a>
+        <a href="#made-for" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;border-radius:100px;font-size:13px;color:var(--lt-text-tertiary)">이런 분에게</a>
+        <a href="#faq" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;border-radius:100px;font-size:13px;color:var(--lt-text-tertiary)">자주 묻는 질문</a>
+        <a href="#download" style="display:inline-flex;align-items:center;min-height:44px;padding:0 10px;border-radius:100px;font-size:13px;color:var(--lt-text-tertiary)">다운로드</a>
+      </div>
+    </div>
+  </nav>
 
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon" aria-hidden="true">🔢</div>
-                    <h3>매초 음성 카운트다운</h3>
-                    <p>1초 단위 또는 10초 + 마지막 10초 매초 카운트. 화면을 보지 않아도 시간은 귀로 흘러간다.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon" aria-hidden="true">⌚</div>
-                    <h3>Apple Watch 한 탭 시작</h3>
-                    <p>컴플리케이션에서 즉시 시작. iPhone을 꺼내거나 화면을 켤 필요가 없다.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon" aria-hidden="true">🎵</div>
-                    <h3>음악과 자연스럽게 공존</h3>
-                    <p>자동 ducking. 숫자가 들리는 순간에만 음악이 살짝 작아졌다가 원래대로 돌아온다.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon" aria-hidden="true">💤</div>
-                    <h3>백그라운드 재생 + 손목 햅틱</h3>
-                    <p>음악 재생 중에는 화면을 잠가도 카운트가 이어진다. 손목 햅틱으로 귀가 막혔을 때도 인지.</p>
-                </div>
-            </div>
+  <section id="hero" style="padding:56px 0 64px">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <h1 style="margin:0;font-size:clamp(40px,9.2vw,86px);line-height:1.02;letter-spacing:-.045em;font-weight:700;max-width:12em;text-wrap:pretty">화면이 아니라, 자세에 집중하세요.</h1>
+      <p style="margin:28px 0 0;font-size:clamp(20px,3.4vw,28px);line-height:1.3;letter-spacing:-.02em;color:#fff;font-weight:500;max-width:11em">운동하고, 쉬고, 다시 반복 — 그 매초를 귀로 들어보세요.</p>
+      <p class="a-hero-note" style="margin:24px 0 0;font-size:17px;line-height:1.62;color:var(--lt-text-secondary);max-width:30em;text-wrap:pretty">인터벌을 설정하면 자세에만 집중하시면 돼요. 듣는타이머가 라운드 내내 매초를 음성으로 읽어드려서, 화면을 보지 않아도 지금 몇 초인지 알 수 있어요. 플랭크, 데드행, 스트레칭, 호흡 명상도 똑같이 쓰실 수 있어요.</p>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin-top:36px">
+        <a href="https://apps.apple.com/app/id6769309369" aria-label="App Store에서 듣는타이머 다운로드" style="display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 28px;border-radius:14px;background:var(--lt-accent);color:#fff;font-size:17px;font-weight:600">App Store에서 다운로드</a>
+      </div>
+      <p style="margin:18px 0 0;font-size:13px;line-height:1.7;color:var(--lt-text-muted)">광고 포함 무료 · 프리미엄은 구독이 아닌 1회 결제 · iPhone (iOS 17 이상) · Apple Watch는 프리미엄에서</p>
+      <ul style="list-style:none;margin:28px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px">
+        <li style="font-size:13px;color:var(--lt-text-secondary);background:var(--lt-surface);border:1px solid var(--lt-border);padding:7px 14px;border-radius:100px">매초를 소리로 카운트</li>
+        <li style="font-size:13px;color:var(--lt-text-secondary);background:var(--lt-surface);border:1px solid var(--lt-border);padding:7px 14px;border-radius:100px">화면을 잠가도 계속 카운트</li>
+        <li style="font-size:13px;color:var(--lt-text-secondary);background:var(--lt-surface);border:1px solid var(--lt-border);padding:7px 14px;border-radius:100px">음악은 계속 재생</li>
+        <li style="font-size:13px;color:var(--lt-text-secondary);background:var(--lt-surface);border:1px solid var(--lt-border);padding:7px 14px;border-radius:100px">HIIT</li>
+        <li style="font-size:13px;color:var(--lt-text-secondary);background:var(--lt-surface);border:1px solid var(--lt-border);padding:7px 14px;border-radius:100px">타바타</li>
+        <li style="font-size:13px;color:var(--lt-text-secondary);background:var(--lt-surface);border:1px solid var(--lt-border);padding:7px 14px;border-radius:100px">플랭크</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="every-second" style="border-top:1px solid var(--lt-border);padding:72px 0">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <p style="margin:0 0 20px;font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--lt-text-muted)">차이점</p>
+      <h2 style="margin:0;font-size:clamp(32px,7vw,68px);line-height:1.05;letter-spacing:-.04em;font-weight:700;max-width:13em;text-wrap:pretty">마지막 카운트다운만이 아닙니다. 매초입니다.</h2>
+      <div aria-hidden="true" style="display:flex;flex-wrap:wrap;gap:10px;margin:32px 0 0;font-family:var(--lt-font-rounded);font-size:clamp(18px,3.4vw,30px);font-weight:700;letter-spacing:-.02em">
+        <span class="a-tick">10</span><span class="a-tick">9</span><span class="a-tick">8</span><span class="a-tick">7</span><span class="a-tick">6</span><span class="a-tick">5</span><span class="a-tick">4</span><span class="a-tick">3</span><span class="a-tick">2</span><span class="a-tick">1</span>
+      </div>
+      <div class="a-two" style="display:grid;grid-template-columns:1fr;gap:20px;margin-top:36px">
+        <div>
+          <p style="margin:0 0 18px;font-size:17px;line-height:1.65;color:var(--lt-text-secondary);text-wrap:pretty">대부분의 인터벌 타이머는 경계에서만 알려 줍니다 — 라운드가 끝날 때 삐 소리, 길어도 마지막 몇 초. 듣는타이머는 말하는 타이머입니다. 처음 1초부터 마지막 1초까지 매초를 소리로 세어 주기 때문에, 플랭크·스트레칭·데드행·타바타 라운드·HIIT 서킷 중에도 시선은 자세에 머무릅니다.</p>
+          <p style="margin:0 0 18px;font-size:17px;line-height:1.65;color:var(--lt-text-secondary);text-wrap:pretty">화면을 잠그고 휴대폰을 주머니에 넣어도 카운트는 계속됩니다. 음악이나 팟캐스트는 그대로 — 카운트 순간에만 소리를 낮추고, 곧바로 원래대로 돌아옵니다.</p>
+          <p style="margin:0;font-size:17px;line-height:1.65;color:var(--lt-text-secondary);text-wrap:pretty">그리고 구간이 바뀔 때마다 들립니다: 휴식, 다음 세트, 완료. 내려다볼 필요 없습니다. 추측할 필요도 없습니다.</p>
         </div>
-    </section>
-
-    <!-- ════════ SCREENSHOTS ════════ -->
-    <section class="screenshots">
-        <div class="container">
-            <p class="section-label">Inside</p>
-            <h2 class="section-title">앱 미리보기</h2>
-
-            <div class="screenshots-grid">
-                <div class="screenshot-item">
-                    <div class="device-frame">
-                        <picture>
-                            <source srcset="../assets/02_timer_running.webp" type="image/webp">
-                            <img src="../assets/02_timer_running.png"
-                                 alt="타이머가 실행 중인 화면 — 큰 숫자 카운트다운과 원형 진행 게이지"
-                                 width="600" height="1303"
-                                 loading="lazy" decoding="async">
-                        </picture>
-                    </div>
-                    <p class="device-caption">화면 안 봐도 듣는 타이머</p>
-                </div>
-                <div class="screenshot-item">
-                    <div class="device-frame">
-                        <picture>
-                            <source srcset="../assets/03_character_sheet.webp" type="image/webp">
-                            <img src="../assets/03_character_sheet.png"
-                                 alt="음성 캐릭터 선택 시트 — 기본 여성, PT 코치, 요가 선생님"
-                                 width="600" height="1303"
-                                 loading="lazy" decoding="async">
-                        </picture>
-                    </div>
-                    <p class="device-caption">3가지 캐릭터 음성</p>
-                </div>
-                <div class="screenshot-item">
-                    <div class="device-frame">
-                        <picture>
-                            <source srcset="../assets/04_premium_sheet.webp" type="image/webp">
-                            <img src="../assets/04_premium_sheet.png"
-                                 alt="프리미엄 안내 시트 — 1회 결제 4400원으로 캐릭터·Watch·광고 제거 해금"
-                                 width="600" height="1303"
-                                 loading="lazy" decoding="async">
-                        </picture>
-                    </div>
-                    <p class="device-caption">1회 결제 프리미엄</p>
-                </div>
-            </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;align-content:start">
+          <figure style="margin:0">
+            <picture><source srcset="../assets/lifestyle/ko/yoga.webp" type="image/webp"><img src="../assets/lifestyle/ko/yoga.png" alt="요가 자세를 유지하는 여성과 60초 유지를 카운트하는 듣는타이머" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:800/1734;object-fit:cover;border-radius:20px;background:var(--lt-surface)"></picture>
+            <figcaption style="margin-top:10px;font-size:12px;line-height:1.5;color:var(--lt-text-muted)">L1 · 요가 — 60초 유지, 소리로 카운트</figcaption>
+          </figure>
+          <figure style="margin:0">
+            <picture><source srcset="../assets/lifestyle/ko/pullup.webp" type="image/webp"><img src="../assets/lifestyle/ko/pullup.png" alt="데드행 자세를 유지하는 남성과 60초 유지를 카운트하는 듣는타이머" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:800/1734;object-fit:cover;border-radius:20px;background:var(--lt-surface)"></picture>
+            <figcaption style="margin-top:10px;font-size:12px;line-height:1.5;color:var(--lt-text-muted)">L2 · 턱걸이 — 데드행, 귀로 듣는 카운트</figcaption>
+          </figure>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <!-- ════════ CHARACTERS ════════ -->
-    <section class="characters">
-        <div class="container">
-            <p class="section-label">Voices</p>
-            <h2 class="section-title">3가지 음성 캐릭터</h2>
+  <section id="facts" class="a-facts" style="border-top:1px solid var(--lt-border);padding:72px 0">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <h2 style="margin:0 0 32px;font-size:clamp(26px,4.4vw,40px);line-height:1.1;letter-spacing:-.03em;font-weight:700">듣는타이머 한눈에 보기</h2>
+      <dl style="margin:0;display:grid;grid-template-columns:1fr;gap:0;font-size:15px;line-height:1.6;border-bottom:1px solid var(--lt-border)">
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">제품</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff;border-top:0">듣는타이머 — 운동 중 손 안 대고 음성 카운트</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">개발자</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">PocketLabs (pocketlabs.kr)</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">카테고리</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">건강 및 피트니스</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">지원 기기</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">iPhone, iOS 17 이상 · Apple Watch, watchOS 10 이상 (프리미엄 — Watch는 iPhone 타이머의 리모컨이고, 음성은 iPhone이 재생합니다)</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">하는 일</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">카운트다운의 매초를 소리로 세어 줍니다 — 인터벌당 1~300초, 단독 또는 최대 10세트 루틴으로</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">이런 운동에</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">HIIT, 타바타, 서킷, 복싱 라운드, 플랭크, 데드행, 턱걸이, 스트레칭, 요가, 호흡 운동</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">음악·팟캐스트</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">예 — 오디오 더킹으로 카운트 순간에만 음악을 낮추고, 곧바로 원래대로 돌립니다</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">화면 잠금 / 백그라운드</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">예 — 화면을 잠가도 카운트가 계속되고, 라이브 액티비티가 잠금 화면에 표시됩니다</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">음성</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">7종 — 2종 무료, 5종 프리미엄 · 영어, 일본어, 한국어 · iPhone 언어 설정을 따릅니다</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">가격</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">배너 광고와 함께 무료 다운로드. 프리미엄은 구독이 아닌 1회 앱 내 구입. 3일 무료 체험, Apple 계정당 1회</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">개인정보</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">계정 없음. 마이크, 연락처, 위치, 카메라, 건강 데이터에 접근하지 않습니다. 추적 권한은 맞춤 광고에만 요청하며, 거부해도 앱 동작은 달라지지 않습니다</dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">지원</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff"><a href="mailto:contact@pocketlabs.kr">contact@pocketlabs.kr</a> · <a href="https://pocketlabs.kr/listentimer-support/ko/">지원 페이지</a> · <a href="https://pocketlabs.kr/listentimer-privacy/ko/">개인정보처리방침</a></dd>
+        <dt style="padding:16px 0 4px;color:var(--lt-text-muted);border-top:1px solid var(--lt-border)">버전</dt>
+        <dd style="margin:0;padding:0 0 16px;color:#fff">App Store 버전 1.3.2 (2026년 9월 2일 출시). 이 페이지는 2026-09-05에 업데이트되었습니다</dd>
+      </dl>
+    </div>
+  </section>
 
-            <div class="characters-grid">
-                <div class="character-card">
-                    <span class="character-badge free">FREE</span>
-                    <h3>기본 여성</h3>
-                    <p>차분하고 명확한 톤. 어떤 운동에도 자연스럽게 어울린다.</p>
-                </div>
-                <div class="character-card">
-                    <span class="character-badge premium">PREMIUM</span>
-                    <h3>PT 코치</h3>
-                    <p>에너지 넘치는 PT 코치 보이스. 고강도 자세 유지·인터벌 운동에 어울린다.</p>
-                </div>
-                <div class="character-card">
-                    <span class="character-badge premium">PREMIUM</span>
-                    <h3>요가 선생님</h3>
-                    <p>부드럽고 평온한 호흡 톤. 요가·명상·스트레칭에 어울린다.</p>
-                </div>
-            </div>
-            <p class="characters-note"><strong>캐릭터마다 다른 톤</strong>으로 운동의 리듬을 만들어 줍니다 — 요가에는 부드러운 톤, 고강도 운동에는 에너지 넘치는 톤.</p>
+  <section id="features" style="border-top:1px solid var(--lt-border);padding:72px 0">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <h2 style="margin:0 0 8px;font-size:clamp(26px,4.4vw,40px);line-height:1.1;letter-spacing:-.03em;font-weight:700">듣는타이머가 하는 모든 것</h2>
+      <p style="margin:0 0 40px;font-size:14px;color:var(--lt-text-muted)">기능 12개. 각각 무엇이고, 언제 쓰는지.</p>
+
+      <article id="f1" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F1</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">매초 음성 카운트다운</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">음성이 카운트다운의 매초를 처음 1초부터 마지막 1초까지 읽어 줍니다 — 인터벌당 1~300초.</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">이럴 때</span> 플랭크, 데드행, 스트레칭, 호흡 운동 — 내려다볼 수 없는 모든 상황.</p>
         </div>
-    </section>
+        <figure style="margin:0;max-width:168px">
+          <picture><source srcset="../assets/ko/S2_timer_running.webp" type="image/webp"><img src="../assets/ko/S2_timer_running.png" alt="타이머 실행 — 원형 진행 링과 큰 카운트다운 숫자" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:1320/2868;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S2 · 타이머 실행 — 링과 큰 숫자</figcaption>
+        </figure>
+      </article>
 
-    <!-- ════════ PREMIUM ════════ -->
-    <section class="premium-section">
-        <div class="container">
-            <div class="premium-card">
-                <span class="premium-badge">PREMIUM</span>
-                <div class="premium-price">
-                    <span class="amount">₩4,400</span>
-                    <span class="period">1회 결제 · 구독 아님</span>
-                </div>
-                <ul class="premium-list">
-                    <li>PT 코치 + 요가 선생님 캐릭터 해금</li>
-                    <li>Apple Watch 연동 (컴플리케이션 · 독립 실행)</li>
-                    <li>앱 내 광고 제거</li>
-                </ul>
-            </div>
+      <article id="f2" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F2</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">읽기 간격</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">1초마다(기본), 10초마다 + 마지막 10초는 하나씩, 또는 프리미엄에서 직접 정한 간격 N초마다(1~60) 중에서 선택합니다.</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">이럴 때</span> 무엇을 선택해도 마지막 10초는 항상 하나씩 세고, 모든 구간의 시작과 끝을 알려 줍니다.</p>
+          <div style="display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding-top:12px;border-top:1px solid var(--lt-border)"><span class="lt-badge lt-badge--compact">PRO</span><span style="font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">커스텀 읽기 간격 — 직접 정한 N초마다(1~60).</span></div>
         </div>
-    </section>
+        <figure style="margin:0;max-width:168px">
+          <picture><source srcset="../assets/ko/S7_interval_settings.webp" type="image/webp"><img src="../assets/ko/S7_interval_settings.png" alt="읽기 간격 설정 화면 — 1초마다, 10초마다, 커스텀 간격 중에서 선택" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:1320/2868;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S7 · 읽기 간격 설정</figcaption>
+        </figure>
+      </article>
 
-    <!-- ════════ CTA ════════ -->
-    <section class="cta">
-        <p class="cta-headline">지금 시작하세요.</p>
-        <p>기본 캐릭터로 바로 시작 — 1회 결제 ₩4,400으로 평생 사용.</p>
-        <a href="https://apps.apple.com/kr/app/id6769309369"
-           class="download-btn">
-            App Store에서 다운로드 <span class="arrow" aria-hidden="true">→</span>
-        </a>
-    </section>
-
-    <!-- ════════ FOOTER ════════ -->
-    <footer>
-        <nav class="lang-switch" aria-label="언어 선택">
-            <span class="current" aria-current="page">한국어</span>
-            <a href="../en/" hreflang="en" lang="en">English</a>
-            <a href="../ja/" hreflang="ja" lang="ja">日本語</a>
-        </nav>
-        <div class="footer-links">
-            <a href="https://pocketlabs.kr/listentimer-support/ko/">지원</a>
-            <a href="https://pocketlabs.kr/listentimer-privacy/ko/">개인정보처리방침</a>
-            <a href="https://pocketlabs.kr/listentimer-terms/ko/">이용약관</a>
-            <!-- 이메일은 HTML entity 인코딩 — 스팸 봇 수확 완화 (정상 사용자/스크린리더는 정상 동작) -->
-            <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#99;&#111;&#110;&#116;&#97;&#99;&#116;&#64;&#112;&#111;&#99;&#107;&#101;&#116;&#108;&#97;&#98;&#115;&#46;&#107;&#114;">문의</a>
+      <article id="f3" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F3</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">루틴(타바타) — 운동과 휴식이 자동으로 번갈아 가고, 구간이 바뀔 때마다 음성으로 알려 줍니다</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">운동(1~300초), 휴식(1~300초), 2~10세트를 설정하면 듣는타이머가 서킷 전체를 진행하며 모든 변화를 알려 줍니다.</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">이럴 때</span> 타바타, HIIT 서킷, 복싱 라운드, 인터벌 러닝.</p>
         </div>
-        <p class="copyright">
-            &copy; 2026 PocketLabs. All rights reserved.<br>
-            <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#99;&#111;&#110;&#116;&#97;&#99;&#116;&#64;&#112;&#111;&#99;&#107;&#101;&#116;&#108;&#97;&#98;&#115;&#46;&#107;&#114;">&#99;&#111;&#110;&#116;&#97;&#99;&#116;&#64;&#112;&#111;&#99;&#107;&#101;&#116;&#108;&#97;&#98;&#115;&#46;&#107;&#114;</a>
-        </p>
-    </footer>
+        <figure style="margin:0;max-width:168px">
+          <picture><source srcset="../assets/ko/S4_routine_edit.webp" type="image/webp"><img src="../assets/ko/S4_routine_edit.png" alt="루틴 편집 화면 — 운동 시간, 휴식 시간, 세트 수 입력" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:1320/2868;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S4 · 루틴 편집 — 운동, 휴식, 세트</figcaption>
+        </figure>
+      </article>
 
+      <article id="f4" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F4</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">프리셋</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">타이머를 최대 12개까지 저장합니다. 가장 최근에 쓴 타이머가 큰 카드로 맨 위에 올라와 한 번 탭하면 시작됩니다. 추가·삭제·순서 변경 모두 자유롭습니다.</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">이럴 때</span> "어제와 똑같이"를 한 번의 탭으로.</p>
+        </div>
+        <figure style="margin:0;max-width:168px">
+          <picture><source srcset="../assets/ko/S1_main_idle.webp" type="image/webp"><img src="../assets/ko/S1_main_idle.png" alt="메인 화면 — 큰 카드로 올라온 최근 프리셋과 그 아래 프리셋 목록" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:1320/2868;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S1 · 메인 화면 — 최근 프리셋이 맨 위</figcaption>
+        </figure>
+      </article>
+
+      <article id="f5" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F5</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">백그라운드 재생 — 화면을 잠가도 카운트가 계속됩니다</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">휴대폰을 잠그고 주머니에 넣거나 바닥에 두어도 음성은 계속됩니다.</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">이럴 때</span> 책상 앞이 아닌 모든 운동.</p>
+        </div>
+        <div></div>
+      </article>
+
+      <article id="f6" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F6</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">음악·팟캐스트와 잘 어울립니다 — 오디오 더킹으로 카운트 순간에만 음악을 낮추고, 곧바로 원래대로 돌립니다</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">내 음악은 그대로 재생되고, 카운트가 그 위에 얹힙니다.</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">이럴 때</span> 헤드폰이나 스피커로 훈련할 때.</p>
+        </div>
+        <div></div>
+      </article>
+
+      <article id="f7" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F7</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">잠금 화면 &amp; 다이내믹 아일랜드 (라이브 액티비티)</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">잠금을 해제하지 않고도 잠금 화면과 다이내믹 아일랜드에서 타이머를 봅니다 — 카운트, 현재 구간, 세트까지. 프리미엄에서는 잠금 화면에서 바로 일시정지·재개·정지할 수 있습니다.</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">이럴 때</span> 세트 사이에 잠긴 화면을 한 번 흘깃 볼 때.</p>
+          <div style="display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding-top:12px;border-top:1px solid var(--lt-border)"><span class="lt-badge lt-badge--compact">PRO</span><span style="font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">잠금 화면에서 바로 일시정지 · 재개 · 정지.</span></div>
+        </div>
+        <figure style="margin:0;max-width:168px">
+          <picture><source srcset="../assets/ko/S6_lockscreen.webp" type="image/webp"><img src="../assets/ko/S6_lockscreen.png" alt="잠금 화면에 표시된 듣는타이머 라이브 액티비티와 남은 카운트" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:1320/2868;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S6 · 잠금 화면과 위젯</figcaption>
+        </figure>
+      </article>
+
+      <article id="f8" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F8</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">홈 화면 &amp; 잠금 화면 위젯</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">위젯이 최근 사용한 프리셋 또는 고정한 프리셋을 보여 주고, 탭하면 앱이 열립니다. 프리미엄에서는 ▶로 위젯에서 바로 타이머를 시작하고 — 앱을 열 필요가 없습니다 — 진행 중에는 위젯에 일시정지와 정지가 표시됩니다.</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">이럴 때</span> 휴대폰을 암밴드에 넣기 전에 홈 화면에서 시작할 때.</p>
+          <div style="display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding-top:12px;border-top:1px solid var(--lt-border)"><span class="lt-badge lt-badge--compact">PRO</span><span style="font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">위젯에서 즉시 시작 — ▶로 앱을 열지 않고 타이머를 시작합니다.</span></div>
+        </div>
+        <figure style="margin:0;max-width:168px">
+          <picture><source srcset="../assets/ko/S6_home_widget.webp" type="image/webp"><img src="../assets/ko/S6_home_widget.png" alt="듣는타이머 프리셋을 보여 주는 홈 화면 위젯" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:1320/2868;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S6 · 홈 화면 위젯</figcaption>
+        </figure>
+      </article>
+
+      <article id="f9" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F9</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">Siri &amp; 단축어 <span class="lt-badge">PRO</span></h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">말하거나 단축어를 탭하면 앱을 열지 않고 최근 프리셋을 시작합니다 (프리미엄이 없으면 앱이 열립니다).</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">이럴 때</span> 손이 바쁘고, 휴대폰은 방 저쪽에 있을 때.</p>
+        </div>
+        <div></div>
+      </article>
+
+      <article id="f10" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F10</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">Apple Watch <span class="lt-badge">PRO</span></h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">손목에서 바로 타이머를 시작하고 조작합니다. Apple Watch 컴플리케이션에서 한 번 탭하면 즉시 시작됩니다. 모든 프리셋이 Apple Watch에 자동으로 동기화됩니다. 10초 전 경고와 종료 시점에 손목이 함께 두드려 줍니다. Watch는 음성을 재생하는 iPhone 타이머의 리모컨으로 동작합니다.</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">이럴 때</span> 휴대폰을 꺼내지도 않을 때.</p>
+        </div>
+        <figure style="margin:0;max-width:168px">
+          <picture><source srcset="../assets/ko/S8_watch.webp" type="image/webp"><img src="../assets/ko/S8_watch.png" alt="루틴을 진행 중인 Apple Watch 화면 — 링과 남은 초" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:396/484;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S8 · Apple Watch — 손목에서 한 번 탭</figcaption>
+        </figure>
+      </article>
+
+      <article id="f11" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F11</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">햅틱</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">귀가 막혀 있어도 손목이 함께 두드려 줍니다(Apple Watch). iPhone은 10초 전 경고와 종료 시점에 진동하며, iPhone 햅틱은 설정에서 끌 수 있습니다.</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">이럴 때</span> 시끄러운 체육관, 헤드폰 없이.</p>
+        </div>
+        <div></div>
+      </article>
+
+      <article id="f12" class="a-feat" style="display:grid;grid-template-columns:1fr;gap:14px;padding:28px 0;border-top:1px solid var(--lt-border);border-bottom:1px solid var(--lt-border)">
+        <div style="font-family:var(--lt-font-rounded);font-size:15px;font-weight:700;color:var(--lt-text-disabled)">F12</div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600">기록 &amp; 나의 리듬</h3>
+          <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">월간 캘린더 통계 — 어떤 날에 운동했는지 한눈에 보고, 하루 단위로 완료한 항목도 확인합니다. 프리미엄에서는 "나의 리듬"이 주간·월간·전체 패턴 분석을 더해 줍니다.</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--lt-text-muted)"><span style="color:var(--lt-success)">이럴 때</span> 한 달이 채워지는 걸 볼 때.</p>
+          <div style="display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding-top:12px;border-top:1px solid var(--lt-border)"><span class="lt-badge lt-badge--compact">PRO</span><span style="font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">나의 리듬 — 주간 · 월간 · 전체 패턴 분석.</span></div>
+        </div>
+        <figure style="margin:0;max-width:168px">
+          <picture><source srcset="../assets/ko/S5_records.webp" type="image/webp"><img src="../assets/ko/S5_records.png" alt="기록 화면 — 운동한 날이 표시된 월간 캘린더" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:1320/2868;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S5 · 기록 — 월간 캘린더</figcaption>
+        </figure>
+      </article>
+    </div>
+  </section>
+
+  <section id="voices" style="padding:72px 0">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <h2 style="margin:0;font-size:clamp(26px,4.4vw,40px);line-height:1.1;letter-spacing:-.03em;font-weight:700">음성 7종. 그중 2종은 무료.</h2>
+      <p style="margin:16px 0 32px;font-size:19px;line-height:1.5;color:#fff;max-width:24em">캐릭터마다 다른 톤으로 운동의 리듬을 만들어 드려요.</p>
+      <div class="a-voices" style="display:grid;grid-template-columns:1fr;gap:1px;background:var(--lt-border);border:1px solid var(--lt-border);border-radius:20px;overflow:hidden">
+        <div style="background:#000;padding:22px 20px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:17px;font-weight:600">기본 여성</span><span style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--lt-success)">무료</span></div>
+          <p style="margin:8px 0 0;font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">차분하고 명확한 기본 음성.</p>
+        </div>
+        <div style="background:#000;padding:22px 20px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:17px;font-weight:600">기본 남성</span><span style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--lt-success)">무료</span></div>
+          <p style="margin:8px 0 0;font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">자연스럽고 안정적인 남성 음성.</p>
+        </div>
+        <div style="background:#000;padding:22px 20px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:17px;font-weight:600">요가 선생님</span><span class="lt-badge lt-badge--compact">PRO</span></div>
+          <p style="margin:8px 0 0;font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">부드럽고 평온한 요가 선생님.</p>
+        </div>
+        <div style="background:#000;padding:22px 20px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:17px;font-weight:600">지옥 조교</span><span class="lt-badge lt-badge--compact">PRO</span></div>
+          <p style="margin:8px 0 0;font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">한계까지 밀어붙이는 강한 음성.</p>
+        </div>
+        <div style="background:#000;padding:22px 20px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:17px;font-weight:600">저승사자</span><span class="lt-badge lt-badge--compact">PRO</span></div>
+          <p style="margin:8px 0 0;font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">시간을 세어 내려가는 서늘한 음성.</p>
+        </div>
+        <div style="background:#000;padding:22px 20px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:17px;font-weight:600">뉴스 아나운서</span><span class="lt-badge lt-badge--compact">PRO</span></div>
+          <p style="margin:8px 0 0;font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">정확하고 담백한 뉴스 음성.</p>
+        </div>
+        <div class="a-voice-wide" style="background:#000;padding:22px 20px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:17px;font-weight:600">라디오 DJ</span><span class="lt-badge lt-badge--compact">PRO</span></div>
+          <p style="margin:8px 0 0;font-size:15px;line-height:1.55;color:var(--lt-text-secondary)">편안한 새벽 라디오 음성.</p>
+        </div>
+      </div>
+      <div class="a-two" style="display:grid;grid-template-columns:1fr;gap:24px;margin-top:32px;align-items:start">
+        <div>
+          <p style="margin:0 0 12px;font-size:16px;line-height:1.6;color:var(--lt-text-secondary);text-wrap:pretty">선택하기 전에 앱에서 모든 음성을 미리 들어 볼 수 있습니다. 음성은 고품질 신경망 TTS로 생성해 앱에 내장했기 때문에, 운동 중에는 인터넷이 필요하지 않습니다.</p>
+          <p style="margin:0;font-size:14px;line-height:1.6;color:var(--lt-text-muted)">영어, 일본어, 한국어를 지원하며 앱은 iPhone 언어 설정을 따릅니다.</p>
+        </div>
+        <figure style="margin:0;max-width:200px">
+          <picture><source srcset="../assets/ko/S3_character_sheet.webp" type="image/webp"><img src="../assets/ko/S3_character_sheet.png" alt="음성 캐릭터 시트 — 듣는타이머에서 음성 선택" loading="lazy" decoding="async" style="display:block;width:100%;aspect-ratio:1320/2868;object-fit:cover;border-radius:20px;background:var(--lt-surface);border:1px solid var(--lt-border)"></picture>
+          <figcaption style="margin-top:8px;font-size:11px;line-height:1.45;color:var(--lt-text-muted)">S3 · 음성 캐릭터 시트</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="pro" style="border-top:1px solid var(--lt-border);padding:72px 0">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <h2 style="margin:0;font-size:clamp(26px,4.4vw,40px);line-height:1.1;letter-spacing:-.03em;font-weight:700">전부 무료, 또는 전부 해금.</h2>
+      <p style="margin:20px 0 12px;font-size:17px;line-height:1.65;color:var(--lt-text-secondary);max-width:34em;text-wrap:pretty">듣는타이머는 배너 광고와 함께 무료입니다. 프리미엄은 구독이 아닌 1회 결제로, 이 iPhone과 Apple Watch에서 아래 모든 항목을 해금합니다. Apple 계정당 1회, 프리미엄 전체를 3일간 무료로 써 볼 수 있습니다: 메인 화면의 금색 "3일 체험" 칩을 탭하고 짧은 광고 하나를 보면 됩니다.</p>
+      <p style="margin:0 0 36px;font-size:15px;color:var(--lt-text-muted)">가격은 국가별로 App Store에 표시됩니다.</p>
+
+      <div class="a-pro-head" style="display:none;grid-template-columns:1fr 132px 132px;gap:16px;padding:0 0 10px;border-bottom:1px solid var(--lt-card-border);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--lt-text-muted)">
+        <div>기능</div><div>무료</div><div>PRO</div>
+      </div>
+
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">매초 음성 카운트다운, 인터벌당 1~300초</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">읽기 간격: 1초마다 · 10초마다 + 마지막 10초</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">커스텀 읽기 간격 (N초마다, 1~60)</div><div style="color:var(--lt-text-muted)">—</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">음성: 기본 여성, 기본 남성</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">음성: 요가 선생님, 지옥 조교, 저승사자, 뉴스 아나운서, 라디오 DJ</div><div style="color:var(--lt-text-secondary)">미리듣기만</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">루틴(타바타): 운동 · 휴식 · 최대 10세트</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">프리셋: 최대 12개</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">백그라운드 재생 · 음악과 팟캐스트는 계속 재생</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">잠금 화면 &amp; 다이내믹 아일랜드 라이브 액티비티 (타이머 확인)</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">잠금 화면에서 일시정지 · 재개 · 정지</div><div style="color:var(--lt-text-muted)">—</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">홈 화면 &amp; 잠금 화면 위젯 (타이머 확인, 탭하면 앱 열림)</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">앱을 열지 않고 위젯에서 즉시 시작</div><div style="color:var(--lt-text-muted)">—</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">앱을 열지 않고 Siri나 단축어로 시작</div><div style="color:var(--lt-text-secondary)">앱이 열림</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">Apple Watch: 손목에서 시작·조작, 컴플리케이션, 프리셋 동기화, 손목 햅틱</div><div style="color:var(--lt-text-muted)">—</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">iPhone 햅틱</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">기록: 월간 캘린더 &amp; 일별 목록</div><div style="color:var(--lt-success)">✓</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-border);font-size:15px">
+        <div style="color:#fff">나의 리듬 분석 (상세 기록 &amp; 통계)</div><div style="color:var(--lt-text-secondary)">예시만</div><div style="color:var(--lt-success)">✓</div>
+      </div>
+      <div class="a-pro-row" style="display:grid;grid-template-columns:1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--lt-card-border);font-size:15px">
+        <div style="color:#fff">광고</div><div style="color:var(--lt-text-secondary)">배너</div><div style="color:var(--lt-text-secondary)">없음</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="made-for" style="padding:72px 0">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <h2 style="margin:0 0 32px;font-size:clamp(26px,4.4vw,40px);line-height:1.1;letter-spacing:-.03em;font-weight:700">이런 분께 잘 어울려요</h2>
+      <ul class="a-made" style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr;gap:2px">
+        <li style="display:flex;gap:14px;align-items:flex-start;padding:18px 0;border-top:1px solid var(--lt-border);font-size:18px;line-height:1.45;color:#fff;letter-spacing:-.01em"><span aria-hidden="true" style="color:var(--lt-success);font-size:15px;line-height:1.7">✓</span><span>라운드로 반복하는 운동을 하시는 분 — HIIT·타바타·서킷·복싱·크로스핏</span></li>
+        <li style="display:flex;gap:14px;align-items:flex-start;padding:18px 0;border-top:1px solid var(--lt-border);font-size:18px;line-height:1.45;color:#fff;letter-spacing:-.01em"><span aria-hidden="true" style="color:var(--lt-success);font-size:15px;line-height:1.7">✓</span><span>운동 중 화면을 볼 수 없거나 보고 싶지 않은 분</span></li>
+        <li style="display:flex;gap:14px;align-items:flex-start;padding:18px 0;border-top:1px solid var(--lt-border);font-size:18px;line-height:1.45;color:#fff;letter-spacing:-.01em"><span aria-hidden="true" style="color:var(--lt-success);font-size:15px;line-height:1.7">✓</span><span>데드행·플랭크·풀업 등 자세 유지가 핵심인 운동을 하시는 분</span></li>
+        <li style="display:flex;gap:14px;align-items:flex-start;padding:18px 0;border-top:1px solid var(--lt-border);font-size:18px;line-height:1.45;color:#fff;letter-spacing:-.01em"><span aria-hidden="true" style="color:var(--lt-success);font-size:15px;line-height:1.7">✓</span><span>호흡 명상·요가 동작에서 시간 인지가 필요한 분</span></li>
+        <li style="display:flex;gap:14px;align-items:flex-start;padding:18px 0;border-top:1px solid var(--lt-border);border-bottom:1px solid var(--lt-border);font-size:18px;line-height:1.45;color:#fff;letter-spacing:-.01em"><span aria-hidden="true" style="color:var(--lt-success);font-size:15px;line-height:1.7">✓</span><span>Apple Watch에서 한 번의 탭으로 운동 타이머를 시작하고 싶은 분</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="faq" style="padding:72px 0">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <h2 style="margin:0 0 36px;font-size:clamp(26px,4.4vw,40px);line-height:1.1;letter-spacing:-.03em;font-weight:700">자주 묻는 질문</h2>
+      <div style="max-width:38em">
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">정말 매초를 말해 주나요?</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">예. 카운트다운의 매초를 처음 1초부터 마지막 1초까지 소리로 읽습니다 — 인터벌당 최대 300초. 10초 간격 모드에서도 마지막 10초는 하나씩 세어 줍니다.</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">화면을 잠그거나 휴대폰을 주머니에 넣어도 계속 카운트되나요?</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">예. 카운트는 백그라운드에서 계속되고, 라이브 액티비티가 잠금 화면에 표시합니다.</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">음악이나 팟캐스트를 끊나요?</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">아니요. 오디오 더킹이 카운트 순간에만 음악을 낮추고, 곧바로 원래대로 돌립니다.</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">HIIT나 타바타에 쓸 수 있나요?</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">예. 운동과 휴식 구간, 최대 10세트로 루틴을 만드세요. 모든 구간 변화를 음성으로 알려 줍니다.</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">라운드가 끝날 때만 삐 소리를 내는 인터벌 타이머와 어떻게 다른가요?</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">대부분의 인터벌 타이머는 경계에서만 알려 줍니다 — 라운드가 끝날 때, 또는 마지막 몇 초. 듣는타이머는 매초를 소리로 세어 주기 때문에, 화면을 보지 않아도 지금 어디쯤인지 늘 알 수 있습니다.</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">프리미엄은 구독인가요?</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">아니요. 1회 결제입니다. 가격은 국가별로 App Store에 표시됩니다.</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">무료 체험이 있나요?</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">예. 프리미엄 전체 기능을 Apple 계정당 1회, 3일간 무료로 써 볼 수 있습니다. 메인 화면의 금색 "3일 체험" 칩을 탭하고 짧은 광고 하나를 보세요.</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">Apple Watch에서도 되나요?</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">예, 프리미엄에서. 손목에서 타이머를 시작하고 조작하며, 컴플리케이션에서 한 번 탭하면 시작되고, 프리셋은 자동으로 동기화됩니다. Watch는 iPhone 타이머의 리모컨으로 동작하며 음성은 iPhone이 재생합니다.</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">앱을 열지 않고 타이머를 시작할 수 있나요?</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">예, 프리미엄에서: 홈 화면이나 잠금 화면 위젯, Siri나 단축어, 또는 Apple Watch에서. 프리미엄이 없으면 해당 탭은 앱을 열고, 거기서 시작하게 됩니다.</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">어떤 음성과 언어를 지원하나요?</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">음성 캐릭터 7종 — 기본 여성과 기본 남성은 무료이고, 요가 선생님·지옥 조교·저승사자·뉴스 아나운서·라디오 DJ는 프리미엄에 포함됩니다. 음성과 앱은 영어, 일본어, 한국어를 지원하며 iPhone 언어 설정을 따릅니다.</p>
+        </div>
+        <div style="padding:22px 0;border-top:1px solid var(--lt-border);border-bottom:1px solid var(--lt-border)">
+          <h3 style="margin:0 0 8px;font-size:18px;line-height:1.35;font-weight:600;letter-spacing:-.01em">계정이나 인터넷 연결이 필요한가요?</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:var(--lt-text-secondary);text-wrap:pretty">아니요. 계정이 없고 모든 음성이 앱에 내장되어 있어 타이머는 오프라인에서 동작합니다. App Store 구입과 선택적 광고에만 연결이 필요합니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="download" style="padding:88px 0 96px;border-top:1px solid var(--lt-border)">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <h2 style="margin:0;font-size:clamp(32px,6vw,58px);line-height:1.05;letter-spacing:-.04em;font-weight:700;max-width:14em">시계를 보지 않고 훈련하세요.</h2>
+      <p style="margin:24px 0 32px;font-size:17px;line-height:1.6;color:var(--lt-text-secondary);max-width:30em;text-wrap:pretty">기본 음성 2종으로 무료로 시작하세요. 1회 결제로 전부 해금 — 또는 프리미엄 전체를 3일간 무료로 써 보세요.</p>
+      <a href="https://apps.apple.com/app/id6769309369" aria-label="App Store에서 듣는타이머 다운로드" style="display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 28px;border-radius:14px;background:var(--lt-accent);color:#fff;font-size:17px;font-weight:600">App Store에서 다운로드</a>
+    </div>
+  </section>
+
+  <footer id="footer" style="border-top:1px solid var(--lt-border);padding:40px 0 56px">
+    <div class="a-wrap" style="max-width:980px;margin:0 auto;padding:0 20px">
+      <div style="display:flex;flex-wrap:wrap;gap:2px;margin-bottom:16px">
+        <a href="https://pocketlabs.kr/listentimer-support/ko/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:14px;color:var(--lt-text-secondary);border-radius:8px">지원</a>
+        <a href="https://pocketlabs.kr/listentimer-privacy/ko/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:14px;color:var(--lt-text-secondary);border-radius:8px">개인정보처리방침</a>
+        <a href="https://pocketlabs.kr/listentimer-terms/ko/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:14px;color:var(--lt-text-secondary);border-radius:8px">이용약관</a>
+        <a href="mailto:contact@pocketlabs.kr" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:14px;color:var(--lt-text-secondary);border-radius:8px">문의 (contact@pocketlabs.kr)</a>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:2px;margin-bottom:20px">
+        <a href="../en/" hreflang="en" lang="en" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:14px;color:var(--lt-text-muted)">English</a>
+        <span lang="ko" aria-current="page" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:14px;color:#fff;font-weight:600;border-radius:8px">한국어</span>
+        <a href="../ja/" hreflang="ja" lang="ja" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:14px;color:var(--lt-text-secondary);border-radius:8px">日本語</a>
+      </div>
+      <p style="margin:0;font-size:13px;line-height:1.8;color:var(--lt-text-muted)">© 2026 PocketLabs<br>듣는타이머 1.3.2 · 페이지 업데이트 2026-09-05</p>
+    </div>
+  </footer>
+</div>
 </body>
 </html>
