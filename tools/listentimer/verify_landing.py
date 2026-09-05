@@ -37,7 +37,7 @@ CONTRACT = load_contract()
 
 REPO = Path.cwd()
 PAGES = {
-    "listentimer/index.html": "https://pocketlabs.kr/listentimer/en/",   # 루트 = en 본문 복사본
+    "listentimer/index.html": "https://pocketlabs.kr/listentimer/",      # 루트 = x-default → self-canonical(en 본문 복사본이지만 hreflang 클러스터의 x-default는 canonical URL이어야 한다 — Codex P2)
     "listentimer/en/index.html": "https://pocketlabs.kr/listentimer/en/",
     "listentimer/ko/index.html": "https://pocketlabs.kr/listentimer/ko/",
     "listentimer/ja/index.html": "https://pocketlabs.kr/listentimer/ja/",
@@ -148,6 +148,12 @@ def check_hreflang(rel, text, canonical_expected):
         fail("4 canonical", "%s: canonical 없음" % rel)
     elif match.group(1) != canonical_expected:
         fail("4 canonical", "%s: %s (기대 %s)" % (rel, match.group(1), canonical_expected))
+    # og:url은 canonical과 같은 URL이어야 한다 — 루트/언어 페이지의 URL 메타가 서로 다른 곳을 가리키지 않게
+    og_url = re.search(r'<meta property="og:url" content="([^"]+)">', text)
+    if not og_url:
+        fail("4 canonical", "%s: og:url 없음" % rel)
+    elif og_url.group(1) != canonical_expected:
+        fail("4 canonical", "%s: og:url %s ≠ canonical %s" % (rel, og_url.group(1), canonical_expected))
 
 
 # ── ⑤ 섹션 · 기능 앵커 ─────────────────────────────────────────────────────
@@ -192,6 +198,8 @@ def check_jsonld(rel, text):
         fail("3 JSON-LD", "%s: softwareVersion %s" % (rel, app.get("softwareVersion")))
     if app.get("installUrl") != STORE_URL:
         fail("3 JSON-LD", "%s: installUrl %s" % (rel, app.get("installUrl")))
+    if app.get("url") != PAGES[rel]:
+        fail("3 JSON-LD", "%s: MobileApplication url %s ≠ canonical %s" % (rel, app.get("url"), PAGES[rel]))
 
     # 본문 F1~F12 h3 ↔ featureList 대조 (같은 추출 규칙)
     feats = section(text, "features")
@@ -243,8 +251,19 @@ def check_assets(assets_optional):
                    % (png, actual_w, actual_h, width, height))
         if color_type in CONTRACT.ALPHA_COLOR_TYPES:
             report("6 자산", "%s 알파 채널 포함" % png)
-        if has_webp and not (ASSETS_ROOT / ("%s.webp" % rel)).is_file():
-            report("6 자산", "webp 쌍 없음: %s.webp" % rel)
+        if has_webp:
+            webp = ASSETS_ROOT / ("%s.webp" % rel)
+            if not webp.is_file():
+                report("6 자산", "webp 쌍 없음: %s.webp" % rel)
+                continue
+            # `<picture>`는 webp를 먼저 고른다 — 존재만으로는 부족하고 헤더 치수·파일 길이 정합까지 본다
+            try:
+                webp_w, webp_h = CONTRACT.webp_header(webp)
+            except SystemExit as exc:  # 빈 파일·잘림·미지원 청크
+                report("6 자산", "%s: %s" % (webp, exc))
+                continue
+            if (webp_w, webp_h) != (width, height):
+                report("6 자산", "%s webp 치수 %dx%d (기대 %dx%d)" % (webp, webp_w, webp_h, width, height))
 
     # 페이지가 참조하는 경로가 계약표 밖이면(오탈자 등) 배포 뒤 404가 된다 — 자산 유무와 무관한 결함
     for rel in PAGES:
