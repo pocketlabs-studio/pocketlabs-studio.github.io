@@ -61,7 +61,7 @@
         </div>
 
         <h1>개인정보처리방침</h1>
-        <p class="effective-date">시행일: 2026년 8월 29일 (iOS 항목 추가 · 최초 시행 2026년 8월 20일)</p>
+        <p class="effective-date">시행일: 2026년 9월 22일 (카카오톡 공유 항목 추가 · 최초 시행 2026년 8월 20일)</p>
 
         <p>PocketLabs(이하 "회사")는 <strong>내년 집값</strong>(HouseCast, 이하 "앱") 이용자의 개인정보를 중요시하며, 「개인정보 보호법」 및 관련 법령을 준수합니다. 본 개인정보처리방침은 앱이 수집하는 개인정보의 항목, 수집 목적, 보유 기간, 제3자 제공·국외 이전 등을 안내합니다.</p>
 
@@ -88,7 +88,7 @@
             </tr>
             <tr>
                 <td>앱 사용 통계 (Firebase Analytics)</td>
-                <td>앱 인스턴스 ID(가명 식별자), 광고 ID(Android — iOS에서는 IDFA를 수집하지 않습니다), 기기 정보(기기 모델, OS 버전, 언어/지역), 자동 수집 이벤트(첫 실행, 세션, 앱 업데이트, 인앱 결제 상품·가격 등), 앱 이용 이벤트(전망 열람, 광고 게이트 진행, 근거 해금, 지역 비교 등 화면 사용 기록 — 조회한 지역 코드 포함), 마스킹된 IP 기반 대략적 위치(국가/지역 수준)</td>
+                <td>앱 인스턴스 ID(가명 식별자), 광고 ID(Android — iOS에서는 IDFA를 수집하지 않습니다), 기기 정보(기기 모델, OS 버전, 언어/지역), 자동 수집 이벤트(첫 실행, 세션, 앱 업데이트, 인앱 결제 상품·가격 등), 앱 이용 이벤트(전망 열람, 광고 게이트 진행, 근거 해금, 지역 비교, 전망 공유 등 화면 사용 기록 — 조회한 지역 코드 포함), 마스킹된 IP 기반 대략적 위치(국가/지역 수준)</td>
                 <td>Google LLC (Firebase) 서버</td>
             </tr>
             <tr>
@@ -105,6 +105,11 @@
                 <td>푸시 알림 (Firebase Cloud Messaging — 알림을 켠 경우)</td>
                 <td>FCM 등록 토큰, 앱 버전, 구독한 알림 주제(월간 전망 갱신, 관심 지역 지표 변화)</td>
                 <td>Google LLC (Firebase) 서버</td>
+            </tr>
+            <tr>
+                <td>카카오톡 공유 (Kakao SDK — 이용자가 카카오톡 공유를 선택한 경우)</td>
+                <td>공유 카드 이미지(공개 전망 수치·지역명·출처로 구성된 앱 생성 이미지), 공유 링크 정보(지역·전망 회차·공유 시각), 기기 정보(기기 모델, 운영체제 버전, 언어 설정, 앱 버전)</td>
+                <td>주식회사 카카오 서버</td>
             </tr>
             <tr>
                 <td>결제 (Android: Google Play 결제 · iOS: App Store 결제)</td>
@@ -127,6 +132,7 @@
             <li><strong>광고 데이터</strong>: Google AdMob SDK가 광고를 요청·표시하는 과정에서 자동 수집합니다. iOS에서는 앱 추적 투명성(ATT) 권한을 요청하지 않으므로 광고 식별자(IDFA)가 수집되지 않고 비개인화 광고만 표시됩니다. 광고 제거를 구매하면 광고 SDK를 통한 수집이 중단됩니다.</li>
             <li><strong>앱 사용 통계·크래시 리포트·원격 설정</strong>: Firebase SDK가 앱 실행·사용 과정에서 자동으로 수집·전송합니다.</li>
             <li><strong>푸시 알림</strong>: 이용자가 앱 설정에서 알림을 켤 때 Firebase Cloud Messaging SDK가 등록 토큰을 발급하고 선택한 알림 주제를 구독합니다.</li>
+            <li><strong>카카오톡 공유</strong>: 이용자가 전망 공유에서 카카오톡을 선택할 때에만 Kakao SDK가 공유 카드 이미지와 공유 링크 정보를 전송하며, 이때 요청 처리를 위한 기기 정보가 함께 전송됩니다. 공유를 선택하지 않으면 카카오로 전송되는 정보는 없습니다.</li>
             <li><strong>결제</strong>: 이용자가 광고 제거를 구매할 때 Google Play(Android) 또는 App Store(iOS) 결제 시스템이 처리합니다.</li>
         </ul>
 
@@ -138,6 +144,7 @@
             <li><strong>크래시 리포트</strong>: 앱 안정성 진단 및 버그 수정</li>
             <li><strong>원격 설정</strong>: 앱 업데이트 없이 기능·표시 설정을 조정</li>
             <li><strong>푸시 알림</strong>: 월간 전망 갱신 및 관심 지역 지표 변화 안내(이용자가 켠 경우에만)</li>
+            <li><strong>카카오톡 공유</strong>: 이용자가 선택한 상대에게 전망 카드와 링크를 카카오톡 메시지로 전달</li>
             <li><strong>결제</strong>: 광고 제거 구매 처리 및 구매 복원</li>
         </ul>
 
@@ -168,6 +175,10 @@
                 <td><a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener noreferrer">Firebase 개인정보 및 보안</a>에 따름. 알림을 끄면 해당 주제 구독이 해제되고, 앱 삭제 시 등록 토큰이 무효화됩니다</td>
             </tr>
             <tr>
+                <td>카카오톡 공유 데이터</td>
+                <td><a href="https://www.kakao.com/policy/privacy" target="_blank" rel="noopener noreferrer">카카오 개인정보 처리방침</a>에 따름. 회사는 공유 내용을 보관하지 않습니다</td>
+            </tr>
+            <tr>
                 <td>결제 데이터</td>
                 <td>Google Play(Android) · App Store(iOS) 정책에 따름. 회사는 결제 정보를 보관하지 않습니다</td>
             </tr>
@@ -191,6 +202,11 @@
                 <td>이용 통계 분석, 안정성 개선, 원격 설정, 푸시 알림 발송</td>
             </tr>
             <tr>
+                <td>주식회사 카카오 (카카오톡 공유 — 이용자가 선택한 경우)</td>
+                <td>공유 카드 이미지, 공유 링크 정보(지역·전망 회차·공유 시각), 기기 정보(기기 모델, 운영체제 버전, 언어 설정, 앱 버전)</td>
+                <td>카카오톡 메시지 전달</td>
+            </tr>
+            <tr>
                 <td>Google LLC (Google Play)</td>
                 <td>주문·결제 정보 (Google Play가 직접 수집 — Android)</td>
                 <td>인앱 결제 처리 및 구매 복원</td>
@@ -201,10 +217,11 @@
                 <td>인앱 결제 처리 및 구매 복원</td>
             </tr>
         </table>
+        <p>전망을 카카오톡으로 공유하면 위 카카오 항목의 정보가 주식회사 카카오로 전송되며, 전송된 정보는 카카오의 개인정보 처리방침에 따라 처리됩니다. 이 기능은 이용자가 공유를 선택한 경우에만 동작합니다.</p>
         <p>광고 제거를 구매하면 AdMob에 대한 데이터 제공이 중단됩니다. Firebase Analytics 및 Crashlytics는 앱 품질 개선 목적으로 구매자에게도 동일하게 동작합니다.</p>
 
         <h2>6. 개인정보의 국외 이전</h2>
-        <p>위 항목의 데이터는 Google LLC의 서버(미국 등)로 전송되며, iOS 결제 정보는 Apple Inc.가 직접 처리합니다.</p>
+        <p>위 항목 중 Google LLC가 제공·위탁받는 데이터는 Google LLC의 서버(미국 등)로 전송되며, iOS 결제 정보는 Apple Inc.가 직접 처리합니다.</p>
         <table>
             <tr>
                 <th>항목</th>
