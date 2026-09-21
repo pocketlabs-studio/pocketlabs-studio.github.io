@@ -130,7 +130,7 @@
         </div>
 
         <h1>Privacy Policy</h1>
-        <p class="effective-date">Effective: March 22, 2026 | Last Updated: April 23, 2026</p>
+        <p class="effective-date">Effective: March 22, 2026 | Last Updated: September 22, 2026</p>
 
         <p>PocketLabs ("we," "us," or "our") values the privacy of users of <strong>ListenTimer</strong> (the "App"). This Privacy Policy explains what personal information the App collects, how it is used, and how it is protected.</p>
 
@@ -143,8 +143,13 @@
             </tr>
             <tr>
                 <td>App Settings</td>
-                <td>Timer presets, voice character, voice interval, haptic settings</td>
+                <td>Timer presets, voice character, voice interval, haptic settings, completion history, goals</td>
                 <td>Stored locally on your device (never sent to any server)</td>
+            </tr>
+            <tr>
+                <td>iCloud Backup (optional)</td>
+                <td>Timer presets, completion history, goals, app settings, and the model of the device that made the backup</td>
+                <td>Your own iCloud Drive (stored only when you turn on iCloud Backup; PocketLabs cannot access this data)</td>
             </tr>
             <tr>
                 <td>Advertising Data (free users)</td>
@@ -169,6 +174,7 @@
         <h2>2. How We Collect Information</h2>
         <ul>
             <li><strong>App Settings</strong>: Values you configure within the App are automatically saved on your device.</li>
+            <li><strong>iCloud Backup</strong>: Only when you turn on iCloud Backup in the App, your presets, history, goals, and settings are stored in your own iCloud Drive through Apple's iCloud. PocketLabs cannot access this data.</li>
             <li><strong>Advertising Data</strong>: Collected automatically by the Google AdMob SDK, based on your App Tracking Transparency (ATT) consent. If you do not allow tracking via ATT, your IDFA is not collected.</li>
             <li><strong>App Usage Analytics (Firebase Analytics)</strong>: Collected automatically by the Firebase Analytics SDK during app launch and use. It does not use IDFA; it relies on a pseudonymous identifier (App Instance ID) issued by Firebase.</li>
             <li><strong>Crash Reports (Firebase Crashlytics)</strong>: When the App terminates abnormally (crashes) or encounters non-fatal errors, the Firebase Crashlytics SDK automatically uploads a report on the next app launch.</li>
@@ -191,6 +197,10 @@
             <tr>
                 <td>App Settings (local)</td>
                 <td>Automatically deleted when you uninstall the App</td>
+            </tr>
+            <tr>
+                <td>iCloud Backup data</td>
+                <td>Kept in your own iCloud Drive until you delete it with the App's "Delete iCloud Backups" option (not deleted automatically when you uninstall the App)</td>
             </tr>
             <tr>
                 <td>Advertising Data</td>
@@ -246,6 +256,7 @@
         <h2>8. Data Deletion</h2>
         <ul>
             <li><strong>App Settings (local data)</strong>: All settings stored on your device are automatically deleted when you uninstall the App.</li>
+            <li><strong>iCloud Backup data</strong>: Kept in your own iCloud Drive, and you can delete it yourself at any time with the App's "Delete iCloud Backups" option. PocketLabs does not hold this data, so there is no separate destruction procedure.</li>
             <li><strong>Advertising Data</strong>: Handled according to Google's data retention policies. You can stop future data collection by changing your ATT settings.</li>
             <li><strong>Firebase Analytics Data</strong>: Automatically deleted after the Firebase default retention period (up to 14 months). Uninstalling the App stops future data collection. To request immediate deletion of previously collected data, contact us at the email below.</li>
             <li><strong>Firebase Crashlytics Data</strong>: Automatically deleted 90 days after the crash event. Immediate deletion can be requested via the contact email below.</li>
@@ -271,7 +282,7 @@
         <p>We take the following measures to ensure the security of your personal information:</p>
         <ul>
             <li>We do not operate our own servers, eliminating risks of server breaches or data leaks.</li>
-            <li>All app settings are stored locally on your device only.</li>
+            <li>All app settings and history are stored locally on your device. Only when you turn on iCloud Backup is a copy kept in your own iCloud Drive, which PocketLabs cannot access.</li>
             <li>Communication with ad networks and Firebase is encrypted via HTTPS.</li>
             <li>Firebase Analytics and Crashlytics use only pseudonymous identifiers and do not collect directly identifying information such as your name, email, or phone number.</li>
         </ul>
