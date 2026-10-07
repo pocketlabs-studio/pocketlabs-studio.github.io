@@ -6,246 +6,273 @@
     <title>PocketLabs</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0A0A0A;
-            --surface: #141414;
-            --surface-hover: #1A1A1A;
-            --text: #EAEAEA;
-            --text-dim: #777;
-            --accent: #4F8FFF;
-            --accent-glow: rgba(79, 143, 255, 0.08);
-            --border: #222;
-            --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            --serif: 'Instrument Serif', Georgia, serif;
+            --bg: #F4F2EE;
+            --ink: #141414;
+            --muted: #5E5B55;
+            --hairline: #D9D5CE;
+            --row-hover: #ECE9E3;
+            --accent: #2E62E0;
+            --live: #1F9D4C;
+            --gutter: clamp(20px, 4.4vw, 56px);
+            --sans: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+            --mono: 'Geist Mono', ui-monospace, monospace;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
 
         body {
-            font-family: var(--sans);
             background: var(--bg);
-            color: var(--text);
+            color: var(--ink);
+            font-family: var(--sans);
             -webkit-font-smoothing: antialiased;
             min-height: 100vh;
-        }
-
-        /* --- HERO --- */
-        .hero {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 140px 24px 80px;
-            position: relative;
-            overflow: hidden;
-        }
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -120px; left: 50%;
-            transform: translateX(-50%);
-            width: 600px; height: 600px;
-            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-            pointer-events: none;
         }
 
-        .logo-text {
-            font-family: var(--sans);
-            font-size: 2.4em;
-            font-weight: 700;
+        a { color: inherit; text-decoration: none; }
+        a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px 32px;
+            padding: 26px var(--gutter);
+            border-bottom: 1px solid var(--hairline);
+        }
+        .wordmark {
+            font-weight: 600;
+            font-size: 20px;
             letter-spacing: -0.03em;
-            margin-bottom: 16px;
-            opacity: 0; animation: fadeUp 0.6s 0.1s forwards;
         }
-        .logo-text span { color: var(--accent); }
-
-        .hero-tagline {
-            font-size: 1.05em;
-            color: var(--text-dim);
-            line-height: 1.6;
-            max-width: 400px;
-            opacity: 0; animation: fadeUp 0.6s 0.25s forwards;
-        }
-
-        /* --- APPS SECTION --- */
-        .apps-section {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 24px 80px;
-        }
-
-        .apps-label {
-            text-align: center;
-            font-size: 0.78em;
-            font-weight: 600;
+        .tagline {
+            font: 500 12px/1 var(--mono);
+            letter-spacing: .1em;
             text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: var(--text-dim);
-            margin-bottom: 40px;
-            opacity: 0; animation: fadeUp 0.6s 0.4s forwards;
+            color: var(--muted);
         }
+        .topnav {
+            display: flex;
+            gap: 28px;
+            font-size: 14px;
+        }
+        .topnav a:hover { text-decoration: underline; }
 
-        .apps-grid {
+        .hero {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px 48px;
+            align-items: flex-end;
+            padding: clamp(64px, 8vw, 104px) var(--gutter) clamp(56px, 7.5vw, 96px);
+        }
+        .hero h1 {
+            font-weight: 600;
+            font-size: clamp(52px, 8.75vw, 112px);
+            line-height: .94;
+            letter-spacing: -0.058em;
+            flex: 1 1 640px;
+            min-width: 0;
+        }
+        .hero h1 em { color: var(--accent); font-style: normal; }
+        .hero p {
+            font-size: 16px;
+            line-height: 1.65;
+            color: var(--muted);
+            padding-bottom: 14px;
+            flex: 0 1 300px;
+        }
+        .hero h1, .hero p { text-wrap: pretty; word-break: keep-all; }
+
+        .index { padding: 0 var(--gutter); }
+        .index-list { list-style: none; }
+
+        .index-head, .app-row {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
+            grid-template-columns: clamp(36px, 4.4vw, 72px) minmax(0, 1.3fr) minmax(0, 1.2fr) clamp(110px, 11vw, 170px) clamp(110px, 10vw, 150px) 48px;
+            gap: clamp(12px, 1.8vw, 24px);
         }
 
-        .app-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 32px 36px;
+        .index-head {
+            padding: 14px 0;
+            border-bottom: 1px solid var(--ink);
+            font: 500 11px/1 var(--mono);
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .app-row {
+            align-items: center;
+            padding: 40px 0;
+            border-bottom: 1px solid var(--hairline);
+            transition: background .2s;
+        }
+        .app-row:hover, .app-row:focus-visible { background: var(--row-hover); }
+
+        .app-meta { display: contents; }
+
+        .app-num {
+            font: 500 13px/1 var(--mono);
+            color: var(--muted);
+        }
+        .app-id {
             display: flex;
             align-items: center;
-            gap: 24px;
-            transition: background 0.25s, border-color 0.25s;
-            opacity: 0; animation: fadeUp 0.5s 0.5s forwards;
+            gap: clamp(12px, 1.4vw, 18px);
+            min-width: 0;
         }
-        .app-card:nth-child(2) { animation-delay: 0.6s; }
-        .app-card:nth-child(3) { animation-delay: 0.7s; }
-
-        .app-card:hover {
-            background: var(--surface-hover);
-            border-color: #2a2a2a;
-        }
-
         .app-icon {
-            width: 64px; height: 64px;
-            border-radius: 16px;
-            background: linear-gradient(135deg, var(--accent), #7C5CFC);
-            display: flex;
-            align-items: center; justify-content: center;
-            font-size: 1.6em;
+            width: clamp(40px, 4.2vw, 56px);
+            height: clamp(40px, 4.2vw, 56px);
+            border-radius: 13px;
+            display: block;
             flex-shrink: 0;
-            box-shadow: 0 4px 20px rgba(79, 143, 255, 0.15);
+            box-shadow: 0 0 0 1px rgba(20, 20, 20, .10);
         }
-
-        .app-info { flex: 1; }
+        .app-icon--dark { box-shadow: 0 0 0 1px rgba(20, 20, 20, .08); }
         .app-name {
-            font-size: 1.1em;
             font-weight: 600;
-            margin-bottom: 4px;
-            letter-spacing: -0.01em;
+            font-size: clamp(26px, 3.6vw, 52px);
+            line-height: .95;
+            letter-spacing: -0.05em;
+            overflow-wrap: anywhere;
         }
         .app-desc {
-            font-size: 0.88em;
-            color: var(--text-dim);
-            line-height: 1.5;
+            font-size: 16px;
+            line-height: 1.55;
         }
-
-        .app-badge {
-            font-size: 0.7em;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            padding: 5px 12px;
-            border-radius: 100px;
+        .app-platform { font-size: 14px; }
+        .app-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .app-status.is-live::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--live);
             flex-shrink: 0;
         }
-        .badge-dev {
-            color: var(--accent);
-            background: var(--accent-glow);
-            border: 1px solid rgba(79, 143, 255, 0.15);
-        }
-        .badge-soon {
-            color: var(--text-dim);
-            background: rgba(255,255,255,0.04);
-            border: 1px solid var(--border);
-        }
-        .badge-live {
-            color: #30D158;
-            background: rgba(48, 209, 88, 0.08);
-            border: 1px solid rgba(48, 209, 88, 0.18);
-        }
-        /* 카드가 링크일 때 링크 기본 스타일 무효화 */
-        a.app-card { color: inherit; text-decoration: none; }
-
-        /* --- FOOTER --- */
-        footer {
-            text-align: center;
-            padding: 40px 24px 60px;
-            border-top: 1px solid var(--border);
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        footer p {
-            font-size: 0.82em;
-            color: var(--text-dim);
-            line-height: 1.8;
-        }
-        footer a {
-            color: var(--text-dim);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        footer a:hover { color: var(--text); }
-
-        /* --- ANIMATIONS --- */
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(16px); }
-            to   { opacity: 1; transform: translateY(0); }
+        .app-arrow {
+            width: 48px;
+            height: 48px;
+            border: 1px solid var(--ink);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
         }
 
-        /* --- RESPONSIVE --- */
-        @media (max-width: 600px) {
-            .hero { padding: 120px 20px 60px; }
-            .logo-text { font-size: 2em; }
-            .apps-section { padding: 32px 16px 60px; }
-            .app-card {
-                padding: 24px 20px;
-                gap: 16px;
-                flex-wrap: wrap;
+        .site-footer {
+            margin: 120px var(--gutter) 0;
+            border-top: 1px solid var(--ink);
+            padding: 48px 0 56px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 16px 32px;
+        }
+        .footer-mail {
+            font-weight: 600;
+            font-size: clamp(28px, 3.75vw, 48px);
+            line-height: 1;
+            letter-spacing: -0.05em;
+        }
+        .footer-mail:hover { color: var(--accent); }
+        .copyright {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        @media (max-width: 899.98px) {
+            .topbar .tagline { order: 3; flex-basis: 100%; }
+
+            .index-head { display: none; }
+
+            .app-row {
+                grid-template-columns: 28px minmax(0, 1fr) 40px;
+                grid-template-areas:
+                    "num app arrow"
+                    ". desc desc"
+                    ". meta meta";
+                column-gap: 12px;
+                row-gap: 14px;
+                padding: 28px 0;
             }
-            .app-icon { width: 52px; height: 52px; font-size: 1.3em; border-radius: 14px; }
-            .app-badge { margin-top: 0; }
+            .app-num { grid-area: num; }
+            .app-id { grid-area: app; }
+            .app-desc { grid-area: desc; max-width: 36em; }
+            .app-meta {
+                grid-area: meta;
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .app-arrow { grid-area: arrow; width: 40px; height: 40px; }
+            .app-platform::after { content: "·"; margin-left: 8px; color: var(--muted); }
         }
     </style>
 </head>
 <body>
 
-    <!-- HERO -->
-    <section class="hero">
-        <h1 class="logo-text">Pocket<span>Labs</span></h1>
-        <p class="hero-tagline">A studio crafting thoughtful apps<br>for iOS and Android.</p>
-    </section>
+    <header class="topbar">
+        <div class="wordmark">PocketLabs</div>
+        <p class="tagline">Independent app studio — iOS &amp; Android</p>
+        <nav class="topnav" aria-label="Primary">
+            <a href="#apps">Apps</a>
+            <a href="mailto:contact@pocketlabs.kr">Contact</a>
+        </nav>
+    </header>
 
-    <!-- APPS -->
-    <section class="apps-section">
-        <p class="apps-label">Our Apps</p>
+    <main>
+        <section class="hero">
+            <h1>Something for <em>every moment.</em></h1>
+            <p>Focused mobile apps for iOS and Android. Here is everything we have made so far.</p>
+        </section>
 
-        <div class="apps-grid">
-            <div class="app-card">
-                <div class="app-icon">📚</div>
-                <div class="app-info">
-                    <div class="app-name">PocketLingo</div>
-                    <div class="app-desc">Language learning through interactive conversations and real-world scenarios.</div>
-                </div>
-                <span class="app-badge badge-dev">In Dev</span>
+        <section id="apps" class="index" aria-label="Apps">
+            <div class="index-head" aria-hidden="true">
+                <span>No.</span><span>App</span><span>What it does</span><span>Platform</span><span>Status</span><span></span>
             </div>
+            <ol class="index-list" role="list">
+                <li>
+                    <a class="app-row" href="/housecast-support/ko/">
+                        <span class="app-num">01</span>
+                        <span class="app-id"><img class="app-icon" src="/assets/apps/housecast.png" alt="" width="56" height="56"><span class="app-name">HouseCast</span></span>
+                        <span class="app-desc">AI forecast of the 12-month direction and range of apartment prices, by region.</span>
+                        <span class="app-meta"><span class="app-platform">iOS · Android</span><span class="app-status is-live">Released</span></span>
+                        <span class="app-arrow" aria-hidden="true">↗</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="app-row" href="/listentimer/">
+                        <span class="app-num">02</span>
+                        <span class="app-id"><img class="app-icon app-icon--dark" src="/listentimer/assets/app_icon.png" alt="" width="56" height="56"><span class="app-name">ListenTimer</span></span>
+                        <span class="app-desc">Voice workout timer that reads every second aloud — train without watching the screen.</span>
+                        <span class="app-meta"><span class="app-platform">iPhone · Apple Watch</span><span class="app-status is-live">Released</span></span>
+                        <span class="app-arrow" aria-hidden="true">↗</span>
+                    </a>
+                </li>
+            </ol>
+        </section>
+    </main>
 
-            <a class="app-card" href="/listentimer/">
-                <div class="app-icon">⏱️</div>
-                <div class="app-info">
-                    <div class="app-name">ListenTimer</div>
-                    <div class="app-desc">Voice-driven workout timer that calls out each second — train without watching the screen.</div>
-                </div>
-                <span class="app-badge badge-live">Released</span>
-            </a>
-
-        </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer>
-        <p>
-            &copy; 2026 PocketLabs. All rights reserved.<br>
-            <a href="mailto:contact@pocketlabs.kr">contact@pocketlabs.kr</a>
-        </p>
+    <footer class="site-footer">
+        <a class="footer-mail" href="mailto:contact@pocketlabs.kr">contact@pocketlabs.kr</a>
+        <p class="copyright">© 2026 PocketLabs. All rights reserved.</p>
     </footer>
 
 </body>
