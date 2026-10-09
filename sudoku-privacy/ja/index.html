@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プライバシーポリシー — だれでもナンプレ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0A0A0A;
+            --surface: #141414;
+            --text: #EAEAEA;
+            --text-dim: #777;
+            --accent: #4F8FFF;
+            --border: #222;
+            --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 60px 24px 80px;
+        }
+        .back-link {
+            display: inline-block;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.88em;
+            margin-bottom: 32px;
+            transition: opacity 0.2s;
+        }
+        .back-link:hover { opacity: 0.7; }
+        .lang-switch {
+            float: right;
+            color: var(--text-dim);
+            font-size: 0.85em;
+        }
+        .lang-switch a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .lang-switch a:hover { text-decoration: underline; }
+        h1 {
+            font-size: 1.8em;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+        .effective-date {
+            color: var(--text-dim);
+            font-size: 0.88em;
+            margin-bottom: 48px;
+        }
+        h2 {
+            font-size: 1.15em;
+            font-weight: 600;
+            margin-top: 40px;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        p, li {
+            font-size: 0.95em;
+            color: #ccc;
+        }
+        ul {
+            padding-left: 20px;
+            margin-bottom: 12px;
+        }
+        li { margin-bottom: 6px; }
+        a { color: var(--accent); }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 20px;
+            font-size: 0.9em;
+        }
+        th, td {
+            text-align: left;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            color: #ccc;
+        }
+        th {
+            background: var(--surface);
+            color: var(--text);
+            font-weight: 600;
+        }
+        .note {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 0.9em;
+            color: #bbb;
+        }
+        footer {
+            text-align: center;
+            padding: 40px 24px;
+            border-top: 1px solid var(--border);
+            margin-top: 60px;
+        }
+        footer p {
+            font-size: 0.82em;
+            color: var(--text-dim);
+        }
+        @media (max-width: 600px) {
+            .container { padding: 40px 16px 60px; }
+            h1 { font-size: 1.5em; }
+            table { font-size: 0.82em; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <span class="lang-switch"><a href="../ko/" hreflang="ko" lang="ko">한국어</a> · <a href="../en/" hreflang="en" lang="en">English</a> · <span lang="ja" aria-current="page">日本語</span></span>
+        </div>
+
+        <h1>プライバシーポリシー</h1>
+        <p class="effective-date">施行日: 2026年10月9日 | 最終更新日: 2026年10月9日</p>
+
+        <h2>1. 概要</h2>
+        <p>PocketLabs(以下「当社」)は、<strong>だれでもナンプレ</strong>(以下「本アプリ」)をご利用いただくユーザーのプライバシーを尊重し、関連法令を遵守します。本プライバシーポリシーは本アプリに適用され、本アプリが取り扱う情報の項目、利用目的、保有期間、取り扱いの委託と国外への移転、収集をオフにする方法などについてご説明します。</p>
+        <div class="note">
+            本アプリにはアカウントや会員登録がなく、当社は本アプリのための独自のサーバーを運営していません。解いた記録と設定は端末の中に保存されます。
+        </div>
+
+        <h2>2. 取り扱う情報</h2>
+        <table>
+            <tr>
+                <th>区分</th>
+                <th>項目</th>
+                <th>保存・送信先</th>
+            </tr>
+            <tr>
+                <td>端末の中だけに置く情報</td>
+                <td>解いた記録、途中の問題、設定、購入の権利</td>
+                <td>端末内のアプリの保存領域(端末のOSのバックアップに含まれることがあります)・アプリの外には送りません</td>
+            </tr>
+            <tr>
+                <td>利用状況(Google Analytics for Firebase)</td>
+                <td>アプリの利用イベント(問題の開始・完了、ヒント、まちがった入力、ふりかえり、練習、カードの作成、共有、テーマ画面を開く、おためし、購入の完了、タブを開く、通知の許可への応答など)とその付加情報(難易度、モード、かかった時間、ヒントの回数などのゲームの数値、初めて起動した日から何日目かを表す日数、配信チャネル)、SDKが自動で収集する情報(アプリインスタンスID(仮名識別子)、機種、OSバージョン、言語、アプリのバージョン、IPアドレスから推定した国・地域、初回起動・セッション・アプリのアップデート・アプリ内課金などの自動収集イベント)。広告識別子(IDFA)は収集しません。</td>
+                <td>Google LLC(Firebase)サーバー</td>
+            </tr>
+            <tr>
+                <td>エラー報告(Firebase Crashlytics)</td>
+                <td>エラーが起きたときのスタックトレース、端末の状態(機種、OSバージョン、メモリ・ディスクの容量、画面の向きなど)、Crashlyticsインストール用UUID・FirebaseインストールID(仮名識別子)、エラーの発生時刻、アプリのバージョン、配信チャネル</td>
+                <td>Google LLC(Firebase)サーバー</td>
+            </tr>
+            <tr>
+                <td>リモート設定(Firebase Remote Config)</td>
+                <td>アプリの設定値を受け取るときに送るFirebaseインストールID(仮名識別子)と、アプリのバージョン・言語・OSなどの技術的な情報、IPアドレス</td>
+                <td>Google LLC(Firebase)サーバー</td>
+            </tr>
+            <tr>
+                <td>購入</td>
+                <td>決済はApple App Storeが行い、当社はカード番号などの決済情報を受け取りません。購入の確認は端末のApp Storeの機能で行います。</td>
+                <td>Apple(App Store)・購入の権利は端末内に保存</td>
+            </tr>
+            <tr>
+                <td>お問い合わせメール</td>
+                <td>ユーザーが送ったメールアドレスと内容、本アプリがメール本文の最後に入れるアプリのバージョン・OS・言語</td>
+                <td>当社のお問い合わせ用メールボックス(contact@pocketlabs.kr)</td>
+            </tr>
+        </table>
+        <div class="note">
+            アプリインスタンスID、Crashlyticsインストール用UUID、FirebaseインストールIDは仮名識別子であり、氏名・メールアドレス・電話番号など個人を直接特定できる情報とは紐付けられません。「利用状況を送る」をオフにしても、リモート設定の値を受け取る通信は行われます。この通信は、本アプリを開いたときにアプリの設定値を受け取るためのものです。
+        </div>
+
+        <h2>3. 利用目的</h2>
+        <ul>
+            <li><strong>利用状況</strong>: ユーザーがつまずきやすいところや、よく使われる機能を知り、本アプリを改善するため</li>
+            <li><strong>エラー報告</strong>: エラーの原因を見つけて直すため</li>
+            <li><strong>リモート設定</strong>: アプリをアップデートせずに、機能や商品の表示を調整するため</li>
+            <li><strong>お問い合わせメール</strong>: お問い合わせにお答えするため</li>
+        </ul>
+        <p>当社はこれらの情報を広告やパーソナライズ広告には使いません。</p>
+
+        <h2 id="data-retention">4. 保有期間</h2>
+        <table>
+            <tr>
+                <th>区分</th>
+                <th>保有期間</th>
+            </tr>
+            <tr>
+                <td>端末の中だけに置く情報</td>
+                <td>本アプリを削除すると一緒に削除されます。端末のOSのバックアップに含まれた複製は、そのバックアップの保管設定に従います。</td>
+            </tr>
+            <tr>
+                <td>利用状況</td>
+                <td>イベント単位・ユーザー単位のデータは2ヶ月(Google Analyticsのデータ保持の設定)。期間を過ぎたデータは毎月自動で削除されます。合計した標準レポートはこの設定の対象外です。詳しくは<a href="https://support.google.com/analytics/answer/7667196" target="_blank" rel="noopener noreferrer">Google Analyticsのデータ保持</a>をご覧ください。</td>
+            </tr>
+            <tr>
+                <td>エラー報告</td>
+                <td>90日間保存した後、削除の手続きが始まります(Firebase Crashlyticsの保存ポリシー)</td>
+            </tr>
+            <tr>
+                <td>リモート設定</td>
+                <td>FirebaseインストールIDは、当社が削除を依頼するまで保存され、依頼から180日以内にGoogleの稼働中のシステムとバックアップから削除されます(Firebaseのポリシー)</td>
+            </tr>
+            <tr>
+                <td>お問い合わせメール</td>
+                <td>回答後、遅滞なく削除します。ただし、法令により保存が必要な場合は、その法令が定める期間に限り保存します。</td>
+            </tr>
+        </table>
+
+        <h2>5. 収集をオフにする方法</h2>
+        <p>本アプリの「設定」で「利用状況を送る」をオフにすると、利用状況とエラー報告を送りません。このスイッチは最初はオンになっていて、いつでもオン・オフを切り替えられます。</p>
+        <ul>
+            <li>オフにしている間に端末に残っていた、まだ送っていないエラー報告は、もう一度オンにする前に削除されます。</li>
+            <li>開発用のビルドは情報を送りません。テスト配信(TestFlight)のビルドが送る情報には配信チャネルの値が付き、本番のデータと区別されます。</li>
+            <li>リモート設定の値を受け取る通信は、このスイッチとは関係なく行われます。</li>
+        </ul>
+
+        <h2>6. 取り扱いの委託と第三者提供</h2>
+        <p>当社は、利用状況、エラー報告、リモート設定の取り扱いをGoogle LLC(Firebase)に委託しています。当社はユーザーの情報を第三者に提供しません。</p>
+
+        <h2>7. 国外への移転</h2>
+        <p>委託先のGoogle LLCは国外にあります。移転の内容は次のとおりです。</p>
+        <table>
+            <tr>
+                <th>委託先(所在国)</th>
+                <th>委託する業務</th>
+                <th>移転される情報</th>
+                <th>保有期間</th>
+            </tr>
+            <tr>
+                <td>Google LLC<br>(米国)<br><span style="color:var(--text-dim)">Google Analytics for Firebase</span></td>
+                <td>利用状況の収集・分析</td>
+                <td>「2. 取り扱う情報」の利用状況の項目</td>
+                <td>2ヶ月(期間を過ぎたデータは毎月自動で削除)</td>
+            </tr>
+            <tr>
+                <td>Google LLC<br>(米国)<br><span style="color:var(--text-dim)">Firebase Crashlytics</span></td>
+                <td>エラー報告の収集・分析</td>
+                <td>「2. 取り扱う情報」のエラー報告の項目</td>
+                <td>90日間保存した後、削除の手続きが始まります</td>
+            </tr>
+            <tr>
+                <td>Google LLC<br>(米国)<br><span style="color:var(--text-dim)">Firebase Remote Config</span></td>
+                <td>アプリの設定値の配信</td>
+                <td>FirebaseインストールID、アプリのバージョン・言語・OS、IPアドレス</td>
+                <td>当社が削除を依頼するまで(依頼から180日以内に削除)</td>
+            </tr>
+        </table>
+        <ul>
+            <li><strong>移転先の国</strong>: 米国など、Googleまたはその代理人が施設を置く国(FirebaseはGoogleまたはその代理人が施設を置くどこででもデータを処理・保存することがあります)</li>
+            <li><strong>移転の時期と方法</strong>: 本アプリを使っている間に随時、暗号化されたネットワーク通信(HTTPS)で送信</li>
+            <li><strong>移転を受ける者</strong>: Google LLC(米国)・連絡先: <a href="https://support.google.com/policies/contact/general_privacy_form" target="_blank" rel="noopener noreferrer">Googleのプライバシーに関するお問い合わせフォーム</a></li>
+            <li><strong>拒否する方法とその効果</strong>: 「5. 収集をオフにする方法」の「利用状況を送る」をオフにすると、利用状況とエラー報告の移転は止まり、本アプリの機能はそのまま使えます。リモート設定の値を受け取る通信は、アプリの設定値を受け取るために続きます。これを望まない場合は、本アプリを削除できます。</li>
+        </ul>
+        <p>Googleは、EU-米国およびスイス-米国データプライバシーフレームワーク(DPF)と、EU-米国DPFの英国拡張に準拠していると表明しています。詳しくは<a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener noreferrer">Firebaseのプライバシーとセキュリティ</a>をご覧ください。</p>
+
+        <h2>8. 外部送信について</h2>
+        <p>電気通信事業法の外部送信規律にもとづく公表として、本アプリがユーザーの端末から外部に送る情報を次のとおりお知らせします。</p>
+        <table>
+            <tr>
+                <th>送信先</th>
+                <th>送信される情報</th>
+                <th>利用目的</th>
+            </tr>
+            <tr>
+                <td>Google LLC(Google Analytics for Firebase)</td>
+                <td>アプリの利用イベントとその付加情報、アプリインスタンスID、機種・OSバージョン・言語・アプリのバージョン、IPアドレス</td>
+                <td>本アプリの使われ方を分析し、本アプリを改善するため</td>
+            </tr>
+            <tr>
+                <td>Google LLC(Firebase Crashlytics)</td>
+                <td>エラーが起きた場所の情報(スタックトレース)、端末の状態、Crashlyticsインストール用UUID・FirebaseインストールID、アプリのバージョン、配信チャネル</td>
+                <td>エラーの原因を見つけて直すため</td>
+            </tr>
+            <tr>
+                <td>Google LLC(Firebase Remote Config)</td>
+                <td>FirebaseインストールID、アプリのバージョン・言語・OS、IPアドレス</td>
+                <td>アプリの設定値を届けるため(機能や商品の表示の調整)</td>
+            </tr>
+        </table>
+        <p>「利用状況を送る」をオフにすると、上の表のうちGoogle Analytics for FirebaseとFirebase Crashlyticsへの送信は止まります。</p>
+
+        <h2 id="data-deletion">9. ユーザーの権利と削除のご依頼</h2>
+        <p>ユーザーはいつでも、個人情報の閲覧、訂正、削除、取り扱いの停止をご依頼いただけます。</p>
+        <ul>
+            <li><strong>端末の中の情報</strong>: 本アプリを削除すると、端末に保存された解いた記録、途中の問題、設定が一緒に削除されます。</li>
+            <li><strong>Google側のデータ</strong>: 利用状況、エラー報告、リモート設定のデータの削除は<a href="mailto:contact@pocketlabs.kr">contact@pocketlabs.kr</a>までご依頼ください。当社がFirebaseで対応します。当社はユーザーを特定できる情報を持っていないため、対応に必要な情報を返信でおたずねすることがあります。</li>
+        </ul>
+        <p>当社はご依頼を受けたら、遅滞なく対応いたします。</p>
+        <div class="note">
+            <strong>英国・スイスのユーザーの方へ</strong><br>
+            当社は、本アプリを改善するという正当な利益にもとづいて、利用状況とエラー報告を取り扱います。「利用状況を送る」をオフにすれば、いつでもこの取り扱いを止められます。お住まいの国の個人情報の監督機関に苦情を申し立てることができます。
+        </div>
+
+        <h2>10. 子どもの個人情報</h2>
+        <p>本アプリの年齢区分は4+で、広告やパーソナライズ広告はありません。当社はユーザーの年齢をたずねず、子どもの情報を特別に収集することはありません。</p>
+
+        <h2>11. 安全性確保のための措置</h2>
+        <ul>
+            <li>当社は本アプリのための独自のサーバーやアカウントを運営していないため、サーバーから会員情報が漏れるリスクがありません。</li>
+            <li>解いた記録と設定は端末の中だけに保存されます。</li>
+            <li>Google(Firebase)との通信は、Googleの暗号化された接続(HTTPS)で送信されます。</li>
+        </ul>
+
+        <h2>12. 個人情報保護責任者</h2>
+        <table>
+            <tr>
+                <th>項目</th>
+                <th>内容</th>
+            </tr>
+            <tr>
+                <td>担当</td>
+                <td>PocketLabs 個人情報保護担当</td>
+            </tr>
+            <tr>
+                <td>メール</td>
+                <td><a href="mailto:contact@pocketlabs.kr">contact@pocketlabs.kr</a></td>
+            </tr>
+        </table>
+
+        <h2>13. プライバシーポリシーの変更</h2>
+        <p>本プライバシーポリシーが変更された場合、変更内容を本ページに掲載し、施行日とあわせてお知らせします。</p>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 PocketLabs. All rights reserved.<br>
+        <a href="mailto:contact@pocketlabs.kr" style="color: #777; text-decoration: none;">contact@pocketlabs.kr</a></p>
+    </footer>
+</body>
+</html>

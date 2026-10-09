@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy — Anyone Can Sudoku</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0A0A0A;
+            --surface: #141414;
+            --text: #EAEAEA;
+            --text-dim: #777;
+            --accent: #4F8FFF;
+            --border: #222;
+            --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 60px 24px 80px;
+        }
+        .back-link {
+            display: inline-block;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.88em;
+            margin-bottom: 32px;
+            transition: opacity 0.2s;
+        }
+        .back-link:hover { opacity: 0.7; }
+        .lang-switch {
+            float: right;
+            color: var(--text-dim);
+            font-size: 0.85em;
+        }
+        .lang-switch a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .lang-switch a:hover { text-decoration: underline; }
+        h1 {
+            font-size: 1.8em;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+        .effective-date {
+            color: var(--text-dim);
+            font-size: 0.88em;
+            margin-bottom: 48px;
+        }
+        h2 {
+            font-size: 1.15em;
+            font-weight: 600;
+            margin-top: 40px;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        p, li {
+            font-size: 0.95em;
+            color: #ccc;
+        }
+        ul {
+            padding-left: 20px;
+            margin-bottom: 12px;
+        }
+        li { margin-bottom: 6px; }
+        a { color: var(--accent); }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 20px;
+            font-size: 0.9em;
+        }
+        th, td {
+            text-align: left;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            color: #ccc;
+        }
+        th {
+            background: var(--surface);
+            color: var(--text);
+            font-weight: 600;
+        }
+        .note {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 0.9em;
+            color: #bbb;
+        }
+        footer {
+            text-align: center;
+            padding: 40px 24px;
+            border-top: 1px solid var(--border);
+            margin-top: 60px;
+        }
+        footer p {
+            font-size: 0.82em;
+            color: var(--text-dim);
+        }
+        @media (max-width: 600px) {
+            .container { padding: 40px 16px 60px; }
+            h1 { font-size: 1.5em; }
+            table { font-size: 0.82em; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <span class="lang-switch"><a href="../ko/" hreflang="ko" lang="ko">한국어</a> · <span lang="en" aria-current="page">English</span> · <a href="../ja/" hreflang="ja" lang="ja">日本語</a></span>
+        </div>
+
+        <h1>Privacy Policy</h1>
+        <p class="effective-date">Effective: October 9, 2026 | Last Updated: October 9, 2026</p>
+
+        <h2>1. Overview</h2>
+        <p>PocketLabs ("we," "us," or "our") values the privacy of users of <strong>Anyone Can Sudoku</strong> (the "App"). This Privacy Policy applies to the App and explains what information the App handles, why, how long it is kept, who processes it and where, and how you can turn collection off.</p>
+        <div class="note">
+            The App has no accounts and no sign-up, and we do not run our own servers for the App. Your puzzle records and settings are stored on your device.
+        </div>
+
+        <h2>2. Information We Handle</h2>
+        <table>
+            <tr>
+                <th>Category</th>
+                <th>Data</th>
+                <th>Where it is stored or sent</th>
+            </tr>
+            <tr>
+                <td>Information kept only on your device</td>
+                <td>Puzzle records, puzzles in progress, settings, purchase entitlements</td>
+                <td>App storage on your device (may be included in your device's OS backup) · never sent outside the App</td>
+            </tr>
+            <tr>
+                <td>Usage analytics (Google Analytics for Firebase)</td>
+                <td>App usage events (puzzle started and completed, hints, wrong entries, review, practice, card creation, sharing, opening the Worlds screen, trials, completed purchases, tab opens, notification permission responses, etc.) and their parameters (game values such as difficulty, mode, time taken, and number of hints; a day number showing how many days have passed since you first opened the App; distribution channel), plus information the SDK collects automatically (App Instance ID (pseudonymous identifier), device model, OS version, language, app version, approximate country/region based on IP address, and automatically collected events such as first open, sessions, app updates, and in-app purchases). We do not collect the advertising identifier (IDFA).</td>
+                <td>Google LLC (Firebase) servers</td>
+            </tr>
+            <tr>
+                <td>Crash reports (Firebase Crashlytics)</td>
+                <td>Stack traces when an error occurs, device state (model, OS version, memory/disk space, screen orientation, etc.), Crashlytics installation UUID and Firebase installation ID (pseudonymous identifiers), time of the error, app version, distribution channel</td>
+                <td>Google LLC (Firebase) servers</td>
+            </tr>
+            <tr>
+                <td>Remote settings (Firebase Remote Config)</td>
+                <td>The Firebase installation ID (pseudonymous identifier) and technical information such as app version, language, and OS that are sent when the App fetches its settings values, plus the IP address</td>
+                <td>Google LLC (Firebase) servers</td>
+            </tr>
+            <tr>
+                <td>Purchases</td>
+                <td>Payments are processed by the Apple App Store, and we do not receive card numbers or other payment information. Purchases are confirmed through the App Store features on your device.</td>
+                <td>Apple (App Store) · purchase entitlements are stored on your device</td>
+            </tr>
+            <tr>
+                <td>Support emails</td>
+                <td>The email address and message you send, plus the app version, OS, and language the App adds to the end of the email body</td>
+                <td>Our support mailbox (contact@pocketlabs.kr)</td>
+            </tr>
+        </table>
+        <div class="note">
+            The App Instance ID, Crashlytics installation UUID, and Firebase installation ID are pseudonymous and are not linked to directly identifying information such as your name, email, or phone number. Even when "Send usage data" is off, the App still connects to receive its remote settings values when you open it.
+        </div>
+
+        <h2>3. Purpose of Use</h2>
+        <ul>
+            <li><strong>Usage analytics</strong>: To find the spots where players get stuck and the features they use most, so we can improve the App</li>
+            <li><strong>Crash reports</strong>: To find and fix the causes of errors</li>
+            <li><strong>Remote settings</strong>: To adjust features and which products are shown without an app update</li>
+            <li><strong>Support emails</strong>: To answer your questions</li>
+        </ul>
+        <p>We do not use this information for advertising or personalized advertising.</p>
+
+        <h2 id="data-retention">4. Data Retention</h2>
+        <table>
+            <tr>
+                <th>Category</th>
+                <th>Retention Period</th>
+            </tr>
+            <tr>
+                <td>Information kept only on your device</td>
+                <td>Deleted when you uninstall the App. Copies included in your device's OS backup follow that backup's retention settings.</td>
+            </tr>
+            <tr>
+                <td>Usage analytics</td>
+                <td>Event-level and user-level data: 2 months (Google Analytics data retention setting). Data past this period is deleted automatically every month. Standard aggregated reports are not affected by this setting. See <a href="https://support.google.com/analytics/answer/7667196" target="_blank" rel="noopener noreferrer">Google Analytics data retention</a> for details.</td>
+            </tr>
+            <tr>
+                <td>Crash reports</td>
+                <td>Kept for 90 days, after which the removal process starts (Firebase Crashlytics retention policy)</td>
+            </tr>
+            <tr>
+                <td>Remote settings</td>
+                <td>The Firebase installation ID is kept until we request its deletion, and is removed from Google's live and backup systems within 180 days of that request (Firebase policy)</td>
+            </tr>
+            <tr>
+                <td>Support emails</td>
+                <td>Deleted without delay once we have answered, unless a law requires us to keep them for a set period, in which case we keep them for that period only.</td>
+            </tr>
+        </table>
+
+        <h2>5. How to Turn Off Collection</h2>
+        <p>If you turn off "Send usage data" in the App's "Settings", the App stops sending usage analytics and crash reports. This switch is on at first, and you can turn it on or off at any time.</p>
+        <ul>
+            <li>Unsent crash reports left on your device while the switch was off are deleted before collection is turned back on.</li>
+            <li>Development builds do not send any information, and information sent from test builds (TestFlight) carries a distribution channel value that keeps it separate from production data.</li>
+            <li>The connection that receives remote settings values happens regardless of this switch.</li>
+        </ul>
+
+        <h2>6. Processors and Third-Party Sharing</h2>
+        <p>We entrust the processing of usage analytics, crash reports, and remote settings to Google LLC (Firebase). We do not share your information with third parties.</p>
+
+        <h2>7. International Data Transfer</h2>
+        <p>Our processor, Google LLC, is located outside Korea. The details of the transfer are as follows.</p>
+        <table>
+            <tr>
+                <th>Processor (country)</th>
+                <th>Service</th>
+                <th>Data transferred</th>
+                <th>Retention</th>
+            </tr>
+            <tr>
+                <td>Google LLC<br>(United States)<br><span style="color:var(--text-dim)">Google Analytics for Firebase</span></td>
+                <td>Collecting and analyzing usage analytics</td>
+                <td>The usage analytics items in "2. Information We Handle"</td>
+                <td>2 months (data past this period is deleted automatically every month)</td>
+            </tr>
+            <tr>
+                <td>Google LLC<br>(United States)<br><span style="color:var(--text-dim)">Firebase Crashlytics</span></td>
+                <td>Collecting and analyzing crash reports</td>
+                <td>The crash report items in "2. Information We Handle"</td>
+                <td>Kept for 90 days, then the removal process starts</td>
+            </tr>
+            <tr>
+                <td>Google LLC<br>(United States)<br><span style="color:var(--text-dim)">Firebase Remote Config</span></td>
+                <td>Delivering app settings values</td>
+                <td>Firebase installation ID, app version, language, OS, IP address</td>
+                <td>Until we request deletion (removed within 180 days of the request)</td>
+            </tr>
+        </table>
+        <ul>
+            <li><strong>Destination countries</strong>: The United States and other countries where Google or its agents maintain facilities (Firebase may process and store data anywhere Google or its agents maintain facilities)</li>
+            <li><strong>When and how</strong>: From time to time while you use the App, sent over encrypted network connections (HTTPS)</li>
+            <li><strong>Recipient</strong>: Google LLC (United States) · Contact: <a href="https://support.google.com/policies/contact/general_privacy_form" target="_blank" rel="noopener noreferrer">Google Privacy Inquiry form</a></li>
+            <li><strong>How to refuse, and the effect</strong>: If you turn off "Send usage data" as described in "5. How to Turn Off Collection", transfers of usage analytics and crash reports stop, and you can keep using every feature of the App. The connection that receives remote settings values continues so the App can get its settings; if you do not want this, you can uninstall the App.</li>
+        </ul>
+        <p>Google states that it complies with the EU-U.S. and Swiss-U.S. Data Privacy Frameworks (DPF) and the UK Extension to the EU-U.S. DPF. For details, see <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener noreferrer">Firebase Privacy and Security</a>.</p>
+
+        <h2>8. External transmission (for users in Japan)</h2>
+        <p>As a public notice under the external transmission rules (外部送信規律) of Japan's Telecommunications Business Act, here is the information the App sends from your device to outside parties.</p>
+        <table>
+            <tr>
+                <th>Sent to</th>
+                <th>Information sent</th>
+                <th>Purpose</th>
+            </tr>
+            <tr>
+                <td>Google LLC (Google Analytics for Firebase)</td>
+                <td>App usage events and their parameters, App Instance ID, device model, OS version, language, app version, IP address</td>
+                <td>Analyzing how the App is used and improving the App</td>
+            </tr>
+            <tr>
+                <td>Google LLC (Firebase Crashlytics)</td>
+                <td>Information about where an error occurred (stack traces), device state, Crashlytics installation UUID and Firebase installation ID, app version, distribution channel</td>
+                <td>Finding and fixing the causes of errors</td>
+            </tr>
+            <tr>
+                <td>Google LLC (Firebase Remote Config)</td>
+                <td>Firebase installation ID, app version, language, OS, IP address</td>
+                <td>Delivering app settings values (adjusting features and which products are shown)</td>
+            </tr>
+        </table>
+        <p>If you turn off "Send usage data", the transmissions to Google Analytics for Firebase and Firebase Crashlytics in the table above stop.</p>
+
+        <h2 id="data-deletion">9. Your Rights and Deletion Requests</h2>
+        <p>You may ask us at any time to access, correct, delete, or stop processing your personal information.</p>
+        <ul>
+            <li><strong>Information on your device</strong>: Uninstalling the App deletes the puzzle records, puzzles in progress, and settings stored on your device.</li>
+            <li><strong>Data held by Google</strong>: You can ask us to delete usage analytics, crash report, and remote settings data by emailing <a href="mailto:contact@pocketlabs.kr">contact@pocketlabs.kr</a>, and we will handle it in Firebase. Because we do not hold information that identifies you, we may ask in our reply for the details needed to process your request.</li>
+        </ul>
+        <p>We will act on your request without delay.</p>
+        <div class="note">
+            <strong>For users in the United Kingdom and Switzerland</strong><br>
+            We process usage analytics and crash reports on the basis of our legitimate interest in improving the App. You can stop this processing at any time by turning off "Send usage data". You have the right to lodge a complaint with the data protection authority in your country.
+        </div>
+
+        <h2>10. Children's Privacy</h2>
+        <p>The App is rated 4+, and it has no ads and no personalized advertising. We do not ask for your age, and we do not collect children's information separately.</p>
+
+        <h2>11. Security Measures</h2>
+        <ul>
+            <li>We do not run our own servers or accounts for the App, so there is no risk of member information leaking from a server.</li>
+            <li>Puzzle records and settings are stored only on your device.</li>
+            <li>Communication with Google (Firebase) is sent over Google's encrypted connections (HTTPS).</li>
+        </ul>
+
+        <h2>12. Data Protection Officer</h2>
+        <table>
+            <tr>
+                <th>Item</th>
+                <th>Details</th>
+            </tr>
+            <tr>
+                <td>Contact</td>
+                <td>PocketLabs Privacy Team</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td><a href="mailto:contact@pocketlabs.kr">contact@pocketlabs.kr</a></td>
+            </tr>
+        </table>
+
+        <h2>13. Changes to This Policy</h2>
+        <p>If this Privacy Policy is updated, we will post the changes on this page together with the effective date.</p>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 PocketLabs. All rights reserved.<br>
+        <a href="mailto:contact@pocketlabs.kr" style="color: #777; text-decoration: none;">contact@pocketlabs.kr</a></p>
+    </footer>
+</body>
+</html>
