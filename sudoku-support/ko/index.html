@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>지원 — 누구나 스도쿠</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0A0A0A;
+            --surface: #141414;
+            --text: #EAEAEA;
+            --text-dim: #777;
+            --accent: #4F8FFF;
+            --border: #222;
+            --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 60px 24px 80px;
+        }
+        .lang-switch {
+            float: right;
+            color: var(--text-dim);
+            font-size: 0.85em;
+        }
+        .lang-switch a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .lang-switch a:hover { text-decoration: underline; }
+        h1 {
+            font-size: 1.8em;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+        .lead {
+            color: #ccc;
+            font-size: 0.95em;
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+        h2 {
+            font-size: 1.15em;
+            font-weight: 600;
+            margin-top: 40px;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        h3 {
+            font-size: 1em;
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 4px;
+            color: var(--text);
+        }
+        p, li {
+            font-size: 0.95em;
+            color: #ccc;
+        }
+        ol, ul {
+            padding-left: 20px;
+            margin-bottom: 12px;
+        }
+        li { margin-bottom: 6px; }
+        a { color: var(--accent); }
+        .note {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 0.9em;
+            color: #bbb;
+        }
+        footer {
+            text-align: center;
+            padding: 40px 24px;
+            border-top: 1px solid var(--border);
+            margin-top: 60px;
+        }
+        footer p {
+            font-size: 0.82em;
+            color: var(--text-dim);
+        }
+        @media (max-width: 600px) {
+            .container { padding: 40px 16px 60px; }
+            h1 { font-size: 1.5em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <span class="lang-switch"><span lang="ko" aria-current="page">한국어</span> · <a href="../en/" hreflang="en" lang="en">English</a> · <a href="../ja/" hreflang="ja" lang="ja">日本語</a></span>
+        </div>
+
+        <h1>누구나 스도쿠 지원</h1>
+        <p class="lead">광고도, 팝업도 없는 스도쿠, <strong>누구나 스도쿠</strong>를 이용해 주셔서 고마워요.</p>
+
+        <h2>문의하기</h2>
+        <ul>
+            <li>이메일: <a href="mailto:contact@pocketlabs.kr">contact@pocketlabs.kr</a></li>
+            <li>앱 안에서: 「설정」 → 「문의하기」</li>
+        </ul>
+
+        <h2>자주 묻는 질문</h2>
+
+        <h3>Q. 기기를 바꿨는데 구매한 것을 되살리고 싶어요.</h3>
+        <p>같은 Apple 계정으로 로그인한 기기에서 「세계」 화면의 「구매 복원」을 눌러 주세요. 「세계」 화면은 홈의 「세계 둘러보기」로 열 수 있어요.</p>
+
+        <h3>Q. 기록을 새 기기로 옮기고 싶어요.</h3>
+        <p>예전 기기의 「설정」 → 「기록 내보내기」로 기록 파일을 저장한 뒤, 새 기기의 「설정」 → 「기록 가져오기」에서 그 파일을 골라 주세요. 풀던 판은 옮기지 않아요. 구매는 옮기지 않아요. 같은 스토어 계정이라면 「구매 복원」으로 되살릴 수 있어요.</p>
+
+        <h3>Q. 사용 통계를 보내고 싶지 않아요.</h3>
+        <p>「설정」 → 「사용 통계 보내기」를 끄면 사용 통계와 오류 보고를 보내지 않아요. 언제든 다시 켤 수 있어요. 무엇을 보내는지는 개인정보처리방침에서 볼 수 있어요.</p>
+
+        <h3>Q. 환불은 어떻게 하나요?</h3>
+        <p>App Store 결제 환불은 Apple이 처리해요. <a href="https://reportaproblem.apple.com" target="_blank" rel="noopener noreferrer">reportaproblem.apple.com</a> 에서 신청할 수 있어요.</p>
+
+        <h2>관련 링크</h2>
+        <ul>
+            <li><a href="https://pocketlabs.kr/sudoku-privacy/ko">개인정보처리방침</a></li>
+        </ul>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 PocketLabs. All rights reserved.<br>
+        <a href="mailto:contact@pocketlabs.kr" style="color: #777; text-decoration: none;">contact@pocketlabs.kr</a></p>
+    </footer>
+</body>
+</html>
