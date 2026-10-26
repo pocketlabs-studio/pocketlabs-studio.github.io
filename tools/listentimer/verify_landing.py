@@ -15,6 +15,7 @@ import argparse
 import html as htmlmod
 import importlib.util
 import json
+import posixpath
 import re
 import subprocess
 import sys
@@ -83,20 +84,7 @@ LD_JSON_TYPE = "application/ld+json"
 CAMPAIGN_SCRIPT = Path("listentimer/campaign.js")
 CAMPAIGN_RUNNER = Path(__file__).resolve().parent / "campaign_runner.mjs"
 RUNNER_TIMEOUT_SECONDS = 60
-PAGE_SCRIPT_SRC = {
-    "listentimer/index.html": "campaign.js",
-    "listentimer/en/index.html": "../campaign.js",
-    "listentimer/ko/index.html": "../campaign.js",
-    "listentimer/ja/index.html": "../campaign.js",
-}
-LANG_LINKS = {
-    "listentimer/index.html": ["./en/", "./ko/", "./ja/"],
-    "listentimer/en/index.html": ["../ko/", "../ja/"],
-    "listentimer/ko/index.html": ["../en/", "../ja/"],
-    "listentimer/ja/index.html": ["../en/", "../ko/"],
-}
 LANG_LINK_REPEAT = 2
-ABSOLUTE_URL = re.compile(r"[A-Za-z][A-Za-z0-9+.\-]*:")
 SCRIPT_FORBIDDEN_NAMES = re.compile(
     r"\b(cookie|localStorage|sessionStorage|indexedDB|caches|fetch|XMLHttpRequest|sendBeacon"
     r"|WebSocket|EventSource|navigator|window|history|Image|ping)\b")
@@ -206,10 +194,6 @@ class PageMarkup(HTMLParser):
     def hrefs(self):
         return [anchor["href"] or "" for anchor in self.anchors]
 
-    def ld_json_text(self):
-        return "".join(script["body"] for script in self.scripts
-                       if script["attrs"].get("type") == LD_JSON_TYPE)
-
 
 def read_markup(text):
     markup = PageMarkup()
@@ -222,8 +206,13 @@ def is_store_link(parsed_url):
     return parsed_url is not None and parsed_url["hostname"] == STORE_HOST
 
 
-def is_relative_path(href):
-    return not href.startswith("#") and not ABSOLUTE_URL.match(href)
+def campaign_script_src(rel):
+    return posixpath.relpath(str(CAMPAIGN_SCRIPT), posixpath.dirname(rel))
+
+
+def language_switch_expected(rel):
+    x_default = HREFLANG_EXPECTED["x-default"]
+    return Counter({url: LANG_LINK_REPEAT for page, url in PAGES.items() if page != rel and url != x_default})
 
 
 # ── ①②⑦⑧⑩⑪ 텍스트 층 검사 ────────────────────────────────────────────────
@@ -235,10 +224,11 @@ def check_text_layer(rel, text, markup, parsed):
     non_ld = [script for script in markup.scripts if script["attrs"].get("type") != LD_JSON_TYPE]
     if len(non_ld) != 1:
         fail("2 스크립트", "%s: ld+json 이외의 <script> %d개 (기대 1개)" % (rel, len(non_ld)))
+    expected_src = campaign_script_src(rel)
     for script in non_ld:
         attrs = script["attrs"]
-        if set(attrs) != {"src", "defer"} or attrs["src"] != PAGE_SCRIPT_SRC[rel]:
-            fail("2 스크립트", "%s: <script> 속성 %s (기대 src=%r · defer)" % (rel, attrs, PAGE_SCRIPT_SRC[rel]))
+        if set(attrs) != {"src", "defer"} or attrs["src"] != expected_src:
+            fail("2 스크립트", "%s: <script> 속성 %s (기대 src=%r · defer)" % (rel, attrs, expected_src))
         if script["body"]:
             fail("2 스크립트", "%s: <script> 본문 있음 %r" % (rel, script["body"][:60]))
 
@@ -314,6 +304,11 @@ def check_jsonld(rel, text):
         fail("3 JSON-LD", "%s: ld+json 블록 없음" % rel)
         return
     raw = match.group(1)
+    store_mentions = re.findall(r'[^"\s]*apps\.apple\.com[^"\s]*', raw)
+    if store_mentions != [STORE_URL]:
+        fail("3 JSON-LD", "%s: ld+json 스토어 URL %s (기대 [%s])" % (rel, store_mentions, STORE_URL))
+    if "ct=" in raw:
+        fail("3 JSON-LD", "%s: ld+json에 ct= 있음" % rel)
     try:
         data = json.loads(raw)
     except json.JSONDecodeError as exc:
@@ -532,11 +527,12 @@ def run_campaign(markups, script_path, with_cases):
 
 
 def gpt_hrefs(rel, hrefs, parsed):
+    other_pages = {url for page, url in PAGES.items() if page != rel}
     expected = []
     for href, url in zip(hrefs, parsed):
         if is_store_link(url):
             expected.append(campaign_url(GPT_CT))
-        elif href in LANG_LINKS[rel] and url is not None:
+        elif url is not None and url["href"] in other_pages:
             expected.append("%s?utm_source=%s" % (url["href"], CHATGPT_UTM))
         else:
             expected.append(href)
@@ -564,21 +560,15 @@ def check_campaign_case(rel, case, hrefs, gpt, result):
 
 
 def check_campaign_token(rel, markup, parsed, outcomes):
-    hrefs = markup.hrefs()
-    relative = Counter(href for href in hrefs if is_relative_path(href))
-    expected_lang = Counter({link: LANG_LINK_REPEAT for link in LANG_LINKS[rel]})
-    if relative != expected_lang:
-        fail("12 출처 토큰", "%s: 상대 경로 링크 %s (기대 %s)" % (rel, dict(relative), dict(expected_lang)))
-
-    ld_text = markup.ld_json_text()
-    store_mentions = re.findall(r'[^"\s]*apps\.apple\.com[^"\s]*', ld_text)
-    if store_mentions != [STORE_URL]:
-        fail("12 출처 토큰", "%s: ld+json 스토어 URL %s (기대 [%s])" % (rel, store_mentions, STORE_URL))
-    if "ct=" in ld_text:
-        fail("12 출처 토큰", "%s: ld+json에 ct= 있음" % rel)
-
     if parsed is None:
         return
+    landing_urls = set(PAGES.values())
+    landing = Counter(url["href"] for url in parsed if url is not None and url["href"] in landing_urls)
+    expected_landing = language_switch_expected(rel)
+    if landing != expected_landing:
+        fail("12 출처 토큰", "%s: 랜딩 페이지 링크 %s (기대 %s)" % (rel, dict(landing), dict(expected_landing)))
+
+    hrefs = markup.hrefs()
     gpt = gpt_hrefs(rel, hrefs, parsed)
     for case, result in outcomes:
         check_campaign_case(rel, case, hrefs, gpt, result)
