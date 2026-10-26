@@ -90,12 +90,14 @@ SCRIPT_FORBIDDEN_NAMES = re.compile(
     r"|WebSocket|EventSource|navigator|window|history|Image|ping)\b")
 SCRIPT_FORBIDDEN_LITERAL = "open("
 UNPARSABLE_HREF = "http://[bad"
+FOREIGN_LANDING_HREF = "https://example.com/listentimer/ko/"
 
-CampaignCase = namedtuple("CampaignCase", "kind suffix referrer rewrites tail fault")
+CampaignCase = namedtuple("CampaignCase", "kind suffix referrer rewrites tail fault lead", defaults=((),))
 CAMPAIGN_CASES = [
     CampaignCase("GPT", "?utm_source=chatgpt.com", "", True, (), False),
     CampaignCase("GPT", "?utm_source=ChatGPT.com", "", True, (), False),
     CampaignCase("GPT", "?utm_source=google&utm_source=chatgpt.com", "", True, (), False),
+    CampaignCase("GPT", "?utm_source=chatgpt.com&utm_source=google", "", True, (), False),
     CampaignCase("GPT", "?utm_source=&utm_source=chatgpt.com", "", True, (), False),
     CampaignCase("GPT", "?utm_source=chatgpt.com#faq", "", True, (), False),
     CampaignCase("GPT", "", "https://chatgpt.com/", True, (), False),
@@ -106,11 +108,15 @@ CAMPAIGN_CASES = [
     CampaignCase("비GPT", "", "", False, (), False),
     CampaignCase("비GPT", "?utm_source=google", "", False, (), False),
     CampaignCase("비GPT", "?utm_source=chatgpt", "", False, (), False),
+    CampaignCase("비GPT", "?utm_source=chatgpt.com.evil.example", "", False, (), False),
+    CampaignCase("비GPT", "?utm_source=notchatgpt.com", "", False, (), False),
     CampaignCase("비GPT", "", "https://www.google.com/", False, (), False),
     CampaignCase("비GPT", "", "https://chatgpt.com.evil.example/", False, (), False),
     CampaignCase("비GPT", "", "https://notchatgpt.com/", False, (), False),
     CampaignCase("비GPT", "", "not a url", False, (), False),
+    CampaignCase("대상 밖 링크", "?utm_source=chatgpt.com", "", True, (STORE_URL, FOREIGN_LANDING_HREF), False),
     CampaignCase("해석 실패", "?utm_source=chatgpt.com", "", True, (UNPARSABLE_HREF,), False),
+    CampaignCase("해석 실패(맨 앞)", "?utm_source=chatgpt.com", "", True, (), False, lead=(UNPARSABLE_HREF,)),
     CampaignCase("고장 주입", "?utm_source=chatgpt.com", "", False, (), True),
 ]
 
@@ -464,7 +470,7 @@ def check_campaign_source(source):
 
 
 def campaign_case_input(rel, case, hrefs):
-    links = hrefs + list(case.tail)
+    links = list(case.lead) + hrefs + list(case.tail)
     payload = {"url": PAGES[rel] + case.suffix, "referrer": case.referrer, "hrefs": links}
     if case.fault:
         payload["throwOnHrefRead"] = len(links) - 1
@@ -554,7 +560,7 @@ def check_campaign_case(rel, case, hrefs, gpt, result):
         fail("12 출처 토큰", "%s: 고장 주입인데 스크립트 오류 없음" % where)
     if not case.fault and result["error"] is not None:
         fail("12 출처 토큰", "%s: 스크립트 오류 — %s" % (where, result["error"]))
-    expected = (gpt if case.rewrites else hrefs) + list(case.tail)
+    expected = list(case.lead) + (gpt if case.rewrites else hrefs) + list(case.tail)
     if result["hrefs"] != expected:
         fail("12 출처 토큰", "%s: %s" % (where, href_difference(result["hrefs"], expected)))
 
