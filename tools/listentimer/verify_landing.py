@@ -3,7 +3,7 @@
 """ListenTimer 랜딩 정합 검사기 — 랜딩 저장소 루트에서 실행, 실패 0이면 rc 0.
 
 이 페이지의 위험은 "사람 눈에는 멀쩡한데 기계가 읽는 층(JSON-LD·hreflang·robots)만 어긋나는"
-쪽이다. LLM 인용·검색 노출이 목적이라 그 층이 정본이므로, 아래 11개 검사를 게이트로 둔다.
+쪽이다. LLM 인용·검색 노출이 목적이라 그 층이 정본이므로, 아래 검사를 게이트로 둔다.
 
 사용:
     python3 tools/listentimer/verify_landing.py [--assets-optional]
@@ -16,8 +16,11 @@ import html as htmlmod
 import importlib.util
 import json
 import re
+import subprocess
 import sys
 import xml.etree.ElementTree as ET
+from collections import Counter, namedtuple
+from html.parser import HTMLParser
 from pathlib import Path
 
 
@@ -67,9 +70,61 @@ def campaign_url(ct):
     """
     if not re.fullmatch(r"\d+", STORE_PT):
         fail("11 스토어 URL", "pt는 숫자여야 한다: %r" % STORE_PT)
-    if not (0 < len(ct) <= 30) or ct != ct.strip():
-        fail("11 스토어 URL", "ct 형식 위반(1~30자 · 앞뒤 공백 금지): %r" % ct)
+    if not re.fullmatch(r"[A-Za-z0-9_-]{1,30}", ct):
+        fail("11 스토어 URL", "ct 형식 위반(영문·숫자·_·- 1~30자): %r" % ct)
     return "%s?pt=%s&ct=%s&mt=8" % (STORE_CAMPAIGN_BASE, STORE_PT, ct)
+
+
+GPT_CT = "web_gpt"
+CHATGPT_UTM = "chatgpt.com"
+STORE_HOST = "apps.apple.com"
+LD_JSON_TYPE = "application/ld+json"
+
+CAMPAIGN_SCRIPT = Path("listentimer/campaign.js")
+CAMPAIGN_RUNNER = Path(__file__).resolve().parent / "campaign_runner.mjs"
+RUNNER_TIMEOUT_SECONDS = 60
+PAGE_SCRIPT_SRC = {
+    "listentimer/index.html": "campaign.js",
+    "listentimer/en/index.html": "../campaign.js",
+    "listentimer/ko/index.html": "../campaign.js",
+    "listentimer/ja/index.html": "../campaign.js",
+}
+LANG_LINKS = {
+    "listentimer/index.html": ["./en/", "./ko/", "./ja/"],
+    "listentimer/en/index.html": ["../ko/", "../ja/"],
+    "listentimer/ko/index.html": ["../en/", "../ja/"],
+    "listentimer/ja/index.html": ["../en/", "../ko/"],
+}
+LANG_LINK_REPEAT = 2
+ABSOLUTE_URL = re.compile(r"[A-Za-z][A-Za-z0-9+.\-]*:")
+SCRIPT_FORBIDDEN_NAMES = re.compile(
+    r"\b(cookie|localStorage|sessionStorage|indexedDB|caches|fetch|XMLHttpRequest|sendBeacon"
+    r"|WebSocket|EventSource|navigator|window|history|Image|ping)\b")
+SCRIPT_FORBIDDEN_LITERAL = "open("
+UNPARSABLE_HREF = "http://[bad"
+
+CampaignCase = namedtuple("CampaignCase", "kind suffix referrer rewrites tail fault")
+CAMPAIGN_CASES = [
+    CampaignCase("GPT", "?utm_source=chatgpt.com", "", True, (), False),
+    CampaignCase("GPT", "?utm_source=ChatGPT.com", "", True, (), False),
+    CampaignCase("GPT", "?utm_source=google&utm_source=chatgpt.com", "", True, (), False),
+    CampaignCase("GPT", "?utm_source=&utm_source=chatgpt.com", "", True, (), False),
+    CampaignCase("GPT", "?utm_source=chatgpt.com#faq", "", True, (), False),
+    CampaignCase("GPT", "", "https://chatgpt.com/", True, (), False),
+    CampaignCase("GPT", "", "https://chatgpt.com/c/abc?x=1", True, (), False),
+    CampaignCase("GPT", "", "http://chatgpt.com/", True, (), False),
+    CampaignCase("GPT", "", "https://chat.openai.com/", True, (), False),
+    CampaignCase("GPT", "?utm_source=google", "https://chatgpt.com/", True, (), False),
+    CampaignCase("비GPT", "", "", False, (), False),
+    CampaignCase("비GPT", "?utm_source=google", "", False, (), False),
+    CampaignCase("비GPT", "?utm_source=chatgpt", "", False, (), False),
+    CampaignCase("비GPT", "", "https://www.google.com/", False, (), False),
+    CampaignCase("비GPT", "", "https://chatgpt.com.evil.example/", False, (), False),
+    CampaignCase("비GPT", "", "https://notchatgpt.com/", False, (), False),
+    CampaignCase("비GPT", "", "not a url", False, (), False),
+    CampaignCase("해석 실패", "?utm_source=chatgpt.com", "", True, (UNPARSABLE_HREF,), False),
+    CampaignCase("고장 주입", "?utm_source=chatgpt.com", "", False, (), True),
+]
 
 # 구 세대 문안의 화석 — 하나라도 살아 있으면 1.3.2 현행화가 덜 끝난 것이다
 BANNED_TOKENS = ["$2.99", "PT Coach", "3종", "Three character", "three voices"]
@@ -123,16 +178,69 @@ def section(text, sid):
     return match.group(0) if match else None
 
 
+class PageMarkup(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.anchors = []
+        self.scripts = []
+        self._open_script = None
+
+    def handle_starttag(self, tag, attrs):
+        fields = {}
+        for name, value in attrs:
+            fields.setdefault(name, value)
+        if tag == "a" and "href" in fields:
+            self.anchors.append(fields)
+        elif tag == "script":
+            self._open_script = {"attrs": fields, "body": ""}
+            self.scripts.append(self._open_script)
+
+    def handle_endtag(self, tag):
+        if tag == "script":
+            self._open_script = None
+
+    def handle_data(self, data):
+        if self._open_script is not None:
+            self._open_script["body"] += data
+
+    def hrefs(self):
+        return [anchor["href"] or "" for anchor in self.anchors]
+
+    def ld_json_text(self):
+        return "".join(script["body"] for script in self.scripts
+                       if script["attrs"].get("type") == LD_JSON_TYPE)
+
+
+def read_markup(text):
+    markup = PageMarkup()
+    markup.feed(text)
+    markup.close()
+    return markup
+
+
+def is_store_link(parsed_url):
+    return parsed_url is not None and parsed_url["hostname"] == STORE_HOST
+
+
+def is_relative_path(href):
+    return not href.startswith("#") and not ABSOLUTE_URL.match(href)
+
+
 # ── ①②⑦⑧⑩⑪ 텍스트 층 검사 ────────────────────────────────────────────────
-def check_text_layer(rel, text):
+def check_text_layer(rel, text, markup, parsed):
     for token in BANNED_TOKENS:
         if token in text:
             fail("1 구세대 문안", "%s: 금지 토큰 %r 발견" % (rel, token))
 
-    scripts = re.findall(r"<script\b[^>]*>", text)
-    non_ld = [s for s in scripts if 'type="application/ld+json"' not in s]
-    if non_ld:
-        fail("2 스크립트", "%s: ld+json 이외의 <script> %d개" % (rel, len(non_ld)))
+    non_ld = [script for script in markup.scripts if script["attrs"].get("type") != LD_JSON_TYPE]
+    if len(non_ld) != 1:
+        fail("2 스크립트", "%s: ld+json 이외의 <script> %d개 (기대 1개)" % (rel, len(non_ld)))
+    for script in non_ld:
+        attrs = script["attrs"]
+        if set(attrs) != {"src", "defer"} or attrs["src"] != PAGE_SCRIPT_SRC[rel]:
+            fail("2 스크립트", "%s: <script> 속성 %s (기대 src=%r · defer)" % (rel, attrs, PAGE_SCRIPT_SRC[rel]))
+        if script["body"]:
+            fail("2 스크립트", "%s: <script> 본문 있음 %r" % (rel, script["body"][:60]))
 
     if "data-implementation-note" in text:
         fail("7 인계 속성", "%s: data-implementation-note가 남아 있음" % rel)
@@ -153,18 +261,19 @@ def check_text_layer(rel, text):
     # 페이지 안의 모든 형태는 두 규격 중 하나여야 한다: JSON-LD installUrl = 추적 없는 규격 URL,
     # 방문자 링크(href) = 이 페이지의 ASC 캠페인 URL(pt·ct·mt). 속성 안의 &amp;는 복호한 뒤 대조한다.
     expected_href = campaign_url(PAGE_CT[rel])
-    urls = [htmlmod.unescape(u) for u in re.findall(r'https://apps\.apple\.com/[^"\s<]*', text)]
+    urls = [htmlmod.unescape(u) for u in re.findall(r"https://apps\.apple\.com/[^\"'\s<>]*", text)]
     bad = [u for u in urls if u not in (STORE_URL, expected_href)]
     if bad:
         fail("11 스토어 URL", "%s: 규격 밖 URL %s" % (rel, sorted(set(bad))))
     # 방문자가 누를 수 있는 링크는 정확히 3곳(헤더 · 히어로 · 다운로드)이고 전부 이 페이지의 캠페인 URL이다.
     # 전체 등장은 4회 — 나머지 1회는 JSON-LD의 installUrl(링크가 아님 · 규격 URL 유지)이라 따로 센다.
-    hrefs = [htmlmod.unescape(u) for u in re.findall(r'href="(https://apps\.apple\.com/[^"]*)"', text)]
-    if len(hrefs) != STORE_URL_COUNT:
-        fail("11 스토어 URL", "%s: 스토어 링크 %d회 (기대 %d회)" % (rel, len(hrefs), STORE_URL_COUNT))
-    wrong = [u for u in hrefs if u != expected_href]
-    if wrong:
-        fail("11 스토어 URL", "%s: 캠페인 URL 아님 %s (기대 %s)" % (rel, sorted(set(wrong)), expected_href))
+    if parsed is not None:
+        hrefs = [href for href, url in zip(markup.hrefs(), parsed) if is_store_link(url)]
+        if len(hrefs) != STORE_URL_COUNT:
+            fail("11 스토어 URL", "%s: 스토어 링크 %d회 (기대 %d회)" % (rel, len(hrefs), STORE_URL_COUNT))
+        wrong = [u for u in hrefs if u != expected_href]
+        if wrong:
+            fail("11 스토어 URL", "%s: 캠페인 URL 아님 %s (기대 %s)" % (rel, sorted(set(wrong)), expected_href))
     if urls.count(STORE_URL) != 1:
         fail("11 스토어 URL", "%s: 규격 URL(installUrl 전용) %d회 (기대 1회)" % (rel, urls.count(STORE_URL)))
 
@@ -351,22 +460,159 @@ def check_site_files():
             fail("9 sitemap", "%s의 hreflang %s" % (url.findtext("%sloc" % SITEMAP_NS), pairs))
 
 
+def check_campaign_source(source):
+    names = sorted(set(SCRIPT_FORBIDDEN_NAMES.findall(source)))
+    if names:
+        fail("12 출처 토큰", "%s: 금지 이름 %s" % (CAMPAIGN_SCRIPT, names))
+    if SCRIPT_FORBIDDEN_LITERAL in source:
+        fail("12 출처 토큰", "%s: 금지 리터럴 %r" % (CAMPAIGN_SCRIPT, SCRIPT_FORBIDDEN_LITERAL))
+
+
+def campaign_case_input(rel, case, hrefs):
+    links = hrefs + list(case.tail)
+    payload = {"url": PAGES[rel] + case.suffix, "referrer": case.referrer, "hrefs": links}
+    if case.fault:
+        payload["throwOnHrefRead"] = len(links) - 1
+    return payload
+
+
+def runner_response_matches(request, response):
+    if not isinstance(response, dict):
+        return False
+    parse, run = response.get("parse"), response.get("run")
+    if not isinstance(parse, list) or not isinstance(run, list):
+        return False
+    group_sizes = [len(group["hrefs"]) for group in request["parse"]]
+    if [len(group) if isinstance(group, list) else -1 for group in parse] != group_sizes:
+        return False
+    return len(run) == len(request["run"]["cases"]) and all(
+        isinstance(result, dict) and {"hrefs", "error", "violations"} <= result.keys() for result in run)
+
+
+def call_campaign_runner(request):
+    try:
+        completed = subprocess.run(["node", str(CAMPAIGN_RUNNER)], input=json.dumps(request),
+                                   capture_output=True, text=True, encoding="utf-8",
+                                   timeout=RUNNER_TIMEOUT_SECONDS)
+    except FileNotFoundError:
+        return None, "node 필요 — 설치 후 다시 실행"
+    except subprocess.TimeoutExpired:
+        return None, "실행기 시간 초과(%d초)" % RUNNER_TIMEOUT_SECONDS
+    if completed.returncode != 0:
+        lines = completed.stderr.strip().splitlines()
+        return None, "실행기 비정상 종료(rc %d) — %s" % (completed.returncode, lines[0] if lines else "stderr 없음")
+    try:
+        response = json.loads(completed.stdout)
+    except json.JSONDecodeError as exc:
+        return None, "실행기 출력 JSON 해석 실패 — %s" % exc
+    if not runner_response_matches(request, response):
+        return None, "실행기 출력 JSON 해석 실패 — 요청과 형식이 맞지 않음"
+    return response, None
+
+
+def run_campaign(markups, script_path, with_cases):
+    plan = [(rel, case) for rel in markups for case in CAMPAIGN_CASES] if with_cases else []
+    request = {
+        "parse": [{"base": PAGES[rel], "hrefs": markups[rel].hrefs()} for rel in markups],
+        "run": {
+            "script": str(script_path.resolve()),
+            "cases": [campaign_case_input(rel, case, markups[rel].hrefs()) for rel, case in plan],
+        },
+    }
+    response, problem = call_campaign_runner(request)
+    if problem:
+        fail("11 스토어 URL", problem)
+        fail("12 출처 토큰", problem)
+        return {}, {}
+    parsed = dict(zip(markups, response["parse"]))
+    outcomes = {rel: [] for rel in markups}
+    for (rel, case), result in zip(plan, response["run"]):
+        outcomes[rel].append((case, result))
+    return parsed, outcomes
+
+
+def gpt_hrefs(rel, hrefs, parsed):
+    expected = []
+    for href, url in zip(hrefs, parsed):
+        if is_store_link(url):
+            expected.append(campaign_url(GPT_CT))
+        elif href in LANG_LINKS[rel] and url is not None:
+            expected.append("%s?utm_source=%s" % (url["href"], CHATGPT_UTM))
+        else:
+            expected.append(href)
+    return expected
+
+
+def href_difference(actual, expected):
+    if len(actual) != len(expected):
+        return "href %d개 (기대 %d개)" % (len(actual), len(expected))
+    index = next(i for i, pair in enumerate(zip(actual, expected)) if pair[0] != pair[1])
+    return "href[%d] %r (기대 %r)" % (index, actual[index], expected[index])
+
+
+def check_campaign_case(rel, case, hrefs, gpt, result):
+    where = "%s %s(url %r · referrer %r)" % (rel, case.kind, case.suffix, case.referrer)
+    if result["violations"]:
+        fail("12 출처 토큰", "%s: 대역 위반 %s" % (where, result["violations"]))
+    if case.fault and result["error"] is None:
+        fail("12 출처 토큰", "%s: 고장 주입인데 스크립트 오류 없음" % where)
+    if not case.fault and result["error"] is not None:
+        fail("12 출처 토큰", "%s: 스크립트 오류 — %s" % (where, result["error"]))
+    expected = (gpt if case.rewrites else hrefs) + list(case.tail)
+    if result["hrefs"] != expected:
+        fail("12 출처 토큰", "%s: %s" % (where, href_difference(result["hrefs"], expected)))
+
+
+def check_campaign_token(rel, markup, parsed, outcomes):
+    hrefs = markup.hrefs()
+    relative = Counter(href for href in hrefs if is_relative_path(href))
+    expected_lang = Counter({link: LANG_LINK_REPEAT for link in LANG_LINKS[rel]})
+    if relative != expected_lang:
+        fail("12 출처 토큰", "%s: 상대 경로 링크 %s (기대 %s)" % (rel, dict(relative), dict(expected_lang)))
+
+    ld_text = markup.ld_json_text()
+    store_mentions = re.findall(r'[^"\s]*apps\.apple\.com[^"\s]*', ld_text)
+    if store_mentions != [STORE_URL]:
+        fail("12 출처 토큰", "%s: ld+json 스토어 URL %s (기대 [%s])" % (rel, store_mentions, STORE_URL))
+    if "ct=" in ld_text:
+        fail("12 출처 토큰", "%s: ld+json에 ct= 있음" % rel)
+
+    if parsed is None:
+        return
+    gpt = gpt_hrefs(rel, hrefs, parsed)
+    for case, result in outcomes:
+        check_campaign_case(rel, case, hrefs, gpt, result)
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description="ListenTimer 랜딩 정합 검사기")
     parser.add_argument("--assets-optional", action="store_true",
                         help="이미지 자산 검사를 경고로 낮춘다(캡처 배치 전용)")
     args = parser.parse_args(argv)
 
+    texts = {}
     for rel in PAGES:
         path = REPO / rel
         if not path.is_file():
             fail("0 페이지", "없음: %s" % rel)
             continue
-        text = path.read_text(encoding="utf-8")
-        check_text_layer(rel, text)
+        texts[rel] = path.read_text(encoding="utf-8")
+    markups = {rel: read_markup(text) for rel, text in texts.items()}
+
+    script_path = REPO / CAMPAIGN_SCRIPT
+    has_script = script_path.is_file()
+    if has_script:
+        check_campaign_source(script_path.read_text(encoding="utf-8"))
+    else:
+        fail("12 출처 토큰", "스크립트 없음: %s" % CAMPAIGN_SCRIPT)
+    parsed, outcomes = run_campaign(markups, script_path, has_script)
+
+    for rel, text in texts.items():
+        check_text_layer(rel, text, markups[rel], parsed.get(rel))
         check_hreflang(rel, text, PAGES[rel])
         check_anchors(rel, text)
         check_jsonld(rel, text)
+        check_campaign_token(rel, markups[rel], parsed.get(rel), outcomes.get(rel, []))
 
     check_assets(args.assets_optional)
     check_site_files()
